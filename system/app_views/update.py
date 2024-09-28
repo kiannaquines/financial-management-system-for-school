@@ -45,7 +45,7 @@ class UpdateAssistanceDetails(UpdateView):
 class UpdateUserDetails(UpdateView):
     pk_url_kwarg = "pk"
     model = AuthUser
-    form_class = RegistrationForm
+    form_class = AdminRegistrationForm
     success_url = reverse_lazy("users_page")
     template_name = "pages/update.html"
 
