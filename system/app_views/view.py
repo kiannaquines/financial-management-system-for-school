@@ -2,6 +2,7 @@ from django.shortcuts import render
 from system.models import *
 from system.utils import oneshot_view_function
 from django.urls import reverse_lazy
+from django.db.models import Q
 
 
 def beneficiary_page(request):
@@ -59,7 +60,7 @@ def payments_page(request):
 def users_page(request):
     path = reverse_lazy("add_user_page")
     header_list = ["Username", "Firstname", "Lastname", "Email", "User Type"]
-    field_list = ["id","username", "first_name", "last_name", "email", "user_type"]
+    field_list = ["id", "username", "first_name", "last_name", "email", "user_type"]
     context = oneshot_view_function(
         AuthUser.objects.values(*field_list),
         "User",
@@ -93,6 +94,7 @@ def inactive_users_page(request):
     )
     return render(request, "pages/view.html", context)
 
+
 def membership_page(request):
     path = reverse_lazy("add_member_page")
     header_list = [
@@ -119,6 +121,7 @@ def membership_page(request):
         header_list,
     )
     return render(request, "pages/view.html", context)
+
 
 def pending_membership_page(request):
     path = reverse_lazy("add_member_page")
@@ -147,6 +150,7 @@ def pending_membership_page(request):
     )
     return render(request, "pages/view.html", context)
 
+
 def assistance_page(request):
     path = reverse_lazy("add_assistance_page")
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -168,6 +172,7 @@ def assistance_page(request):
     )
     return render(request, "pages/view.html", context)
 
+
 def pending_assistance_page(request):
     path = reverse_lazy("add_assistance_page")
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -184,6 +189,99 @@ def pending_assistance_page(request):
         "Pending Assistance",
         "Pending Assistance List",
         "Add Assistance",
+        path,
+        header_list,
+    )
+
+    return render(request, "pages/view.html", context)
+
+
+def assistance_page(request):
+    path = reverse_lazy("add_assistance_page")
+    header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
+    field_list = [
+        "id",
+        "assistance_first_name",
+        "assistance_middle_name",
+        "assistance_last_name",
+        "type_of_assistance",
+        "assistance_status",
+    ]
+    context = oneshot_view_function(
+        Assistance.objects.filter(assistance_status=True).values(*field_list),
+        "Assistance",
+        "Assistance List",
+        "Add Assistance",
+        path,
+        header_list,
+    )
+    return render(request, "pages/view.html", context)
+
+
+def membership_fee_page(request):
+    path = reverse_lazy("add_payment_page")
+    header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
+    field_list = [
+        "id",
+        "paid_by__username",
+        "amount",
+        "payment_type",
+        "date_paid",
+    ]
+    context = oneshot_view_function(
+        Payment.objects.filter(payment_type="Membership").values(*field_list),
+        "Membership Fee",
+        "Membership Fee List",
+        "Add Payment",
+        path,
+        header_list,
+    )
+
+    return render(request, "pages/view.html", context)
+
+
+def monthly_due_page(request):
+    path = reverse_lazy("add_payment_page")
+    header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
+    field_list = [
+        "id",
+        "paid_by__username",
+        "amount",
+        "payment_type",
+        "date_paid",
+    ]
+    context = oneshot_view_function(
+        Payment.objects.filter(
+            Q(payment_type="Delegation Pay")
+            | Q(payment_type="Trust Fund")
+            | Q(payment_type="Visitors Fund")
+        ).values(*field_list),
+        "Monthly Due",
+        "Monthly Due List",
+        "Add Payment",
+        path,
+        header_list,
+    )
+
+    return render(request, "pages/view.html", context)
+
+def expense_page(request):
+    path = reverse_lazy("add_payment_page")
+    path = reverse_lazy("add_assistance_page")
+    header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
+    field_list = [
+        "id",
+        "assistance_first_name",
+        "assistance_middle_name",
+        "assistance_last_name",
+        "type_of_assistance",
+        "assistance_status",
+    ]
+    context = oneshot_view_function(
+        Assistance.objects.values(*field_list),
+        "Expense",
+        "Expense List",
+        "Add Payment",
         path,
         header_list,
     )

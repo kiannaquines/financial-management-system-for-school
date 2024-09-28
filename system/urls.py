@@ -42,4 +42,9 @@ urlpatterns = [
     path('payments/delete/<int:pk>', DeletePaymentDetails.as_view(), name="delete_payment"),
     path('users/delete/<int:pk>', DeleteUserDetails.as_view(), name="delete_user"),
     path('assistance/delete/<int:pk>', DeleteAssistanceDetails.as_view(), name="delete_assistance"),
+
+
+    path('report/membership/fee/list',membership_fee_page, name='membership_fee_page'),
+    path('report/monthly/dues/list',monthly_due_page, name='monthly_due_page'),
+    path('report/assistance/expense/list',expense_page, name='expense_page'),
 ]

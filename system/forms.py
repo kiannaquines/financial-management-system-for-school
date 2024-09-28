@@ -9,6 +9,10 @@ class AssistanceForm(forms.ModelForm):
             {"placeholder": "First Name", "class": "form-control"}
         )
 
+        self.fields["amount_released"].widget.attrs.update(
+            {"placeholder": "Amount Released", "class": "form-control"}
+        )
+
         self.fields["assistance_middle_name"].widget.attrs.update(
             {"placeholder": "Middle Name", "class": "form-control"}
         )
@@ -38,6 +42,7 @@ class AssistanceForm(forms.ModelForm):
         fields = [
             "request_by",
             "assistance_first_name",
+            "amount_released",
             "assistance_middle_name",
             "assistance_last_name",
             "suffix",

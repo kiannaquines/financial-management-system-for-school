@@ -10,7 +10,12 @@
             <div class="card">
                 <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">{{ header_title }}</h4>
-                    <a href="{{ path }}" class="btn btn-primary">{{ add_button_name }}</a>
+                    <div>
+                        <a href="{{ path }}" class="btn btn-primary">{{ add_button_name }}</a>
+                        {% if "report" in request.path %}
+                        <a class="btn btn-primary" href="#">Export Report</a>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="datatable">
@@ -60,6 +65,9 @@
                                             {% elif "assistance" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_assistance' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_assistance' pk=item.id %}">Remove</a>
+                                            {% else %}
+                                            <a class="dropdown-item" href="{% url 'update_payment' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_payment' pk=item.id %}">Remove</a>
                                             {% endif %}
                                         </div>
                                     </div>

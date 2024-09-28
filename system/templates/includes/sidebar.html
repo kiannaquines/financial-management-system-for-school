@@ -146,9 +146,9 @@
             <li class="nav-item"></li>
                 <div class="navbar-heading">Report Page</div>
             </li>
-            <li class="nav-item {% if 'reports' in request.path %}active{% endif %}">
+            <li class="nav-item {% if 'report' in request.path %}active{% endif %}">
                 <a
-                    class="nav-link has-arrow  collapsed "
+                    class="nav-link has-arrow  collapsed"
                     href="#!"
                     data-bs-toggle="collapse"
                     data-bs-target="#report"
@@ -158,20 +158,20 @@
                     <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
                     Report
                 </a>
-                <div id="report" class="collapse {% if 'reports' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
+                <div id="report" class="collapse {% if 'report' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " href="{% url 'membership_fee_page' %}">
                                 Membership Fee
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " href="{% url 'monthly_due_page' %}">
                                 Monthly Dues
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " href="{% url 'expense_page' %}">
                                 Expenses
                             </a>
                         </li>

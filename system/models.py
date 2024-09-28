@@ -18,6 +18,7 @@ class Assistance(models.Model):
     assistance_status = models.BooleanField(default=False)
     assistance_evidence_first = models.FileField(upload_to='assistance/proof/')
     assistance_evidence_second = models.FileField(upload_to='assistance/proof/')
+    amount_released = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
 
     def __str__(self) -> str:
         return f'{self.assistance_first_name} {self.assistance_last_name} {self.suffix}'
