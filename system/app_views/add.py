@@ -35,9 +35,7 @@ def add_beneficiary_page(request):
         form_data = BeneficiaryForm(request.POST, request.FILES)
 
         if form_data.is_valid():
-            beneficiary = form_data.save(commit=False)
-            beneficiary.user_id = request.user
-            beneficiary.save()
+            form_data.save()
             success(
                 request,
                 "You have successfully added new beneficiary.",

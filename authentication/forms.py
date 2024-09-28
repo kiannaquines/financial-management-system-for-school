@@ -1,6 +1,7 @@
 from django import forms
 from authentication.models import AuthUser
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 
 
 class RegistrationForm(UserCreationForm):
@@ -30,17 +31,11 @@ class RegistrationForm(UserCreationForm):
             {"placeholder": "User Type", "class": "form-control"}
         )
 
-        self.fields["is_active"].widget.attrs.update(
-            {"class": "form-check-input"}
-        )
+        self.fields["is_active"].widget.attrs.update({"class": "form-check-input"})
 
-        self.fields["is_staff"].widget.attrs.update(
-            {"class": "form-check-input"}
-        )
+        self.fields["is_staff"].widget.attrs.update({"class": "form-check-input"})
 
-        self.fields["is_superuser"].widget.attrs.update(
-            {"class": "form-check-input"}
-        )
+        self.fields["is_superuser"].widget.attrs.update({"class": "form-check-input"})
 
     class Meta:
         model = AuthUser
@@ -56,6 +51,28 @@ class RegistrationForm(UserCreationForm):
             "is_staff",
             "is_superuser",
         ]
+
+
+class PasswordChangeForm(BasePasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
+        self.fields["old_password"].widget.attrs.update(
+            {"placeholder": "Old Password", "class": "form-control"}
+        )
+        self.fields["new_password1"].widget.attrs.update(
+            {"placeholder": "New Password", "class": "form-control"}
+        )
+        self.fields["new_password2"].widget.attrs.update(
+            {"placeholder": "Confirm New Password", "class": "form-control"}
+        )
+
+    class Meta:
+        model = AuthUser
+        fields = [
+            "new_password1",
+            "new_password2",
+        ]
+
 
 class AdminRegistrationForm(forms.ModelForm):
 
@@ -80,17 +97,11 @@ class AdminRegistrationForm(forms.ModelForm):
             {"placeholder": "User Type", "class": "form-control"}
         )
 
-        self.fields["is_active"].widget.attrs.update(
-            {"class": "form-check-input"}
-        )
+        self.fields["is_active"].widget.attrs.update({"class": "form-check-input"})
 
-        self.fields["is_staff"].widget.attrs.update(
-            {"class": "form-check-input"}
-        )
+        self.fields["is_staff"].widget.attrs.update({"class": "form-check-input"})
 
-        self.fields["is_superuser"].widget.attrs.update(
-            {"class": "form-check-input"}
-        )
+        self.fields["is_superuser"].widget.attrs.update({"class": "form-check-input"})
 
     class Meta:
         model = AuthUser

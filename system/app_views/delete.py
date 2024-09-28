@@ -6,53 +6,25 @@ from authentication.forms import *
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.contrib.messages import success, error
-from django.views.generic import UpdateView
-from django.contrib.auth.views import PasswordChangeView
+from django.views.generic import DeleteView
 
 
-class UpdatePasswordDetails(PasswordChangeView):
-    pk_url_kwarg = "pk"
-    model = AuthUser
-    form_class = PasswordChangeForm
-    success_url = reverse_lazy("users_page")
-    template_name = "pages/update.html"
-
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["header_title"] = "Change Password Details"
-        return context
-
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        form.save()
-        success(self.request, "Password details updated successfully.")
-        return super().form_valid(form)
-
-    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        error(
-            self.request,
-            "There is an error while trying to update the password details",
-        )
-        return super().form_invalid(form)
-
-
-# DONE
-class UpdateAssistanceDetails(UpdateView):
+class DeleteAssistanceDetails(DeleteView):
     pk_url_kwarg = "pk"
     model = Assistance
-    form_class = AssistanceForm
     success_url = reverse_lazy("assistance_page")
-    template_name = "pages/update.html"
+    template_name = "pages/delete.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["header_title"] = "Update Assistance Details"
+        context["header_title"] = "Remove Assistance Details"
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
         success(
             self.request,
-            "Assistance details updated successfully.",
+            "Assistance details removed successfully.",
             extra_tags="success_tag",
         )
         return response
@@ -61,29 +33,27 @@ class UpdateAssistanceDetails(UpdateView):
         response = super().form_invalid(form)
         error(
             self.request,
-            "There is an error while trying to update the assistance details",
+            "There is an error while trying to removing the assistance details",
             extra_tags="error_tag",
         )
         return response
 
 
-# DONE
-class UpdateUserDetails(UpdateView):
+class DeleteUserDetails(DeleteView):
     pk_url_kwarg = "pk"
     model = AuthUser
-    form_class = AdminRegistrationForm
     success_url = reverse_lazy("users_page")
-    template_name = "pages/update.html"
+    template_name = "pages/delete.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["header_title"] = "Update User Details"
+        context["header_title"] = "Remove User Details"
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
         success(
-            self.request, "User details updated successfully.", extra_tags="success_tag"
+            self.request, "User details removed successfully.", extra_tags="success_tag"
         )
         return response
 
@@ -91,30 +61,28 @@ class UpdateUserDetails(UpdateView):
         response = super().form_invalid(form)
         error(
             self.request,
-            "There is an error while trying to update the user details",
+            "There is an error while trying to remove the user details",
             extra_tags="error_tag",
         )
         return response
 
 
-# DONE
-class UpdatePaymentDetails(UpdateView):
+class DeletePaymentDetails(DeleteView):
     pk_url_kwarg = "pk"
     model = Payment
-    form_class = PaymentForm
     success_url = reverse_lazy("payments_page")
-    template_name = "pages/update.html"
+    template_name = "pages/delete.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["header_title"] = "Update Payment Details"
+        context["header_title"] = "Remove Payment Details"
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
         success(
             self.request,
-            "Payment details updated successfully.",
+            "Payment removed successfully.",
             extra_tags="success_tag",
         )
         return response
@@ -123,29 +91,28 @@ class UpdatePaymentDetails(UpdateView):
         response = super().form_invalid(form)
         error(
             self.request,
-            "There is an error while trying to update the payment details",
+            "There is an error while trying to remove the payment details",
             extra_tags="error_tag",
         )
         return response
 
 
-class UpdateBeneficiaryDetails(UpdateView):
+class DeleteBeneficiaryDetails(DeleteView):
     pk_url_kwarg = "pk"
     model = Beneficiary
-    form_class = BeneficiaryForm
     success_url = reverse_lazy("beneficiary_page")
-    template_name = "pages/update.html"
+    template_name = "pages/delete.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["header_title"] = "Update Beneficiary Details"
+        context["header_title"] = "Remove Beneficiary Details"
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
         success(
             self.request,
-            "Beneficiary details updated successfully.",
+            "Beneficiary details removed successfully.",
             extra_tags="success_tag",
         )
         return response
@@ -154,30 +121,28 @@ class UpdateBeneficiaryDetails(UpdateView):
         response = super().form_invalid(form)
         error(
             self.request,
-            "There is an error while trying to update the beneficiary details",
+            "There is an error while trying to remove the beneficiary details",
             extra_tags="error_tag",
         )
         return response
 
 
-# DONE
-class UpdateMembershipDetails(UpdateView):
+class DeleteMembershipDetails(DeleteView):
     pk_url_kwarg = "pk"
     model = Membership
-    form_class = MembershipForm
     success_url = reverse_lazy("membership_page")
-    template_name = "pages/update.html"
+    template_name = "pages/delete.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["header_title"] = "Update Membership Details"
+        context["header_title"] = "Removed Membership Details"
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
         success(
             self.request,
-            "Membership details updated successfully.",
+            "Membership details removed successfully.",
             extra_tags="success_tag",
         )
         return response
@@ -186,7 +151,7 @@ class UpdateMembershipDetails(UpdateView):
         response = super().form_invalid(form)
         error(
             self.request,
-            "There is an error while trying to update the membership details",
+            "There is an error while trying to removed the membership details",
             extra_tags="error_tag",
         )
         return response

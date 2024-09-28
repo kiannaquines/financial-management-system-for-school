@@ -26,4 +26,4 @@ def auth_register_page(request):
 
 def auth_logout_page(request):
     logout(request)
-    return HttpResponseRedirect('auth/')
+    return HttpResponseRedirect('/auth/')

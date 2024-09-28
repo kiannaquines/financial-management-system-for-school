@@ -46,16 +46,21 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
                                             {% if "members" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_membership' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_membership' pk=item.id %}">Remove</a>
                                             {% elif "beneficiary" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_beneficiary' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_beneficiary' pk=item.id %}">Remove</a>
                                             {% elif "payments" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_payment' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_payment' pk=item.id %}">Remove</a>
                                             {% elif "users" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_user' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'change_password' pk=item.id %}">Change Password</a>
+                                            <a class="dropdown-item" href="{% url 'delete_user' pk=item.id %}">Remove</a>
                                             {% elif "assistance" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_assistance' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_assistance' pk=item.id %}">Remove</a>
                                             {% endif %}
-                                            <a class="dropdown-item" href="#">Remove</a>
                                         </div>
                                     </div>
                                 </td>

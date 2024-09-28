@@ -4,6 +4,7 @@ from system.app_views.view import *
 from system.app_views.add import *
 from authentication.views import auth_logout_page
 from system.app_views.update import *
+from system.app_views.delete import *
 
 urlpatterns = [
     path('',dashboard_page, name='dashboard'),
@@ -31,4 +32,14 @@ urlpatterns = [
     path('payments/edit/<int:pk>', UpdatePaymentDetails.as_view(), name="update_payment"),
     path('users/edit/<int:pk>', UpdateUserDetails.as_view(), name="update_user"),
     path('assistance/edit/<int:pk>', UpdateAssistanceDetails.as_view(), name="update_assistance"),
+
+
+    path('users/edit/change_password/<int:pk>', UpdatePasswordDetails.as_view(), name="change_password"),
+
+    # Delete Route
+    path('members/delete/<int:pk>', DeleteMembershipDetails.as_view(), name="delete_membership"),
+    path('beneficiary/delete/<int:pk>', DeleteBeneficiaryDetails.as_view(), name="delete_beneficiary"),
+    path('payments/delete/<int:pk>', DeletePaymentDetails.as_view(), name="delete_payment"),
+    path('users/delete/<int:pk>', DeleteUserDetails.as_view(), name="delete_user"),
+    path('assistance/delete/<int:pk>', DeleteAssistanceDetails.as_view(), name="delete_assistance"),
 ]

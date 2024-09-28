@@ -71,6 +71,11 @@ class BeneficiaryForm(forms.ModelForm):
         self.fields["proof"].widget.attrs.update(
             {"placeholder": "Proof of Evidence", "class": "form-control"}
         )
+        self.fields["user_id"].label = "Beneficiary User"
+
+        self.fields["user_id"].widget.attrs.update(
+            {"placeholder": "Belong to", "class": "form-control"}
+        )
 
     class Meta:
         model = Beneficiary
@@ -82,6 +87,7 @@ class BeneficiaryForm(forms.ModelForm):
             )
         }
         fields = [
+            "user_id",
             "beneficiary_first_name",
             "beneficiary_middle_name",
             "beneficiary_last_name",
