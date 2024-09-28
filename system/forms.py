@@ -12,6 +12,11 @@ class AssistanceForm(forms.ModelForm):
         self.fields["assistance_middle_name"].widget.attrs.update(
             {"placeholder": "Middle Name", "class": "form-control"}
         )
+
+        self.fields["request_by"].widget.attrs.update(
+            {"placeholder": "Request By", "class": "form-control"}
+        )
+
         self.fields["assistance_last_name"].widget.attrs.update(
             {"placeholder": "Last Name", "class": "form-control"}
         )
@@ -31,6 +36,7 @@ class AssistanceForm(forms.ModelForm):
     class Meta:
         model = Assistance
         fields = [
+            "request_by",
             "assistance_first_name",
             "assistance_middle_name",
             "assistance_last_name",

@@ -1,7 +1,6 @@
-def oneshot_view_function(model, header_title, title, add_button_name, path, header_list, field_list):
+def oneshot_view_function(query, header_title, title, add_button_name, path, header_list):
     context = {}
-    view_data = model.objects.values(*field_list)
-    context['view_data'] = view_data
+    context['view_data'] = query
     context['header_title'] = header_title
     context['title'] = title
     context['add_button_name'] = add_button_name

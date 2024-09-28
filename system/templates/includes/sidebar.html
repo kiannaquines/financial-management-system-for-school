@@ -1,26 +1,26 @@
 {% load static %}
 <nav class="navbar-vertical navbar">
     <div class="nav-scroller">
-        <!-- Brand logo -->
         <a class="navbar-brand" href="{% url 'dashboard' %}">
-            <img src="{% static 'assets/images/brand/logo/logo.svg' %}" alt="">
+            <h3 class="text-white" style="margin-bottom: 0px; font-weight: 600;">DASPTEA</h3>
+            <span style="font-size: 20px; color: white; margin-top: 0px;">Management System</span>
         </a>
-        <!-- Navbar nav -->
         <ul class="navbar-nav flex-column" id="sideNavbar">
+            <li class="nav-item">
+                <div class="navbar-heading">Dashboard</div>
+            </li>
             <li class="nav-item">
                 <a class="nav-link has-arrow  active " href="{% url 'dashboard' %}">
                     <i data-feather="home" class="nav-icon icon-xs me-2"></i>
                     Dashboard
                 </a>
             </li>
-            <!-- Nav item -->
             <li class="nav-item">
                 <div class="navbar-heading">Main Pages</div>
             </li>
-            <!-- Nav item -->
-            <li class="nav-item">
+            <li class="nav-item {% if 'members' in request.path %}active{% endif %}">
                 <a
-                    class="nav-link has-arrow  collapsed "
+                    class="nav-link has-arrow collapsed"
                     href="#!"
                     data-bs-toggle="collapse"
                     data-bs-target="#membership"
@@ -30,7 +30,7 @@
                     <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
                     Membership
                 </a>
-                <div id="membership" class="collapse " data-bs-parent="#sideNavbar">
+                <div id="membership" class="collapse {% if 'members' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'membership_page' %}">
@@ -38,16 +38,16 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " href="{% url 'pending_membership_page' %}">
                                 Pending Members
                             </a>
                         </li>
                     </ul>
                 </div>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if 'beneficiary' in request.path %}active{% endif %}">
                 <a
-                    class="nav-link has-arrow  collapsed "
+                    class="nav-link has-arrow collapsed"
                     href="#!"
                     data-bs-toggle="collapse"
                     data-bs-target="#beneficiary"
@@ -57,7 +57,7 @@
                     <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
                     Beneficiary
                 </a>
-                <div id="beneficiary" class="collapse " data-bs-parent="#sideNavbar">
+                <div id="beneficiary" class="collapse {% if 'beneficiary' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'beneficiary_page' %}">
@@ -67,9 +67,9 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if 'payments' in request.path %}active{% endif %}">
                 <a
-                    class="nav-link has-arrow  collapsed "
+                    class="nav-link has-arrow collapsed"
                     href="#!"
                     data-bs-toggle="collapse"
                     data-bs-target="#payments"
@@ -79,7 +79,7 @@
                     <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
                     Payments
                 </a>
-                <div id="payments" class="collapse " data-bs-parent="#sideNavbar">
+                <div id="payments" class="collapse {% if 'payments' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'payments_page' %}">
@@ -89,7 +89,7 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if 'users' in request.path %}active{% endif %}">
                 <a
                     class="nav-link has-arrow  collapsed "
                     href="#!"
@@ -101,7 +101,7 @@
                     <i data-feather="users" class="nav-icon icon-xs me-2"></i>
                     Users
                 </a>
-                <div id="users" class="collapse " data-bs-parent="#sideNavbar">
+                <div id="users" class="collapse {% if 'users' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'users_page' %}">
@@ -109,13 +109,70 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="#">
+                            <a class="nav-link " href="{% url 'inactive_users_page' %}">
                                 Inactive Users
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item {% if 'assistance' in request.path %}active{% endif %}">
+                <a
+                    class="nav-link has-arrow  collapsed "
+                    href="#!"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#assistance"
+                    aria-expanded="false"
+                    aria-controls="assistance"
+                >
+                    <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
+                    Assistance
+                </a>
+                <div id="assistance" class="collapse {% if 'assistance' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'assistance_page' %}">
+                                List of Assistance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'pending_assistance_page' %}">
+                                Pending Assistance
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item"></li>
+                <div class="navbar-heading">Report Page</div>
+            </li>
+            <li class="nav-item {% if 'reports' in request.path %}active{% endif %}">
+                <a
+                    class="nav-link has-arrow  collapsed "
+                    href="#!"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#report"
+                    aria-expanded="false"
+                    aria-controls="report"
+                >
+                    <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
+                    Report
+                </a>
+                <div id="report" class="collapse {% if 'reports' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link " href="#">
+                                Membership Fee
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="#">
-                                Pending Users
+                                Monthly Dues
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="#">
+                                Expenses
                             </a>
                         </li>
                     </ul>

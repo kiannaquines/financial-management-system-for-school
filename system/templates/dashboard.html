@@ -20,8 +20,7 @@ mb-3">
                     <div>
                         <h1 class="fw-bold">{{ total_membership }}</h1>
                         <p class="mb-0">
-                            <span class="text-dark me-2">2</span>
-                            Completed
+                            <a href="{% url 'membership_page' %}">See More</a>
                         </p>
                     </div>
                 </div>
@@ -43,8 +42,7 @@ mb-3">
                     <div>
                         <h1 class="fw-bold">{{ total_pending }}</h1>
                         <p class="mb-0">
-                            <span class="text-dark me-2">28</span>
-                            Completed
+                            <a href="{% url 'membership_page' %}">See More</a>
                         </p>
                     </div>
                 </div>
@@ -64,10 +62,9 @@ mb-3">
                         </div>
                     </div>
                     <div>
-                        <h1 class="fw-bold">{{ total_payments }}</h1>
+                        <h1 class="fw-bold">₱ {{ total_payments }}</h1>
                         <p class="mb-0">
-                            <span class="text-dark me-2">1</span>
-                            Completed
+                            <a href="{% url 'payments_page' %}">See More</a>
                         </p>
                     </div>
                 </div>
@@ -91,8 +88,7 @@ mb-3">
                             {{ total_beneficary }}
                         </h1>
                         <p class="mb-0">
-                            <span class="text-success me-2">5%</span>
-                            Completed
+                            <a href="{% url 'beneficiary_page' %}">See More</a>
                         </p>
                     </div>
                 </div>
@@ -102,248 +98,30 @@ mb-3">
     <div class="row my-6">
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
             <div class="card h-100">
-                <div class="card-header bg-white py-4">
-                    <h4 class="mb-0">Latest Members</h4>
+                <div class="card-header border-0 bg-white py-4">
+                    <h4 class="mb-0">Latest Activities</h4>
                 </div>
                 <div class="table-responsive">
-                    <table class="table text-nowrap">
-                        <thead class="table-light">
+                    <table class="table text-nowrap" id="datatable">
+                        <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Role</th>
-                                <th>Last Activity</th>
-                                <th></th>
+                                <th>Firstname</th>
+                                <th>Lastname</th>
+                                <th>Username</th>
+                                <th>User Type</th>
+                                <th>Last Login</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for latest_user in latest_users %}
                             <tr>
-                                <td class="align-middle">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <img src="{% static 'assets/images/avatar/avatar-2.jpg' %}" alt="" class="avatar-md avatar rounded-circle">
-                                        </div>
-                                        <div class="ms-3 lh-1">
-                                            <h5 class=" mb-1">Anita Parmar</h5>
-                                            <p class="mb-0">anita@example.com</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="align-middle">Front End Developer</td>
-                                <td class="align-middle">3 May, 2023</td>
-                                <td class="align-middle">
-                                    <div class="dropdown dropstart">
-                                        <a
-                                            class="text-muted text-primary-hover"
-                                            href="#"
-                                            role="button"
-                                            id="dropdownTeamOne"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-xxs" data-feather="more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">
-                                                Something else
-            here
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
+                                <td class="align-middle">{{ latest_user.first_name }}</td>
+                                <td class="align-middle">{{ latest_user.last_name }}</td>
+                                <td class="align-middle">{{ latest_user.username }}</td>
+                                <td class="align-middle">{{ latest_user.user_type }}</td>
+                                <td class="align-middle">{{ latest_user.last_login }}</td>
                             </tr>
-                            <tr>
-                                <td class="align-middle">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <img src="{% static 'assets/images/avatar/avatar-1.jpg' %}" alt="" class="avatar-md avatar rounded-circle">
-                                        </div>
-                                        <div class="ms-3 lh-1">
-                                            <h5 class=" mb-1">Jitu Chauhan</h5>
-                                            <p class="mb-0">jituchauhan@example.com</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="align-middle">Project Director</td>
-                                <td class="align-middle">Today</td>
-                                <td class="align-middle">
-                                    <div class="dropdown dropstart">
-                                        <a
-                                            class="text-muted text-primary-hover"
-                                            href="#"
-                                            role="button"
-                                            id="dropdownTeamTwo"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-xxs" data-feather="more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamTwo">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">
-                                                Something else
-            here
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <img src="{% static 'assets/images/avatar/avatar-3.jpg' %}" alt="" class="avatar-md avatar rounded-circle">
-                                        </div>
-                                        <div class="ms-3 lh-1">
-                                            <h5 class=" mb-1">Sandeep Chauhan</h5>
-                                            <p class="mb-0">sandeepchauhan@example.com</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="align-middle">Full- Stack Developer</td>
-                                <td class="align-middle">Yesterday</td>
-                                <td class="align-middle">
-                                    <div class="dropdown dropstart">
-                                        <a
-                                            class="text-muted text-primary-hover"
-                                            href="#"
-                                            role="button"
-                                            id="dropdownTeamThree"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-xxs" data-feather="more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamThree">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">
-                                                Something else
-            here
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <img src="{% static 'assets/images/avatar/avatar-4.jpg' %}" alt="" class="avatar-md avatar rounded-circle">
-                                        </div>
-                                        <div class="ms-3 lh-1">
-                                            <h5 class=" mb-1">Amanda Darnell</h5>
-                                            <p class="mb-0">amandadarnell@example.com</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="align-middle">Digital Marketer</td>
-                                <td class="align-middle">3 May, 2023</td>
-                                <td class="align-middle">
-                                    <div class="dropdown dropstart">
-                                        <a
-                                            class="text-muted text-primary-hover"
-                                            href="#"
-                                            role="button"
-                                            id="dropdownTeamFour"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-xxs" data-feather="more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamFour">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">
-                                                Something else
-            here
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <img src="{% static 'assets/images/avatar/avatar-5.jpg' %}" alt="" class="avatar-md avatar rounded-circle">
-                                        </div>
-                                        <div class="ms-3 lh-1">
-                                            <h5 class=" mb-1">Patricia Murrill</h5>
-                                            <p class="mb-0">patriciamurrill@example.com</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="align-middle">Account Manager</td>
-                                <td class="align-middle">3 May, 2023</td>
-                                <td class="align-middle">
-                                    <div class="dropdown dropstart">
-                                        <a
-                                            class="text-muted text-primary-hover"
-                                            href="#"
-                                            role="button"
-                                            id="dropdownTeamFive"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-xxs" data-feather="more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamFive">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">
-                                                Something else
-            here
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="align-middle border-bottom-0">
-                                    <div class="d-flex align-items-center">
-                                        <div>
-                                            <img src="{% static 'assets/images/avatar/avatar-6.jpg' %}" alt="" class="avatar-md avatar rounded-circle">
-                                        </div>
-                                        <div class="ms-3 lh-1">
-                                            <h5 class=" mb-1">Darshini Nair</h5>
-                                            <p class="mb-0">darshininair@example.com</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="align-middle border-bottom-0">Front End Developer</td>
-                                <td class="align-middle border-bottom-0">3 May, 2023</td>
-                                <td class="align-middle border-bottom-0">
-                                    <div class="dropdown dropstart">
-                                        <a
-                                            class="text-muted text-primary-hover"
-                                            href="#"
-                                            role="button"
-                                            id="dropdownTeamSix"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-xxs" data-feather="more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamSix">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">
-                                                Something else
-            here
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

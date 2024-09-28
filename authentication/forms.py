@@ -26,6 +26,22 @@ class RegistrationForm(UserCreationForm):
             {"placeholder": "Email", "class": "form-control"}
         )
 
+        self.fields["user_type"].widget.attrs.update(
+            {"placeholder": "User Type", "class": "form-control"}
+        )
+
+        self.fields["is_active"].widget.attrs.update(
+            {"class": "form-check-input"}
+        )
+
+        self.fields["is_staff"].widget.attrs.update(
+            {"class": "form-check-input"}
+        )
+
+        self.fields["is_superuser"].widget.attrs.update(
+            {"class": "form-check-input"}
+        )
+
     class Meta:
         model = AuthUser
         fields = [
@@ -35,6 +51,10 @@ class RegistrationForm(UserCreationForm):
             "first_name",
             "last_name",
             "email",
+            "user_type",
+            "is_active",
+            "is_staff",
+            "is_superuser",
         ]
 
 

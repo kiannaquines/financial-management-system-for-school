@@ -7,8 +7,9 @@ class Assistance(models.Model):
         ('Death','Death'),
         ('Hospitalization','Hospitalization'),
     ]
-
-    assistance_id = models.AutoField(primary_key=True)
+    
+    request_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
     assistance_first_name = models.CharField(max_length=50)
     assistance_middle_name = models.CharField(max_length=50)
     assistance_last_name = models.CharField(max_length=100)
@@ -36,7 +37,7 @@ class Beneficiary(models.Model):
     ]
 
     user_id = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
-    beneficiary_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     beneficiary_first_name = models.CharField(max_length=50)
     beneficiary_middle_name = models.CharField(max_length=50, blank=True)
     beneficiary_last_name = models.CharField(max_length=50)
@@ -71,7 +72,7 @@ class Membership(models.Model):
         ('Female','Female'),
     ]
 
-    membership_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     middle_name = models.CharField(max_length=50, blank=True)
@@ -104,7 +105,7 @@ class Payment(models.Model):
         ('Visitors Fund','Visitors Fund')
     ]
     
-    payment_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     paid_by = models.ForeignKey(AuthUser,on_delete=models.CASCADE)
     amount = models.FloatField()
     payment_type = models.CharField(max_length=50, choices=PAYMENT_TYPE)

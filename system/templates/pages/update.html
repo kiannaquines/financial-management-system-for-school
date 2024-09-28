@@ -2,5 +2,35 @@
 {% block title %}DSAPTEA Financial Management System | Edit{% endblock title %}
 
 {% block content %}
-
+<div class="container-fluid mt-n22 px-6 mt-6">
+    <div class="row my-6">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            <div class="card h-100">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">{{ header_title }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {% for input in form %}
+                            {% if input.id_for_label == "id_is_superuser" or input.id_for_label == "id_is_active" or input.id_for_label == "id_is_staff" %}
+                                <div class="form-check">
+                                    <label class="form-check-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
+                                    {{ input }}
+                                </div>
+                            {% else %}
+                                <div class="mb-3">
+                                    <label class="form-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
+                                    {{ input }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <input type="submit" value="{{ header_title }}" class="btn btn-primary mt-2">
+                        <button onclick="back()" class="btn btn-secondary float-end mt-2">Back</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
