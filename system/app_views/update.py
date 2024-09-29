@@ -8,9 +8,10 @@ from django.urls import reverse_lazy
 from django.contrib.messages import success, error
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordChangeView
+from system.mixins import CustomLoginRequiredMixin
 
 
-class UpdatePasswordDetails(PasswordChangeView):
+class UpdatePasswordDetails(CustomLoginRequiredMixin, PasswordChangeView):
     pk_url_kwarg = "pk"
     model = AuthUser
     form_class = PasswordChangeForm
@@ -35,8 +36,7 @@ class UpdatePasswordDetails(PasswordChangeView):
         return super().form_invalid(form)
 
 
-# DONE
-class UpdateAssistanceDetails(UpdateView):
+class UpdateAssistanceDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     model = Assistance
     form_class = AssistanceForm
@@ -67,8 +67,7 @@ class UpdateAssistanceDetails(UpdateView):
         return response
 
 
-# DONE
-class UpdateUserDetails(UpdateView):
+class UpdateUserDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     model = AuthUser
     form_class = AdminRegistrationForm
@@ -97,8 +96,7 @@ class UpdateUserDetails(UpdateView):
         return response
 
 
-# DONE
-class UpdatePaymentDetails(UpdateView):
+class UpdatePaymentDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     model = Payment
     form_class = PaymentForm
@@ -129,7 +127,7 @@ class UpdatePaymentDetails(UpdateView):
         return response
 
 
-class UpdateBeneficiaryDetails(UpdateView):
+class UpdateBeneficiaryDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     model = Beneficiary
     form_class = BeneficiaryForm
@@ -160,8 +158,7 @@ class UpdateBeneficiaryDetails(UpdateView):
         return response
 
 
-# DONE
-class UpdateMembershipDetails(UpdateView):
+class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     model = Membership
     form_class = MembershipForm

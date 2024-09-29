@@ -83,7 +83,7 @@
                                             <a class="dropdown-item" href="{% url 'activate_user' pk=item.id %}">Activate User</a>
                                             {% elif "users" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_user' pk=item.id %}">Edit</a>
-                                            <a class="dropdown-item" href="{% url 'change_password' pk=item.id %}">Change Password</a>
+                                            <!-- <a class="dropdown-item" href="{% url 'change_password' pk=item.id %}">Change Password</a> -->
                                             <a class="dropdown-item" href="{% url 'delete_user' pk=item.id %}">Remove</a>
                                             
                                             {% elif "assistance" in request.path %}
