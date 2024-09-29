@@ -4,8 +4,9 @@ from system.forms import UserMembershipForm, UserBeneficiaryForm, UserAssistance
 from system.models import Beneficiary, Payment, Membership, Assistance
 from django.contrib.messages import error, success
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 
-
+@login_required(login_url='/auth/')
 def employee_apply_membership(request):
     context = {}
     form = UserMembershipForm()
@@ -30,6 +31,7 @@ def employee_apply_membership(request):
     context['header_title'] = "Apply Membership"
     return render(request,'employee/add.html',context)
 
+@login_required(login_url='/auth/')
 def employee_add_beneficiary(request):
     context = {}
     form = UserBeneficiaryForm()
@@ -52,6 +54,7 @@ def employee_add_beneficiary(request):
     context['header_title'] = "Add Beneficiary"
     return render(request,'employee/add.html',context)
 
+@login_required(login_url='/auth/')
 def employee_apply_assistance(request):
     context = {}
     form = UserAssistanceForm()
@@ -73,6 +76,7 @@ def employee_apply_assistance(request):
     context['header_title'] = "Apply Assistance"
     return render(request,'employee/add.html',context)
 
+@login_required(login_url='/auth/')
 def employee_view_beneficiary(request):
     context = {}
     header_list = [
@@ -97,6 +101,7 @@ def employee_view_beneficiary(request):
     context['header_list'] = header_list
     return render(request,'employee/view.html',context)
 
+@login_required(login_url='/auth/')
 def employee_view_payments(request):
     context = {}
     header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
@@ -112,7 +117,7 @@ def employee_view_payments(request):
     context['header_list'] = header_list
     return render(request,'employee/view.html',context)
 
-
+@login_required(login_url='/auth/')
 def employee_assistance_request(request):
     context = {}
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -128,3 +133,6 @@ def employee_assistance_request(request):
     context['header_title'] = "My Assistance Request"
     context['header_list'] = header_list
     return render(request,'employee/view.html',context)
+
+
+

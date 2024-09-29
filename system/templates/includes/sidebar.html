@@ -231,7 +231,7 @@
     </div>
     {% else %}
     <div class="nav-scroller">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">
+        <a class="navbar-brand" href="#">
             <h3 class="text-white" style="margin-bottom: 0px; font-weight: 600;">DSAPSTEA</h3>
             <span style="font-size: 17px; color: white; margin-top: 0px;">Financial Management System</span>
         </a>
@@ -239,7 +239,7 @@
             <li class="nav-item">
                 <div class="navbar-heading">Main Pages</div>
             </li>
-            <li class="nav-item {% if 'assistance' in request.path %}active{% endif %}">
+            <li class="nav-item {% if request.path == '/employee/membership/add' or request.path == '/employee/assistance/add' or request.path == '/employee/assistance/list' %}active{% endif %}">
                 <a
                     class="nav-link has-arrow  collapsed "
                     href="#!"
@@ -251,8 +251,13 @@
                     <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
                     Assistance
                 </a>
-                <div id="assistance" class="collapse {% if 'assistance' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
+                <div id="assistance" class="collapse {% if request.path == '/employee/membership/add' or request.path == '/employee/assistance/add' or request.path == '/employee/assistance/list' %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'employee_assistance_request' %}">
+                                My Assistance Request
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'employee_apply_membership' %}">
                                 Apply Membership
@@ -263,18 +268,13 @@
                                 Apply Assistance
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'employee_assistance_request' %}">
-                                My Assistance Request
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
             <li class="nav-item">
                 <div class="navbar-heading">Others</div>
             </li>
-            <li class="nav-item {% if 'payments' in request.path %}active{% endif %}">
+            <li class="nav-item {% if request.path == '/employee/payment/list' %}active{% endif %}">
                 <a
                     class="nav-link has-arrow  collapsed "
                     href="#!"
@@ -286,7 +286,7 @@
                     <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
                     Payments
                 </a>
-                <div id="payments" class="collapse {% if 'payments' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
+                <div id="payments" class="collapse {% if request.path == '/employee/payment/list' %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'employee_view_payments' %}">
@@ -296,7 +296,7 @@
                     </ul>
                 </div>
             </li>
-            <li class="nav-item {% if 'payments' in request.path %}active{% endif %}">
+            <li class="nav-item {% if request.path == '/employee/beneficiary/list' or request.path == '/employee/beneficiary/add' %}active{% endif %}">
                 <a
                     class="nav-link has-arrow  collapsed "
                     href="#!"
@@ -308,7 +308,7 @@
                     <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
                     Beneficiary
                 </a>
-                <div id="beneficiary" class="collapse {% if 'payments' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
+                <div id="beneficiary" class="collapse {% if request.path == '/employee/beneficiary/list' or request.path == '/employee/beneficiary/add' %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'employee_view_beneficiary' %}">

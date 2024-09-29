@@ -21,7 +21,12 @@ def auth_index_page(request):
             )
             if user is not None:
                 login(request, user)
-                return redirect(reverse_lazy("dashboard"))
+
+                if user.user_type == "Treasurer" or user.user_type == "President":
+                    return redirect(reverse_lazy("dashboard"))
+                else:
+                    return redirect(reverse_lazy("employee_assistance_request"))
+                    
             else:
                 error(request, "Invalid username or password.", extra_tags="error_tag")
 
