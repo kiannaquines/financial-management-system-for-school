@@ -5,6 +5,7 @@ from system.models import Beneficiary, Payment, Membership, Assistance
 from django.contrib.messages import error, success
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.views.generic import UpdateView
 
 @login_required(login_url='/auth/')
 def employee_apply_membership(request):
@@ -135,4 +136,5 @@ def employee_assistance_request(request):
     return render(request,'employee/view.html',context)
 
 
-
+class BeneficiaryUpdateView(UpdateView):
+    pass
