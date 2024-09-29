@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import success, error
 
+@login_required(login_url='/auth/')
 def add_assistance_page(request):
     path = reverse_lazy("assistance_page")
 
@@ -28,6 +29,7 @@ def add_assistance_page(request):
     )
     return render(request,'pages/add.html',context)
 
+@login_required(login_url='/auth/')
 def add_beneficiary_page(request):
     path = reverse_lazy("beneficiary_page")
 
@@ -56,7 +58,7 @@ def add_beneficiary_page(request):
     )
     return render(request, "pages/add.html", context)
 
-
+@login_required(login_url='/auth/')
 def add_member_page(request):
     path = reverse_lazy("membership_page")
     if request.method == "POST":
@@ -67,14 +69,11 @@ def add_member_page(request):
             selected_beneficiaries = form_data["beneficiary"].value()
 
             for id in selected_beneficiaries:
-                beneficiary_status = Beneficiary.objects.get(beneficiary_id=id)
+                beneficiary_status = Beneficiary.objects.get(id=id)
                 beneficiary_status.used = True
                 beneficiary_status.save()
 
-            membership_data = form_data.save(commit=False)
-            membership_data.user_id = request.user
-            membership_data.save()
-
+            form_data.save()
             success(
                 request,
                 "You have successfully added new membership.",
@@ -97,7 +96,7 @@ def add_member_page(request):
     )
     return render(request, "pages/add.html", context)
 
-
+@login_required(login_url='/auth/')
 def add_payment_page(request):
     path = reverse_lazy("payments_page")
 
@@ -126,7 +125,7 @@ def add_payment_page(request):
     )
     return render(request, "pages/add.html", context)
 
-
+@login_required(login_url='/auth/')
 def add_user_page(request):
     path = reverse_lazy('users_page')
     if request.method == "POST":

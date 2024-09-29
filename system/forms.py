@@ -42,10 +42,10 @@ class AssistanceForm(forms.ModelForm):
         fields = [
             "request_by",
             "assistance_first_name",
-            "amount_released",
             "assistance_middle_name",
             "assistance_last_name",
             "suffix",
+            "amount_released",
             "type_of_assistance",
             "assistance_evidence_first",
             "assistance_evidence_second",
@@ -133,6 +133,10 @@ class MembershipForm(forms.ModelForm):
         self.fields["position"].widget.attrs.update(
             {"placeholder": "Position", "class": "form-control"}
         )
+        self.fields["user_id"].label = "Select User"
+        self.fields["user_id"].widget.attrs.update(
+            {"placeholder": "Select User", "class": "form-control"}
+        )
         self.fields["gender"].widget.attrs.update(
             {"placeholder": "Gender", "class": "form-control"}
         )
@@ -154,6 +158,7 @@ class MembershipForm(forms.ModelForm):
             )
         }
         fields = [
+            "user_id",
             "first_name",
             "last_name",
             "middle_name",

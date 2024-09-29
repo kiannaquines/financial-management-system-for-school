@@ -44,7 +44,17 @@ urlpatterns = [
     path('assistance/delete/<int:pk>', DeleteAssistanceDetails.as_view(), name="delete_assistance"),
 
 
-    path('report/membership/fee/list',membership_fee_page, name='membership_fee_page'),
+    path('report/fee/list',membership_fee_page, name='membership_fee_page'),
     path('report/monthly/dues/list',monthly_due_page, name='monthly_due_page'),
-    path('report/assistance/expense/list',expense_page, name='expense_page'),
+    path('report/expense/list',expense_page, name='expense_page'),
+
+    # Generate Report Route
+    path('report/fee/generate/list',generate_annual_fee, name='generate_annual_fee'),
+    path('report/monthly/dues/generate/list',generate_dues_fee, name='generate_dues_fee'),
+    path('report/expense/dues/generate/list',generate_expense_fee, name='generate_expense_fee'),
+
+    # Approve
+    path('assistance/approve/<int:pk>',approve_assistance, name='approve_assistance'),
+    path('membership/approve/<int:pk>',approve_membership, name='approve_membership'),
+    path('user/activate/<int:pk>',activate_user, name='activate_user'),
 ]

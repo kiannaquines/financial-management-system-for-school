@@ -1,11 +1,30 @@
 {% extends './includes/auth_base.html' %}
 
 {% block content %}
-<form method="post">
+<form method="POST">
+    {% csrf_token %}
     {% for input in form %}
+    <div class="mb-2">
+        <label for="{{ input.id_for_label }}" class="form-label">{{ input.label }}</label>
         {{ input }}
+    </div>
     {% endfor %}
-    <input type="submit" value="Login">
+    <div class="d-lg-flex justify-content-between align-items-center
+        mb-4">
+        <div class="form-check custom-checkbox">
+            <input type="checkbox" class="form-check-input" id="rememberme" checked>
+            <label class="form-check-label" for="rememberme">
+                Remember me
+            </label>
+        </div>
+    </div>
+    <div class="mb-2">
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+                Register
+            </button>
+        </div>
+    </div>
+    <span style="font-size: 16px">Already have an account? <a href="{% url 'login' %}">Click here</a> </span>
 </form>
 {% endblock content %}
-

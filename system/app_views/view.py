@@ -3,8 +3,9 @@ from system.models import *
 from system.utils import oneshot_view_function
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
-
+@login_required(login_url='/auth/')
 def beneficiary_page(request):
     path = reverse_lazy("add_beneficiary_page")
     header_list = [
@@ -34,7 +35,7 @@ def beneficiary_page(request):
     )
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def payments_page(request):
     path = reverse_lazy("add_payment_page")
     header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
@@ -56,13 +57,13 @@ def payments_page(request):
 
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def users_page(request):
     path = reverse_lazy("add_user_page")
     header_list = ["Username", "Firstname", "Lastname", "Email", "User Type"]
     field_list = ["id", "username", "first_name", "last_name", "email", "user_type"]
     context = oneshot_view_function(
-        AuthUser.objects.values(*field_list),
+        AuthUser.objects.filter(is_active=True).values(*field_list),
         "User",
         "Users List",
         "Add User",
@@ -71,7 +72,7 @@ def users_page(request):
     )
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def inactive_users_page(request):
     path = reverse_lazy("add_user_page")
     header_list = ["Username", "Firstname", "Lastname", "Email", "User Type", "Active"]
@@ -94,7 +95,7 @@ def inactive_users_page(request):
     )
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def membership_page(request):
     path = reverse_lazy("add_member_page")
     header_list = [
@@ -122,7 +123,7 @@ def membership_page(request):
     )
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def pending_membership_page(request):
     path = reverse_lazy("add_member_page")
     header_list = [
@@ -150,7 +151,7 @@ def pending_membership_page(request):
     )
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def assistance_page(request):
     path = reverse_lazy("add_assistance_page")
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -172,7 +173,7 @@ def assistance_page(request):
     )
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def pending_assistance_page(request):
     path = reverse_lazy("add_assistance_page")
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -195,7 +196,7 @@ def pending_assistance_page(request):
 
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def assistance_page(request):
     path = reverse_lazy("add_assistance_page")
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -217,7 +218,7 @@ def assistance_page(request):
     )
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def membership_fee_page(request):
     path = reverse_lazy("add_payment_page")
     header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
@@ -239,7 +240,7 @@ def membership_fee_page(request):
 
     return render(request, "pages/view.html", context)
 
-
+@login_required(login_url='/auth/')
 def monthly_due_page(request):
     path = reverse_lazy("add_payment_page")
     header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
@@ -265,6 +266,7 @@ def monthly_due_page(request):
 
     return render(request, "pages/view.html", context)
 
+@login_required(login_url='/auth/')
 def expense_page(request):
     path = reverse_lazy("add_payment_page")
     path = reverse_lazy("add_assistance_page")

@@ -3,6 +3,40 @@ from authentication.models import AuthUser
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 
+class UserRegistrationForm(UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super(UserRegistrationForm, self).__init__(*args, **kwargs)
+        self.fields["username"].label = 'Username'
+        self.fields["first_name"].label = 'Firstname'
+        self.fields["last_name"].label = 'Lastname'
+
+        self.fields["username"].widget.attrs.update(
+            {"placeholder": "Username", "class": "form-control"}
+        )
+        self.fields["password1"].widget.attrs.update(
+            {"placeholder": "Password", "class": "form-control"}
+        )
+        self.fields["password2"].widget.attrs.update(
+            {"placeholder": "Confirm Password", "class": "form-control"}
+        )
+        self.fields["first_name"].widget.attrs.update(
+            {"placeholder": "First Name", "class": "form-control"}
+        )
+        self.fields["last_name"].widget.attrs.update(
+            {"placeholder": "Last Name", "class": "form-control"}
+        )
+
+    class Meta:
+        model = AuthUser
+        fields = [
+            "username",
+            "password1",
+            "password2",
+            "first_name",
+            "last_name",
+        ]
+
 
 class RegistrationForm(UserCreationForm):
 
@@ -118,9 +152,16 @@ class AdminRegistrationForm(forms.ModelForm):
 
 
 class LoginForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.fields["user_name"].label = 'Username'
+        self.fields["password"].label = 'Password'
+
     user_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Username"})
+        widget=forms.TextInput(attrs={"placeholder": "Username","class":"form-control"})
     )
+
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Password"})
+        widget=forms.PasswordInput(attrs={"placeholder": "Password","class":"form-control"})
     )

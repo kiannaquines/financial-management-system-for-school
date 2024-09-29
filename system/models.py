@@ -13,13 +13,14 @@ class Assistance(models.Model):
     assistance_first_name = models.CharField(max_length=50)
     assistance_middle_name = models.CharField(max_length=50)
     assistance_last_name = models.CharField(max_length=100)
-    suffix = models.CharField(max_length=10, blank=True)
+    suffix = models.CharField(max_length=10, blank=True, null=True)
     type_of_assistance = models.CharField(max_length=50, choices=ASSISTANCE_TYPE)
     assistance_status = models.BooleanField(default=False)
     assistance_evidence_first = models.FileField(upload_to='assistance/proof/')
     assistance_evidence_second = models.FileField(upload_to='assistance/proof/')
     amount_released = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
-
+    date_released = models.DateTimeField(auto_now_add=True)
+    
     def __str__(self) -> str:
         return f'{self.assistance_first_name} {self.assistance_last_name} {self.suffix}'
     
@@ -42,7 +43,7 @@ class Beneficiary(models.Model):
     beneficiary_first_name = models.CharField(max_length=50)
     beneficiary_middle_name = models.CharField(max_length=50, blank=True)
     beneficiary_last_name = models.CharField(max_length=50)
-    suffix = models.CharField(max_length=10, blank=True)
+    suffix = models.CharField(max_length=10, blank=True, null=True)
     relationship = models.CharField(max_length=50, choices=RELATIONSHIP)
     date_of_birth = models.DateField()
     proof = models.FileField(upload_to='beneficiary/proof/')

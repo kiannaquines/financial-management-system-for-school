@@ -13,7 +13,13 @@
                     <div>
                         <a href="{{ path }}" class="btn btn-primary">{{ add_button_name }}</a>
                         {% if "report" in request.path %}
-                        <a class="btn btn-primary" href="#">Export Report</a>
+                            {% if "fee" in request.path %}
+                                <a class="btn btn-primary" href="{% url 'generate_annual_fee' %}">Export Report</a>
+                            {% elif "dues" in request.path %}
+                                <a class="btn btn-primary" href="{% url 'generate_dues_fee' %}">Export Report</a>
+                            {% else %}
+                                <a class="btn btn-primary" href="{% url 'generate_expense_fee' %}">Export Report</a>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>
@@ -32,7 +38,15 @@
                             <tr>
                                 {% for field, value in item.items %}
                                     {% if field != "id" %}
-                                        <td class="align-middle">{{ value }}</td>
+                                        <td class="align-middle">
+                                            {% if value == True %}
+                                                Approved
+                                            {% elif value == False %}
+                                                Pending
+                                            {% else %}
+                                                {{ value }}
+                                            {% endif %}
+                                        </td>
                                     {% endif %}
                                 {% endfor %}
                                 <td class="align-middle">
@@ -49,22 +63,33 @@
                                             <i class="icon-xxs" data-feather="more-vertical"></i>
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
-                                            {% if "members" in request.path %}
+                                            {% if request.path == '/members/list' %}
                                             <a class="dropdown-item" href="{% url 'update_membership' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_membership' pk=item.id %}">Remove</a>
+                                            {% elif request.path == '/members/pending/list' %}
+                                            <a class="dropdown-item" href="{% url 'approve_membership' pk=item.id %}">Approve Membership</a>
                                             {% elif "beneficiary" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_beneficiary' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_beneficiary' pk=item.id %}">Remove</a>
+                                            
                                             {% elif "payments" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_payment' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_payment' pk=item.id %}">Remove</a>
+                                            
+                                            {% elif request.path == '/assistance/pending/list' %}
+                                            <a class="dropdown-item" href="{% url 'approve_assistance' pk=item.id %}">Approve Assistance</a>
+                                                                                    
+                                            {% elif request.path == '/users/inactive/list' %}
+                                            <a class="dropdown-item" href="{% url 'activate_user' pk=item.id %}">Activate User</a>
                                             {% elif "users" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_user' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'change_password' pk=item.id %}">Change Password</a>
                                             <a class="dropdown-item" href="{% url 'delete_user' pk=item.id %}">Remove</a>
+                                            
                                             {% elif "assistance" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_assistance' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_assistance' pk=item.id %}">Remove</a>
+                                            
                                             {% else %}
                                             <a class="dropdown-item" href="{% url 'update_payment' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_payment' pk=item.id %}">Remove</a>
