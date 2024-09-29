@@ -5,6 +5,7 @@ from system.app_views.add import *
 from authentication.views import auth_logout_page
 from system.app_views.update import *
 from system.app_views.delete import *
+from system.app_views.employee_views import *
 
 urlpatterns = [
     path("", dashboard_page, name="dashboard"),
@@ -92,4 +93,15 @@ urlpatterns = [
     path("assistance/approve/<int:pk>", approve_assistance, name="approve_assistance"),
     path("membership/approve/<int:pk>", approve_membership, name="approve_membership"),
     path("user/activate/<int:pk>", activate_user, name="activate_user"),
+
+
+    # Employee Routes
+    path('employee/membership/add', employee_apply_membership, name='employee_apply_membership'),
+    path('employee/beneficiary/add', employee_add_beneficiary, name='employee_add_beneficiary'),
+    path('employee/assistance/add', employee_apply_assistance, name='employee_apply_assistance'),
+    path('employee/beneficiary/list', employee_view_beneficiary, name='employee_view_beneficiary'),
+    path('employee/payment/list', employee_view_payments, name='employee_view_payments'),
+
+
+    path('employee/assistance/list', employee_assistance_request, name='employee_assistance_request'),
 ]

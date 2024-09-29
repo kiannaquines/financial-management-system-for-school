@@ -263,13 +263,18 @@
                 <div id="assistance" class="collapse {% if 'assistance' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'assistance_page' %}">
+                            <a class="nav-link " href="{% url 'employee_apply_membership' %}">
                                 Apply Membership
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'assistance_page' %}">
-                                My Membership Details
+                            <a class="nav-link " href="{% url 'employee_apply_assistance' %}">
+                                Apply Assistance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'employee_assistance_request' %}">
+                                My Assistance Request
                             </a>
                         </li>
                     </ul>
@@ -290,8 +295,35 @@
                 <div id="payments" class="collapse {% if 'payments' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'assistance_page' %}">
-                                My Membership Details
+                            <a class="nav-link " href="{% url 'employee_view_payments' %}">
+                                My Payments
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="nav-item {% if 'payments' in request.path %}active{% endif %}">
+                <a
+                    class="nav-link has-arrow  collapsed "
+                    href="#!"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#beneficiary"
+                    aria-expanded="false"
+                    aria-controls="#beneficiary"
+                >
+                    <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
+                    Beneficiary
+                </a>
+                <div id="beneficiary" class="collapse {% if 'payments' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'employee_view_beneficiary' %}">
+                                My Beneficiaries
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'employee_add_beneficiary' %}">
+                                Add Beneficiary
                             </a>
                         </li>
                     </ul>
