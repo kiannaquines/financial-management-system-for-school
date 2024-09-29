@@ -10,6 +10,7 @@
             <div class="card">
                 <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">{{ header_title }}</h4>
+                    {% if request.user.user_type == "Treasurer" %}
                     <div>
                         <a href="{{ path }}" class="btn btn-primary">{{ add_button_name }}</a>
                         {% if "report" in request.path %}
@@ -22,6 +23,7 @@
                             {% endif %}
                         {% endif %}
                     </div>
+                    {% endif %}
                 </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="datatable">

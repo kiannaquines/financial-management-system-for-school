@@ -9,7 +9,8 @@ from django.contrib.messages import success
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def dashboard_page(request):
     context = {}
     total_amount = 0
@@ -33,19 +34,28 @@ def dashboard_page(request):
 
     return render(request, "dashboard.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def generate_annual_fee(request):
     query = Payment.objects.filter(payment_type="Membership").order_by("date_paid")
-    result = one_shot_pdf_generation(request, "annual_membership_fee_report", "Annual Membership Fee Report", query)
+    result = one_shot_pdf_generation(
+        request, "annual_membership_fee_report", "Annual Membership Fee Report", query
+    )
     return result
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def generate_expense_fee(request):
-    query = Assistance.objects.filter(Q(assistance_status=True) & Q(amount_released__gt=0)).all()
-    result = one_shot_pdf_generation_expense(request, "expense_fee_report", "Expenses Report", query)
+    query = Assistance.objects.filter(
+        Q(assistance_status=True) & Q(amount_released__gt=0)
+    ).all()
+    result = one_shot_pdf_generation_expense(
+        request, "expense_fee_report", "Expenses Report", query
+    )
     return result
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def generate_dues_fee(request):
 
     query = Payment.objects.filter(
@@ -53,29 +63,46 @@ def generate_dues_fee(request):
         | Q(payment_type="Trust Fund")
         | Q(payment_type="Visitors Fund")
     ).order_by("date_paid")
-    result = one_shot_pdf_generation(request, "monthly_dues_report", "Monthly Dues Report", query)
+    result = one_shot_pdf_generation(
+        request, "monthly_dues_report", "Monthly Dues Report", query
+    )
     return result
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def approve_assistance(request, pk):
     assistance = Assistance.objects.get(id=pk)
     assistance.assistance_status = True
     assistance.save()
-    success(request,'You have successfully approved the assistance request.', extra_tags='success_tag')
+    success(
+        request,
+        "You have successfully approved the assistance request.",
+        extra_tags="success_tag",
+    )
     return HttpResponseRedirect(reverse_lazy("assistance_page"))
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def approve_membership(request, pk):
     membership = Membership.objects.get(id=pk)
     membership.membership_status = True
     membership.save()
-    success(request,'You have successfully approved the membership request.', extra_tags='success_tag')
+    success(
+        request,
+        "You have successfully approved the membership request.",
+        extra_tags="success_tag",
+    )
     return HttpResponseRedirect(reverse_lazy("membership_page"))
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def activate_user(request, pk):
     user = AuthUser.objects.get(id=pk)
     user.is_active = True
     user.save()
-    success(request,'You have successfully activated the user acount.', extra_tags='success_tag')
+    success(
+        request,
+        "You have successfully activated the user acount.",
+        extra_tags="success_tag",
+    )
     return HttpResponseRedirect(reverse_lazy("users_page"))

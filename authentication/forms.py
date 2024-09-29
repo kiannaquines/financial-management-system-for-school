@@ -3,13 +3,14 @@ from authentication.models import AuthUser
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordChangeForm as BasePasswordChangeForm
 
+
 class UserRegistrationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserRegistrationForm, self).__init__(*args, **kwargs)
-        self.fields["username"].label = 'Username'
-        self.fields["first_name"].label = 'Firstname'
-        self.fields["last_name"].label = 'Lastname'
+        self.fields["username"].label = "Username"
+        self.fields["first_name"].label = "Firstname"
+        self.fields["last_name"].label = "Lastname"
 
         self.fields["username"].widget.attrs.update(
             {"placeholder": "Username", "class": "form-control"}
@@ -155,13 +156,17 @@ class LoginForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
-        self.fields["user_name"].label = 'Username'
-        self.fields["password"].label = 'Password'
+        self.fields["user_name"].label = "Username"
+        self.fields["password"].label = "Password"
 
     user_name = forms.CharField(
-        widget=forms.TextInput(attrs={"placeholder": "Username","class":"form-control"})
+        widget=forms.TextInput(
+            attrs={"placeholder": "Username", "class": "form-control"}
+        )
     )
 
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Password","class":"form-control"})
+        widget=forms.PasswordInput(
+            attrs={"placeholder": "Password", "class": "form-control"}
+        )
     )

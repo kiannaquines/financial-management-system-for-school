@@ -1,17 +1,31 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from authentication.models import *
+from django.contrib.auth.admin import UserAdmin as OriginalAdmin
 
-admin.site.site_header = 'DSAPTEA Financial Management System'
-admin.site.index_title = 'Dashboard'
-admin.site.site_title = 'DSAPTEA Financial Management System'
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(OriginalAdmin):
 
-    list_display = ('id', 'username', 'email', 'date_joined', 'last_login')
+    list_display = (
+        "username",
+        "email",
+        "user_type",
+        "date_joined",
+    )
     fieldsets = (
-        (None, {"fields": ("username", "password",)}),
-        (_("Personal info"), {"fields": ("first_name", "last_name", "email",)}),
+        (
+            None,
+            {
+                "fields": (
+                    "username",
+                    "password",
+                )
+            },
+        ),
+        (
+            _("Personal info"),
+            {"fields": ("first_name", "last_name", "email", "user_type")},
+        ),
         (
             _("Permissions"),
             {
@@ -19,7 +33,6 @@ class UserAdmin(admin.ModelAdmin):
                     "is_active",
                     "is_staff",
                     "is_superuser",
-                    "user_type",
                     "groups",
                     "user_permissions",
                 ),
@@ -27,5 +40,9 @@ class UserAdmin(admin.ModelAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+    list_filter = ("date_joined", "is_staff", "is_superuser", "is_active")
+    search_fields = ("username", "email", "first_name", "last_name")
+    readonly_fields = ("date_joined", "last_login")
+
 
 admin.site.register(AuthUser, UserAdmin)
