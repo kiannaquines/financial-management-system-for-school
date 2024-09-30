@@ -17,8 +17,8 @@ class Assistance(models.Model):
     suffix = models.CharField(max_length=10, blank=True, null=True)
     type_of_assistance = models.CharField(max_length=50, choices=ASSISTANCE_TYPE)
     assistance_status = models.BooleanField(default=False)
-    assistance_evidence_first = models.FileField(upload_to="assistance/proof/")
-    assistance_evidence_second = models.FileField(upload_to="assistance/proof/")
+    assistance_evidence_first = models.ImageField(upload_to="assistance/proof/")
+    assistance_evidence_second = models.ImageField(upload_to="assistance/proof/")
     amount_released = models.DecimalField(max_digits=10, default=0.00, decimal_places=2)
     date_released = models.DateTimeField(auto_now_add=True)
 
