@@ -48,7 +48,7 @@ class Beneficiary(models.Model):
     suffix = models.CharField(max_length=10, blank=True, null=True)
     relationship = models.CharField(max_length=50, choices=RELATIONSHIP)
     date_of_birth = models.DateField()
-    proof = models.FileField(upload_to="beneficiary/proof/")
+    proof = models.ImageField(upload_to="beneficiary/proof/")
     used = models.BooleanField(default=True)
 
     def __str__(self) -> str:
