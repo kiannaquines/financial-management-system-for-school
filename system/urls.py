@@ -122,4 +122,31 @@ urlpatterns = [
         employee_assistance_request,
         name="employee_assistance_request",
     ),
+
+
+    path(
+        "employee/beneficiary/edit/<int:pk>",
+        BeneficiaryUpdateView.as_view(),
+        name="employee_update_beneficiary",
+    ),
+
+    path(
+        "employee/beneficiary/delete/<int:pk>",
+        BeneficiaryDeleteView.as_view(),
+        name="employee_delete_beneficiary",
+    ),
+
+
+
+    path(
+        "employee/assistance/edit/<int:pk>",
+        AssistanceUpdateView.as_view(),
+        name="employee_update_assistance",
+    ),
+
+    path(
+        "employee/assistance/delete/<int:pk>",
+        AssistanceDeleteView.as_view(),
+        name="employee_delete_assistance",
+    ),
 ]

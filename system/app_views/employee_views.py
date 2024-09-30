@@ -1,11 +1,13 @@
-from django.http import HttpResponseRedirect
+from typing import Any
+from django.forms import BaseModelForm
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from system.forms import UserMembershipForm, UserBeneficiaryForm, UserAssistanceForm
 from system.models import Beneficiary, Payment, Membership, Assistance
 from django.contrib.messages import error, success
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, DeleteView
 
 @login_required(login_url='/auth/')
 def employee_apply_membership(request):
@@ -137,4 +139,84 @@ def employee_assistance_request(request):
 
 
 class BeneficiaryUpdateView(UpdateView):
-    pass
+    model = Beneficiary
+    form_class = UserBeneficiaryForm
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('employee_view_beneficiary')
+    template_name = 'employee/update.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['header_title'] = "Update Beneficiary Details"
+        return context
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        form = super().form_valid(form)
+        success(
+            self.request,
+            "Beneficiary details updated successfully.",
+            extra_tags="success_tag",
+        )
+        return form
+    
+
+class BeneficiaryDeleteView(DeleteView):
+    model = Beneficiary
+    success_url = reverse_lazy('employee_view_beneficiary')
+    template_name = 'employee/delete.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['header_title'] = "Remove Beneficiary Details"
+        return context
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        form = super().form_valid(form)
+        success(
+            self.request,
+            "Beneficiary details removed successfully.",
+            extra_tags="success_tag",
+        )
+        return form
+
+
+class AssistanceUpdateView(UpdateView):
+    model = Assistance
+    form_class = UserAssistanceForm
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('employee_assistance_request')
+    template_name = 'employee/update.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['header_title'] = "Update Assistance Details"
+        return context
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        form = super().form_valid(form)
+        success(
+            self.request,
+            "Assistance details updated successfully.",
+            extra_tags="success_tag",
+        )
+        return form
+    
+
+class AssistanceDeleteView(DeleteView):
+    model = Assistance
+    success_url = reverse_lazy('employee_assistance_request')
+    template_name = 'employee/delete.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['header_title'] = "Remove Assistance Details"
+        return context
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        form = super().form_valid(form)
+        success(
+            self.request,
+            "Assistance details removed successfully.",
+            extra_tags="success_tag",
+        )
+        return form
