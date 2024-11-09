@@ -2,9 +2,10 @@
 {% load static %}
 {% block title %}DSAPTEA Financial Management System | Dashboard{% endblock title %}
 {% block content %}
-<div class="container-fluid mt-n22 px-6 mt-6">
+<div class="container-fluid mt-n20 px-6">
+    <h3>Dashboard Overview</h3>
     <div class="row">
-        <div class="col-xl-3 col-lg-6 col-md-12 col-12 mt-6">
+        <div class="col-xl-3 col-lg-6 col-md-12 col-12">
             <div class="card ">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -16,12 +17,12 @@
                         </div>
                     </div>
                     <div>
-                        <h1 class="fw-bold">{{ total_membership }}</h1>
+                        <h2 class="fw-bold">{{ total_membership }}</h2>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-md-12 col-12 mt-6">
+        <div class="col-xl-3 col-lg-6 col-md-12 col-12">
             <div class="card ">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -33,12 +34,12 @@
                         </div>
                     </div>
                     <div>
-                        <h1 class="fw-bold">{{ total_pending }}</h1>
+                        <h2 class="fw-bold">{{ total_pending }}</h2>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-md-12 col-12 mt-6">
+        <div class="col-xl-3 col-lg-6 col-md-12 col-12">
             <div class="card ">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -50,12 +51,12 @@
                         </div>
                     </div>
                     <div>
-                        <h1 class="fw-bold">₱ {{ total_payments }}</h1>
+                        <h2 class="fw-bold">₱ {{ total_payments }}</h2>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-lg-6 col-md-12 col-12 mt-6">
+        <div class="col-xl-3 col-lg-6 col-md-12 col-12">
             <div class="card ">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -67,9 +68,9 @@
                         </div>
                     </div>
                     <div>
-                        <h1 class="fw-bold">
+                        <h2 class="fw-bold">
                             {{ total_beneficary }}
-                        </h1>
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -79,7 +80,17 @@
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
             <div class="card h-100">
                 <div class="card-header border-0 bg-white py-4">
-                    <h4 class="mb-0">Latest Activities</h4>
+                    <h4 class="mb-0">Payment History Chart</h4>
+                </div>
+                <div id="chart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row my-6">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            <div class="card h-100">
+                <div class="card-header border-0 bg-white py-4">
+                    <h4 class="mb-0">Latest Users</h4>
                 </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="datatable">
@@ -88,7 +99,7 @@
                                 <th>Firstname</th>
                                 <th>Lastname</th>
                                 <th>Username</th>
-                                <th>User Type</th>
+                                <th>Type</th>
                                 <th>Last Login</th>
                             </tr>
                         </thead>
@@ -98,7 +109,9 @@
                                 <td class="align-middle">{{ latest_user.first_name }}</td>
                                 <td class="align-middle">{{ latest_user.last_name }}</td>
                                 <td class="align-middle">{{ latest_user.username }}</td>
-                                <td class="align-middle">{{ latest_user.user_type }}</td>
+                                <td class="align-middle">
+                                    <span class="badge bg-primary">{{ latest_user.user_type }}</span>
+                                </td>
                                 <td class="align-middle">{{ latest_user.last_login }}</td>
                             </tr>
                             {% endfor %}

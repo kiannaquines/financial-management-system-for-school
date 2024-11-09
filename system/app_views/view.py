@@ -60,7 +60,7 @@ def payments_page(request):
 @login_required(login_url='/auth/')
 def users_page(request):
     path = reverse_lazy("add_user_page")
-    header_list = ["Username", "Firstname", "Lastname", "Email", "User Type"]
+    header_list = ["Username", "Firstname", "Lastname", "Email", "Type"]
     field_list = ["id", "username", "first_name", "last_name", "email", "user_type"]
     context = oneshot_view_function(
         AuthUser.objects.filter(is_active=True).values(*field_list),

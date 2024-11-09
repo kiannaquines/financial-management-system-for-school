@@ -5,6 +5,7 @@
 {% block content %}
 <div class="container-fluid mt-n22 px-6 mt-6">
     <div class="row my-6">
+        <h4>View your data here</h4>
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
             {% include './../includes/message.html' %}
             <div class="card">
@@ -42,9 +43,9 @@
                                     {% if field != "id" %}
                                         <td class="align-middle">
                                             {% if value == True %}
-                                                Approved
+                                               <span class="badge bg-primary">Approved</span>
                                             {% elif value == False %}
-                                                Pending
+                                            <span class="badge bg-primary">Pending</span>
                                             {% else %}
                                                 {{ value }}
                                             {% endif %}
