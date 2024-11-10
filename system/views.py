@@ -3,11 +3,53 @@ from system.models import *
 from django.db.models import Sum
 from authentication.models import AuthUser
 from system.utils import one_shot_pdf_generation, one_shot_pdf_generation_expense
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.contrib.messages import success
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
+from django.db.models.functions import TruncMonth
+
+
+def get_monthly_payment_data(request):
+    current_year = datetime.now().year
+
+    payments_data = (
+        Payment.objects.filter(date_paid__year=current_year)
+        .annotate(month=TruncMonth("date_paid"))
+        .values("month", "payment_type")
+        .annotate(total_amount=Sum("amount"))
+        .order_by("month")
+    )
+
+    payment_by_month = {
+        "Membership": [0] * 12,
+        "Delegation Pay": [0] * 12,
+        "Trust Fund": [0] * 12,
+        "Visitors Fund": [0] * 12,
+    }
+
+    months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]
+
+    for payment in payments_data:
+        month_index = payment["month"].month - 1
+        payment_by_month[payment["payment_type"]][month_index] = payment["total_amount"]
+
+    return JsonResponse({"payment_data": payment_by_month, "months": months})
 
 
 @login_required(login_url="/auth/")

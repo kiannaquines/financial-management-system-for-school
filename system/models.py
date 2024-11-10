@@ -79,6 +79,19 @@ class Membership(models.Model):
         ("Female", "Female"),
     ]
 
+    SCHOOL_AFFILIATION = [
+        ("Dapiowan Central ES", "Dapiowan Central ES"),
+        ("Datu Pendililang ES", "Datu Pendililang ES"),
+        ("Madia ES", "Madia ES"),
+        ("Elian ES", "Elian ES"),
+        ("Gawang ES", "Gawang ES"),
+        ("Kitango ES", "Kitango ES"),
+        ("Kitapok ES", "Kitapok ES"),
+        ("Datu Kogia ES", "Datu Kogia ES"),
+        ("Dimaukon Utto ES", "Dimaukon Utto ES"),
+        ("Dimankom ES", "Dimankom ES"),
+    ]
+
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
@@ -91,8 +104,8 @@ class Membership(models.Model):
     employee_id = models.CharField(max_length=50)
     position = models.CharField(max_length=50, choices=POSITION)
     gender = models.CharField(max_length=20, choices=GENDER)
-    school_affiliation = models.CharField(max_length=100)
-    beneficiary = models.ManyToManyField(Beneficiary)
+    school_affiliation = models.CharField(max_length=100, choices=SCHOOL_AFFILIATION)
+    beneficiary = models.ManyToManyField(Beneficiary,blank=True)
     membership_status = models.BooleanField(default=False)
 
     def __str__(self) -> str:

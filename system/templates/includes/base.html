@@ -33,59 +33,75 @@
         <script src="https://cdn.datatables.net/v/bs5/dt-2.1.7/datatables.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script>
-        var options = {
-          series: [{
-          name: 'Net Profit',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-        }, {
-          name: 'Revenue',
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-        }, {
-          name: 'Free Cash Flow',
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
-        }],
-          chart: {
-          type: 'bar',
-          height: 350,
-          fontFamily: 'Inter'
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            endingShape: 'rounded'
-          },
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ['transparent']
-        },
-        xaxis: {
-          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-        },
-        yaxis: {
-          title: {
-            text: '$ (thousands)'
-          }
-        },
-        fill: {
-          opacity: 1
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return "$ " + val + " thousands"
-            }
-          }
-        }
-        };
+          fetch('/get_monthly_payment_data/')
+        .then(response => response.json())
+        .then(data => {
+          const paymentData = data.payment_data;
+          const months = data.months;
 
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
+          const options = {
+            series: [
+              {
+                name: 'Trust Fund',
+                data: paymentData['Trust Fund']
+              },
+              {
+                name: 'Membership',
+                data: paymentData['Membership']
+              },
+              {
+                name: 'Delegation Pay',
+                data: paymentData['Delegation Pay']
+              },
+              {
+                name: 'Visitors Fund',
+                data: paymentData['Visitors Fund']
+              }
+            ],
+            chart: {
+              type: 'bar',
+              height: 350,
+              fontFamily: 'Inter'
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+              }
+            },
+            dataLabels: {
+              enabled: false
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent']
+            },
+            xaxis: {
+              categories: months,
+            },
+            yaxis: {
+              title: {
+                text: 'Funds'
+              }
+            },
+            fill: {
+              opacity: 1
+            },
+            tooltip: {
+              y: {
+                formatter: function (val) {
+                  return "₱ " + val + " ";
+                }
+              }
+            }
+          };
+
+          var chart = new ApexCharts(document.querySelector("#chart"), options);
+          chart.render();
+        })
+        .catch(error => console.error('Error fetching data:', error));
        
         function back(){
             window.history.back()

@@ -1,3 +1,5 @@
+{% load custom_filters %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -5,7 +7,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Membership Fee Report</title>
         <style>
-          
+            
+            @page {
+                size: A3;
+                margin: 1cm;
+            }
+
             body {
                 font-family: 'Noto Sans', sans-serif;
               color: #212B36;
@@ -28,15 +35,15 @@
                 margin-top: 10px;
                 text-align: start;
                 font-size: 15px;
+                border: 2px solid #000;
             }
     
             th, td {
-                border: 1px solid #f6f6f6;
-                padding: 10px;
+                border: 1px solid #000;
+                padding: 5px;
                 text-align: left;
                 line-height: 7px;
                 text-align: center;
-              border-collapse: collapse;
             }
           
             th {
@@ -51,348 +58,39 @@
     </head>
     <body>
         <table>
-            <tr class="withBackground">
-                <th colspan="14">DASAPSTEA ASSOCIATION MEMBERS (DAPIAWAN CES)</th>
+            <tr>
+                <th colspan="16" style="text-transform: uppercase;">DASAPSTEA ASSOCIATION MEMBERS ({{ school }})</th>
             </tr>
             <tr>
-                <th style="text-align: start !important;">November 29, 2024</th>
-                <th colspan="13">SCHOOL YEAR 2023 - 2024</th>
+                <th colspan="16">{{ school_year }}</th>
             </tr>
             <tr>
-                <th style="text-align: start !important;">Prepaird by: Catherine Maglinte</th>
+                <th colspan="3"></th>
                 <th colspan="13">MONTH</th>
             </tr>
             <tr>
-                <th class="withBackground" style="text-align: start !important;">Employee Fullname</th>
-                <th class="withBackground">8</th>
-                <th class="withBackground">9</th>
-                <th class="withBackground">10</th>
-                <th class="withBackground">11</th>
-                <th class="withBackground">12</th>
-                <th class="withBackground">1</th>
-                <th class="withBackground">2</th>
-                <th class="withBackground">3</th>
-                <th class="withBackground">4</th>
-                <th class="withBackground">5</th>
-                <th class="withBackground">6</th>
-                <th class="withBackground">7</th>
-                <th class="withBackground">TOTAL</th>
+                <th colspan="3" style="text-align: start !important;">Employee Fullname</th>
+                {% for month in month_headers %}
+                <th>{{ month }}</th>
+                {% endfor %}
+                <th>TOTAL</th>
             </tr>
+            {% for member in member_result %}
+                <tr>
+                    <td colspan="3" style="text-align: start !important;">{{ member.fullname }}</td>
+                    {% for month in month_headers %}
+                        <td>
+                            {{ member.monthly_payments|get_item:month }}
+                        </td>
+                    {% endfor %}
+                    <td>{{ member.total_paid }}</td>
+                </tr>
+            {% endfor %}
             <tr>
-                <td style="text-align: start !important;">
-                    ABAS, SITTIES S.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    ABE, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    JOHN, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    GARY, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    LETTY, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    KIM, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    SHIEN, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    LEE, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    MANDY, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    MADDY, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    GABBY, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    GRALIAD, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    ZEKE, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    MIKASA, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    EREN, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    KENNY, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td class="noPayment">-</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td style="text-align: start !important;">
-                    JEARARD, NAQUINES G.
-                </td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>100</td>
-                <td>1200</td>
-            </tr>
-            <tr>
-                <td class="withBackground">
-                    <b>TOTAL</b>
-                </td>
+                <td colspan="3"><b>TOTAL</b></td>
                 <td colspan="12"></td>
-                <td class="withBackground">
-                    <b>20,400</b>
-                </td>
+                <td><b>{{ total_amount }}</b></td>
             </tr>
-        </table>
+        </table>        
     </body>
 </html>

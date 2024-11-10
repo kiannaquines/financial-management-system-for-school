@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from system.models import *
 from system.utils import oneshot_view_function
@@ -5,7 +6,8 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def beneficiary_page(request):
     path = reverse_lazy("add_beneficiary_page")
     header_list = [
@@ -35,7 +37,8 @@ def beneficiary_page(request):
     )
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def payments_page(request):
     path = reverse_lazy("add_payment_page")
     header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
@@ -57,7 +60,8 @@ def payments_page(request):
 
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def users_page(request):
     path = reverse_lazy("add_user_page")
     header_list = ["Username", "Firstname", "Lastname", "Email", "Type"]
@@ -72,7 +76,8 @@ def users_page(request):
     )
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def inactive_users_page(request):
     path = reverse_lazy("add_user_page")
     header_list = ["Username", "Firstname", "Lastname", "Email", "User Type", "Active"]
@@ -95,7 +100,8 @@ def inactive_users_page(request):
     )
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def membership_page(request):
     path = reverse_lazy("add_member_page")
     header_list = [
@@ -121,9 +127,11 @@ def membership_page(request):
         path,
         header_list,
     )
+
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def pending_membership_page(request):
     path = reverse_lazy("add_member_page")
     header_list = [
@@ -151,7 +159,8 @@ def pending_membership_page(request):
     )
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def assistance_page(request):
     path = reverse_lazy("add_assistance_page")
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -173,7 +182,8 @@ def assistance_page(request):
     )
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def pending_assistance_page(request):
     path = reverse_lazy("add_assistance_page")
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -196,7 +206,8 @@ def pending_assistance_page(request):
 
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def assistance_page(request):
     path = reverse_lazy("add_assistance_page")
     header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
@@ -218,7 +229,8 @@ def assistance_page(request):
     )
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def membership_fee_page(request):
     path = reverse_lazy("add_payment_page")
     header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
@@ -237,10 +249,11 @@ def membership_fee_page(request):
         path,
         header_list,
     )
-
+    context["schools"] = [school[0] for school in Membership.SCHOOL_AFFILIATION]
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def monthly_due_page(request):
     path = reverse_lazy("add_payment_page")
     header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
@@ -266,7 +279,8 @@ def monthly_due_page(request):
 
     return render(request, "pages/view.html", context)
 
-@login_required(login_url='/auth/')
+
+@login_required(login_url="/auth/")
 def expense_page(request):
     path = reverse_lazy("add_payment_page")
     path = reverse_lazy("add_assistance_page")
@@ -289,3 +303,129 @@ def expense_page(request):
     )
 
     return render(request, "pages/view.html", context)
+
+
+def is_exactly_11_months(start_date, end_date):
+    months_difference = (end_date.year - start_date.year) * 11 + (
+        end_date.month - start_date.month
+    )
+    print(months_difference)
+    return months_difference == 11
+
+
+@login_required(login_url="/auth/")
+def generate_annual_membership_report(request):
+    if request.method == "POST":
+        from datetime import datetime, timedelta
+        from django.utils import timezone
+        from calendar import monthrange
+        from django.db.models import Sum
+        from django.template.loader import get_template
+        from xhtml2pdf import pisa
+        from django.contrib import messages
+        from django.shortcuts import redirect
+        from django.urls import reverse_lazy
+
+        response = HttpResponse(content_type="application/pdf")
+        response["Content-Disposition"] = (
+            'attachment; filename="annual_membership_payment.pdf"'
+        )
+
+        school_year_from = request.POST.get("range_from")
+        school_year_to = request.POST.get("range_to")
+        school = request.POST.get("school")
+
+        start_date = timezone.make_aware(
+            datetime.strptime(school_year_from, "%Y-%m-%d")
+        )
+
+        end_date = timezone.make_aware(datetime.strptime(school_year_to, "%Y-%m-%d"))
+
+        if not is_exactly_11_months(start_date, end_date):
+            messages.warning(
+                request,
+                "The selected date range is incorrect, please try again.",
+                extra_tags="error_tag",
+            )
+            return redirect(reverse_lazy("membership_fee_page"))
+        else:
+            month_headers = []
+            current_date = start_date
+            while current_date <= end_date:
+                month_headers.append(current_date.strftime("%m"))
+                current_date = (
+                    current_date.replace(day=1) + timedelta(days=32)
+                ).replace(day=1)
+
+            member_result = []
+
+            query_members = Membership.objects.filter(
+                school_affiliation=school, user_id__user_type="Employee"
+            )
+
+            check_payments = Payment.objects.filter(
+                date_paid__range=(start_date, end_date),
+                payment_type="Membership",
+            )
+
+            if query_members.count() == 0:
+                messages.warning(
+                    request,
+                    "No employee found with the school provided, please try again later.",
+                    extra_tags="error_tag",
+                )
+                return redirect(reverse_lazy("membership_fee_page"))
+
+            if check_payments.count() == 0:
+                messages.warning(
+                    request,
+                    "No payment found using the provided date range, please try again later.",
+                    extra_tags="error_tag",
+                )
+                return redirect(reverse_lazy("membership_fee_page"))
+
+            total_paid_amount = 0
+
+            for member in query_members:
+                fullname = f"{member.user_id.last_name}, {member.user_id.first_name}"
+                monthly_payments = {month: 0 for month in month_headers}
+                current_date = start_date
+
+                while current_date <= end_date:
+                    month_start = current_date.replace(day=1)
+                    last_day = monthrange(current_date.year, current_date.month)[1]
+                    month_end = current_date.replace(day=last_day)
+
+                    payments = Payment.objects.filter(
+                        paid_by=member.user_id.id,
+                        date_paid__range=(month_start, month_end),
+                        payment_type="Membership",
+                    )
+
+                    total_paid = payments.aggregate(total=Sum("amount"))["total"] or 0
+                    monthly_payments[current_date.strftime("%m")] = total_paid
+                    current_date += timedelta(days=last_day)
+
+                total_paid_amount += sum(monthly_payments.values())
+                member_result.append(
+                    {
+                        "fullname": fullname,
+                        "monthly_payments": monthly_payments,
+                        "total_paid": total_paid_amount,
+                    }
+                )
+
+            context = {
+                "school": school,
+                "month_headers": month_headers,
+                "member_result": member_result,
+                "school_year": f"SCHOOL YEAR {start_date.year} - {end_date.year}",
+                "total_amount": total_paid_amount,
+                "report_date": timezone.now().strftime("%B %d, %Y"),
+                "prepared_by": "Catherine Maglinte",
+            }
+
+            template = get_template("membership_report.html")
+            html = template.render(context)
+            pisa.CreatePDF(html, dest=response)
+            return response
