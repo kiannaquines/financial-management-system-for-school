@@ -141,13 +141,18 @@
                 </tr>
                 {% for fee in query_info %}
                 <tr>
-                    <td>{{ fee.paid_by.first_name }} {{ fee.paid_by.last_name }}</td>
-                    <td>{{ fee.paid_by.user_type }}</td>
+                    <td>{{ fee.paid_by.user_id.first_name }} {{ fee.paid_by.user_id.last_name }}</td>
+                    <td>{{ fee.paid_by.user_id.user_type }}</td>
                     <td>{{ fee.payment_type }}</td>
                     <td>{{ fee.amount }}</td>
                     <td>{{ fee.date_paid }}</td>
                 </tr>
                 {% endfor %}
+                <tr>
+                    <td colspan="1"><b>TOTAL</b></td>
+                    <td colspan="2"></td>
+                    <td colspan="1"><b>{{ total_amount_paid }}</b></td>
+                </tr>
             </table>
         </div>
         <div id="footer_content">

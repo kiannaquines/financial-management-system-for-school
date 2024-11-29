@@ -5,6 +5,7 @@
 <div class="container-fluid mt-n22 px-6 mt-6">
     <div class="row my-6">
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            {% include './../includes/message.html' %}
             <div class="card h-100">
                 <div class="card-header bg-white">
                     <h4 class="mb-0">{{ header_title }}</h4>
@@ -13,17 +14,20 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% for input in form %}
-                            {% if input.id_for_label == "id_is_superuser" or input.id_for_label == "id_is_active" or input.id_for_label == "id_is_staff" %}
-                                <div class="form-check">
-                                    <label class="form-check-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
-                                    {{ input }}
-                                </div>
-                            {% else %}
-                                <div class="mb-3">
-                                    <label class="form-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
-                                    {{ input }}
-                                </div>
-                            {% endif %}
+                            {% if input.id_for_label == "id_is_superuser" or input.id_for_label == "id_is_active" or input.id_for_label == "id_is_staff" or input.id_for_label == "id_released_status" %}
+                        <div class="form-check">
+                            <label class="form-check-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
+                            {{ input }}
+                            <br>
+                            <small class="text-muted">{{ input.help_text }}</small>
+                        </div>
+                        {% else %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
+                            {{ input }}
+                            <small class="text-muted">{{ input.help_text }}</small>
+                        </div>
+                        {% endif %}
                         {% endfor %}
                         <input type="submit" value="{{ header_title }}" class="btn btn-primary mt-2">
                         <button type="button" onclick="back()" class="btn btn-secondary mt-2">Back</button>
@@ -33,4 +37,24 @@
         </div>
     </div>
 </div>
+<script>
+    document.querySelector("input[value='Add Payment']").addEventListener('click', function(event) {
+
+        if ( document.querySelector("#id_paid_by").value == "") {
+            alert("Please select who paid this transaction")
+            return
+        }else if (document.querySelector("#id_amount").value == "") {
+            alert("Please enter a valid amount")
+            return
+        }else if (document.querySelector("#id_payment_type").value == "") {
+            alert("Please select payment type for this transaction")
+            return
+        } else {
+            if (!confirm("Are you sure about the amount to pay?")) {
+                event.preventDefault();
+            }
+        }
+        
+    });
+</script>
 {% endblock content %}

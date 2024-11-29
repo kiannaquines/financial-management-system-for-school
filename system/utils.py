@@ -36,11 +36,17 @@ def one_shot_pdf_generation(request, filename, title, query):
     response["Content-Disposition"] = (
         f'attachment; filename="{filename}-{current_date}.pdf"'
     )
+
+    total_amount = 0
+    for item in query:
+        total_amount += item.amount
+
     context["date_generated"] = current_date
     context["generated_by"] = AuthUser.get_full_name(request.user)
     context["logo_path"] = os.path.join(settings.MEDIA_ROOT, "logo", "seaoil-logo.svg")
     context["query_info"] = query
     context["title"] = title
+    context['total_amount_paid'] = total_amount
     template = get_template("template.html")
 
     rendered_html = template.render(context)
@@ -63,6 +69,11 @@ def one_shot_pdf_generation_expense(request, filename, title, query):
     from django.template.loader import get_template
     from authentication.models import AuthUser
 
+    total_amount = 0
+    for item in query:
+        print(item)
+        total_amount += item.amount_released
+
     current_date = datetime.now()
     response = HttpResponse(content_type="application/pdf")
     response["Content-Disposition"] = (
@@ -73,6 +84,7 @@ def one_shot_pdf_generation_expense(request, filename, title, query):
     context["logo_path"] = os.path.join(settings.MEDIA_ROOT, "logo", "seaoil-logo.svg")
     context["expenses"] = query
     context["title"] = title
+    context['total_amount'] = total_amount
     template = get_template("expense_template.html")
 
     rendered_html = template.render(context)

@@ -1,0 +1,26 @@
+{% extends './../includes/base.html' %}
+{% load static %}
+{% block title %}DSAPTEA Financial Management System{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-n22 px-6 mt-6">
+    <div class="row my-6">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            {% include './../includes/message.html' %}
+            <div class="card">
+                <div class="card-header border-0 bg-white">
+                    <h4 class="mb-0">My Membership Details</h4>
+                </div>
+                <form method="post" class="p-3">
+                {% for input in user_membership_form %}
+                <div class="form-group mt-2">
+                    <label for="{{ input.id_for_label }}">{{ input.label }}</label>
+                  {{ input }}
+                </div>
+                {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

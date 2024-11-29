@@ -29,10 +29,13 @@ class UpdatePasswordDetails(CustomLoginRequiredMixin, PasswordChangeView):
         return super().form_valid(form)
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        error(
-            self.request,
-            "There is an error while trying to update the password details",
-        )
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
         return super().form_invalid(form)
 
 
@@ -59,11 +62,13 @@ class UpdateAssistanceDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
-            self.request,
-            "There is an error while trying to update the assistance details",
-            extra_tags="error_tag",
-        )
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
         return response
 
 
@@ -88,11 +93,13 @@ class UpdateUserDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
-            self.request,
-            "There is an error while trying to update the user details",
-            extra_tags="error_tag",
-        )
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
         return response
 
 
@@ -119,11 +126,13 @@ class UpdatePaymentDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
-            self.request,
-            "There is an error while trying to update the payment details",
-            extra_tags="error_tag",
-        )
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
         return response
 
 
@@ -150,11 +159,13 @@ class UpdateBeneficiaryDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
-            self.request,
-            "There is an error while trying to update the beneficiary details",
-            extra_tags="error_tag",
-        )
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
         return response
 
 
@@ -181,9 +192,46 @@ class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
+        return response
+
+
+
+
+class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView):
+    pk_url_kwarg = "pk"
+    model = Assistance
+    form_class = AssistanceReleaseStatusForm
+    success_url = reverse_lazy("assistance_page")
+    template_name = "pages/update.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update Assistance Details"
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_valid(form)
+        success(
             self.request,
-            "There is an error while trying to update the membership details",
-            extra_tags="error_tag",
+            "Assistance details updated successfully.",
+            extra_tags="success_tag",
         )
+        return response
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_invalid(form)
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
         return response

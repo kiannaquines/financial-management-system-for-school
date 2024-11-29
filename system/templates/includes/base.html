@@ -33,6 +33,15 @@
         <script src="https://cdn.datatables.net/v/bs5/dt-2.1.7/datatables.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script>
+        
+        $(document).ready(function(){
+          $('option').each(function() {
+              if ($(this).text() === '---------') {
+                  $(this).text('Select Option');
+              }
+          });
+        })
+
           fetch('/get_monthly_payment_data/')
         .then(response => response.json())
         .then(data => {
@@ -102,7 +111,99 @@
           chart.render();
         })
         .catch(error => console.error('Error fetching data:', error));
-       
+        
+
+
+        async function fetchAssistanceData() {
+            try {
+                const response = await fetch('{% url "assistance_type_count" %}');
+                const data = await response.json();
+
+                if (response.ok) {
+                    var options = {
+                        series: [data.hospitalization_count, data.death_count],
+                        chart: {
+                            width: 380,
+                            type: 'pie',
+                        },
+                        labels: ['Hospitalization', 'Death'],
+                        legend: {
+                        show: false  // Hide the legend
+                    },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    width: 200
+                                },
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }]
+                    };
+
+                    var chart = new ApexCharts(document.querySelector("#yawa"), options);
+                    chart.render();
+                } else {
+                    console.error('Error fetching data:', data);
+                }
+            } catch (error) {
+                console.error('Error fetching assistance data:', error);
+            }
+        }
+
+        fetchAssistanceData();
+
+        async function fetchMembershipData() {
+            try {
+                const response = await fetch('{% url "membership_statistics" %}');
+                const data = await response.json();
+
+                if (response.ok) {
+                    const labels = Object.keys(data);
+                    const series = Object.values(data);
+
+                    var options = {
+                        series: series,
+                        chart: {
+                            width: 380,
+                            type: 'pie',
+                        },
+                        labels: labels,
+                        legend: {
+                        show: false  // Hide the legend
+                    },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    width: 200
+                                },
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }]
+                    };
+
+                    var chart = new ApexCharts(document.querySelector("#piste"), options);
+                    chart.render();
+                } else {
+                    console.error('Error fetching data:', data);
+                }
+            } catch (error) {
+                console.error('Error fetching membership data:', error);
+            }
+        }
+
+        fetchMembershipData();
+
+
+
+
+
+
         function back(){
             window.history.back()
         }

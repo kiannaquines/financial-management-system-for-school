@@ -18,10 +18,11 @@
                             <div class="mb-3">
                                 <label class="form-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
                                 {{ input }}
+                                <small class="text-muted">{{ input.help_text }}</small>
                             </div>
                         {% endfor %}
                         <input type="submit" value="{{ header_title }}" class="btn btn-primary mt-2">
-                        <button type="button" onclick="back()" class="btn btn-secondary float-end mt-2">Back</button>
+                        <button type="button" onclick="back()" class="btn btn-secondary mt-2">Back</button>
                     </form>
                 </div>
             </div>

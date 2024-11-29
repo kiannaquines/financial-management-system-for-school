@@ -19,6 +19,7 @@ def auth_index_page(request):
                 username=login_form.cleaned_data["user_name"],
                 password=login_form.cleaned_data["password"],
             )
+            
             if user is not None:
                 login(request, user)
 
@@ -26,9 +27,8 @@ def auth_index_page(request):
                     return redirect(reverse_lazy("dashboard"))
                 else:
                     return redirect(reverse_lazy("employee_assistance_request"))
-                    
             else:
-                error(request, "Invalid username or password.", extra_tags="error_tag")
+                error(request, "Incorrect combination of username & password, or your account still inactive please wait to active by the staff.", extra_tags="error_tag")
 
     context["form"] = form
     return render(request, "login.html", context)
@@ -43,7 +43,7 @@ def auth_register_page(request):
 
         if register_form.is_valid():
             registration = register_form.save(commit=False)
-            registration.is_active = True
+            registration.is_active = False
             registration.user_type = "Employee"
             registration.save()
             success(
@@ -53,11 +53,13 @@ def auth_register_page(request):
             )
             return redirect(reverse_lazy("login"))
         else:
-            error(
-                request,
-                "There is something wrong with your registration, try again.",
-                extra_tags="error_tag",
-            )
+            for field, errors in register_form.errors.items():
+                for err in errors:
+                    error(
+                        request,
+                        f"{err}",
+                        extra_tags="error_tag",
+                    )
 
     context["form"] = form
     return render(request, "register.html", context)

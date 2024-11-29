@@ -110,6 +110,12 @@
                 font-size: 18px;
                 margin: 0px;
             }
+
+            .footer {
+                text-align: center;
+                font-size: 12px;
+                margin-top: 20px;
+            }
         </style>
     </head>
     <body>
@@ -139,17 +145,22 @@
                 <tr>
                     <th class="withBackground">Fullname</th>
                     <th class="withBackground">Assistance Type</th>
-                    <th class="withBackground">Amount Released</th>
                     <th class="withBackground">Date Released</th>
+                    <th class="withBackground">Amount Released</th>
                 </tr>
                 {% for expense in expenses %}
                 <tr>
                     <td>{{ expense.assistance_first_name }} {{ expense.assistance_last_name }}</td>
                     <td>{{ expense.type_of_assistance }}</td>
-                    <td>{{ expense.amount_released }}</td>
                     <td>{{ expense.date_released }}</td>
+                    <td>{{ expense.amount_released }}</td>
                 </tr>
                 {% endfor %}
+                <tr>
+                    <td colspan="1"><b>TOTAL</b></td>
+                    <td colspan="2"></td>
+                    <td colspan="1"><b>{{ total_amount }}</b></td>
+                </tr>
             </table>
         </div>
         <div id="footer_content">

@@ -2,6 +2,25 @@ from django import forms
 from system.models import *
 from django.db.models import Q
 
+
+
+
+class AssistanceReleaseStatusForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(AssistanceReleaseStatusForm, self).__init__(*args, **kwargs)
+        self.fields['amount_released'].widget.attrs.update({'class':'form-control'})
+        self.fields['released_status'].widget.attrs.update({'class':'form-check-input'})
+    class Meta:
+        model = Assistance
+        fields = [
+            "amount_released",
+            "released_status",
+        ]
+        widget = {
+            'amount_released': forms.TextInput(attrs={'class': 'form-control'})
+        }
+
 class AssistanceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AssistanceForm, self).__init__(*args, **kwargs)
@@ -37,6 +56,10 @@ class AssistanceForm(forms.ModelForm):
             {"placeholder": "Proof of Evidence 2", "class": "form-control"}
         )
 
+
+        self.fields['assistance_evidence_first'].label = "Medical Certificate"
+        self.fields['assistance_evidence_second'].label = "Birth Certificate"
+
     class Meta:
         model = Assistance
         fields = [
@@ -49,6 +72,7 @@ class AssistanceForm(forms.ModelForm):
             "type_of_assistance",
             "assistance_evidence_first",
             "assistance_evidence_second",
+            "released_status",
         ]
 
 
@@ -76,6 +100,10 @@ class BeneficiaryForm(forms.ModelForm):
         self.fields["proof"].widget.attrs.update(
             {"placeholder": "Proof of Evidence", "class": "form-control"}
         )
+
+
+        self.fields["proof"].label = "Birth Certificate"
+        
         self.fields["user_id"].label = "Beneficiary User"
 
         self.fields["user_id"].widget.attrs.update(
@@ -194,9 +222,9 @@ class PaymentForm(forms.ModelForm):
 
 class UserMembershipForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(UserMembershipForm, self).__init__(*args, **kwargs)
-
         user = kwargs.pop('user', None)
+
+        super(UserMembershipForm, self).__init__(*args, **kwargs)
 
         self.fields["first_name"].widget.attrs.update(
             {"placeholder": "First Name", "class": "form-control"}
@@ -225,7 +253,6 @@ class UserMembershipForm(forms.ModelForm):
         self.fields["position"].widget.attrs.update(
             {"placeholder": "Position", "class": "form-control"}
         )
-        
         self.fields["gender"].widget.attrs.update(
             {"placeholder": "Gender", "class": "form-control"}
         )
@@ -234,7 +261,7 @@ class UserMembershipForm(forms.ModelForm):
         )
 
         if user:
-            self.fields['beneficiary'].queryset = Beneficiary.objects.filter(Q(user_id=user) & Q(used=False))
+            self.fields['beneficiary'].queryset = Beneficiary.objects.filter(user_id=user.id, used=False)
 
         self.fields["beneficiary"].widget.attrs.update(
             {"placeholder": "Beneficiary", "class": "form-control"}
@@ -244,9 +271,7 @@ class UserMembershipForm(forms.ModelForm):
         model = Membership
         widgets = {
             "date_of_birth": forms.DateInput(
-                {
-                    "type": "date",
-                }
+                {"type": "date"},
             )
         }
         fields = [
@@ -262,6 +287,71 @@ class UserMembershipForm(forms.ModelForm):
             "gender",
             "school_affiliation",
             "beneficiary",
+        ]
+
+class ViewUserMembershipForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+
+        super(ViewUserMembershipForm, self).__init__(*args, **kwargs)
+
+        self.fields["first_name"].widget.attrs.update(
+            {"placeholder": "First Name", "class": "form-control"}
+        )
+        self.fields["last_name"].widget.attrs.update(
+            {"placeholder": "Last Name", "class": "form-control"}
+        )
+        self.fields["middle_name"].widget.attrs.update(
+            {"placeholder": "Middle Name", "class": "form-control"}
+        )
+        self.fields["place_of_birth"].widget.attrs.update(
+            {"placeholder": "Place of Birth", "class": "form-control"}
+        )
+        self.fields["date_of_birth"].widget.attrs.update(
+            {"placeholder": "Date of Birth", "class": "form-control"}
+        )
+        self.fields["address"].widget.attrs.update(
+            {"placeholder": "Address", "class": "form-control"}
+        )
+        self.fields["contact_number"].widget.attrs.update(
+            {"placeholder": "Contact Number", "class": "form-control"}
+        )
+        self.fields["employee_id"].widget.attrs.update(
+            {"placeholder": "Employee ID", "class": "form-control"}
+        )
+        self.fields["position"].widget.attrs.update(
+            {"placeholder": "Position", "class": "form-control"}
+        )
+        self.fields["gender"].widget.attrs.update(
+            {"placeholder": "Gender", "class": "form-control"}
+        )
+        self.fields["school_affiliation"].widget.attrs.update(
+            {"placeholder": "School Affiliation", "class": "form-control"}
+        )
+
+        if user:
+            self.fields['beneficiary'].queryset = Beneficiary.objects.filter(user_id=user.id, used=False)
+
+
+    class Meta:
+        model = Membership
+        widgets = {
+            "date_of_birth": forms.DateInput(
+                {"type": "date"},
+            )
+        }
+        fields = [
+            "first_name",
+            "last_name",
+            "middle_name",
+            "place_of_birth",
+            "date_of_birth",
+            "address",
+            "contact_number",
+            "employee_id",
+            "position",
+            "gender",
+            "school_affiliation",
         ]
 
 
@@ -289,6 +379,7 @@ class UserBeneficiaryForm(forms.ModelForm):
         self.fields["proof"].widget.attrs.update(
             {"placeholder": "Proof of Evidence", "class": "form-control"}
         )
+        self.fields["proof"].label = 'Birth Certificate'
         
 
     class Meta:
@@ -334,6 +425,9 @@ class UserAssistanceForm(forms.ModelForm):
         self.fields["assistance_evidence_first"].widget.attrs.update(
             {"placeholder": "Proof of Evidence 1", "class": "form-control"}
         )
+        self.fields['assistance_evidence_first'].label = 'Medical Certificate'
+        self.fields['assistance_evidence_second'].label = 'Birth Certificate'
+
         self.fields["assistance_evidence_second"].widget.attrs.update(
             {"placeholder": "Proof of Evidence 2", "class": "form-control"}
         )

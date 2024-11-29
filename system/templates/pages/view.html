@@ -48,18 +48,26 @@
                             {% for item in view_data %}
                             <tr>
                                 {% for field, value in item.items %}
-                                    {% if field != "id" %}
-                                <td class="align-middle">
-                                    {% if value == True %}
-                                    <span class="badge bg-primary">Approved</span>
-                                    {% elif value == False %}
-                                    <span class="badge bg-primary">Pending</span>
-                                    {% else %}
-                                                {{ value }}
+                                {% if field != "id" %}
+                                    <td>
+                                        {% if field == "released_status" %}
+                                            {% if value %}
+                                                <span class="badge bg-primary">Released</span>
+                                            {% else %}
+                                                <span class="badge bg-primary">Pending</span>
                                             {% endif %}
-                                </td>
+                                        {% elif field == "assistance_status" %}
+                                            {% if value %}
+                                                <span class="badge bg-primary">Approved</span>
+                                            {% else %}
+                                                <span class="badge bg-primary">Pending</span>
+                                            {% endif %}
+                                        {% else %}
+                                            {{ value }}
+                                        {% endif %}
+                                    </td>
                                 {% endif %}
-                                {% endfor %}
+                            {% endfor %}
                                 <td class="align-middle">
                                     <div class="dropdown dropstart">
                                         <a
@@ -87,11 +95,17 @@
                                             <a class="dropdown-item" href="{% url 'delete_payment' pk=item.id %}">Remove</a>
                                             {% elif request.path == '/assistance/pending/list' %}
                                             <a class="dropdown-item" href="{% url 'approve_assistance' pk=item.id %}">Approve Assistance</a>
+                                            {% elif request.path == '/assistance/list' %}
+                                            {% if request.user.user_type == "President" %}
+                                            <a class="dropdown-item" href="{% url 'update_assistance' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_assistance' pk=item.id %}">Remove</a>
+                                            {% else %}
+                                            <a class="dropdown-item" href="{% url 'update_assistance_release_status_details' pk=item.id %}">Update Release Status</a>
+                                            {% endif %}
                                             {% elif request.path == '/users/inactive/list' %}
                                             <a class="dropdown-item" href="{% url 'activate_user' pk=item.id %}">Activate User</a>
                                             {% elif "users" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_user' pk=item.id %}">Edit</a>
-                                            <!-- <a class="dropdown-item" href="{% url 'change_password' pk=item.id %}">Change Password</a> -->
                                             <a class="dropdown-item" href="{% url 'delete_user' pk=item.id %}">Remove</a>
                                             {% elif "assistance" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_assistance' pk=item.id %}">Edit</a>
@@ -162,6 +176,7 @@
                         <label class="form-label" for="school">Affiliated School</label>
                         <select name="school" id="school" class="form-control">
                             {% for school in schools %}
+                            <option value="All">All Schools</option>
                             <option value="{{ school }}">{{ school }}</option>
                             {% endfor %}
                         </select>

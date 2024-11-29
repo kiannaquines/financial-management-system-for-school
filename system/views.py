@@ -10,8 +10,29 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.db.models.functions import TruncMonth
+from django.db.models import Count
 
 
+
+def membership_statistics(request):
+    school_affiliation_counts = Membership.objects.values('school_affiliation').annotate(count=Count('school_affiliation')).order_by('school_affiliation')
+    school_affiliation_data = {affiliation['school_affiliation']: affiliation['count'] for affiliation in school_affiliation_counts}
+    
+    return JsonResponse(school_affiliation_data)
+
+
+def assistance_statistics(request):
+    hospitalization_count = Assistance.objects.filter(type_of_assistance="Hospitalization").count()
+    death_count = Assistance.objects.filter(type_of_assistance="Death").count()
+
+    assistance_data = {
+        'hospitalization_count': hospitalization_count,
+        'death_count': death_count,
+    }
+
+    return JsonResponse(assistance_data)
+
+@login_required(login_url="/auth/")
 def get_monthly_payment_data(request):
     current_year = datetime.now().year
 

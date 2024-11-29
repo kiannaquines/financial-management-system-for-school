@@ -29,6 +29,14 @@
                         <div class="dropdown-divider mt-3 mb-2"></div>
                     </div>
                     <ul class="list-unstyled">
+                        {% if request.user.user_type == 'Employee' %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'membership_me' pk=request.user.id %}">
+                                <i class="me-2 icon-xxs dropdown-item-icon" data-feather=""></i>
+                                Membership Details
+                            </a>
+                        </li>
+                        {% endif %}
                         <li>
                             <a class="dropdown-item" href="{% url 'auth_logout_page' %}">
                                 <i class="me-2 icon-xxs dropdown-item-icon" data-feather="power"></i>
