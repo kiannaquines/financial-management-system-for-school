@@ -17,7 +17,8 @@ urlpatterns = [
     path("users/inactive/list", inactive_users_page, name="inactive_users_page"),
     path("assistance/list", assistance_page, name="assistance_page"),
 
-    path("expenses/list", all_expense_page, name="expenses_page"),
+    path("expenses/release", assistance_expense_page, name="release_expense_page"),
+    path("expenses/list", other_expense_page, name="other_expense_page"),
     path("expenses/add", add_expense_page, name="add_expense_page_form"),
     path("expenses/update/<int:pk>", UpdateExpenseDetails.as_view(), name="update_expense_page_form"),
     path("expenses/delete/<int:pk>", DeleteExpenseDetails.as_view(), name="delete_expense_page_form"),
@@ -46,12 +47,15 @@ urlpatterns = [
     path("assistance/delete/<int:pk>",DeleteAssistanceDetails.as_view(),name="delete_assistance"),
     path("report/fee/list", membership_fee_page, name="membership_fee_page"),
     path("report/monthly/dues/list", monthly_due_page, name="monthly_due_page"),
-    path("report/expense/list", all_expense_page, name="report_expense_page"),
+    path("report/expense/list", assistance_expense_page, name="report_expense_page"),
 
-    # Generate Report Route
+    # Generate Report Route assistance_report_expense_page
     path("report/fee/generate/list", generate_annual_fee, name="generate_annual_fee"),
     path("report/monthly/dues/generate/list", generate_dues_fee, name="generate_dues_fee"),
     path("report/expense/dues/generate/list",generate_expense_fee,name="generate_expense_fee"),
+
+    path("report/expense/assistance/list",assistance_report_expense_page,name="assistance_report_expense_page"),
+    path("report/other_expense/assistance/list",other_report_expense_page,name="other_report_expense_page"),
 
 
     # Approve
@@ -76,4 +80,12 @@ urlpatterns = [
     path('assistance/update/release/<int:pk>', UpdateAssistanceReleaseStatusDetails.as_view(), name="update_assistance_release_status_details"),
     path('fetch/assistance_type/count', assistance_statistics, name="assistance_type_count"),
     path('fetch/membership/count', membership_statistics, name="membership_statistics"),
+
+
+    # Dependent
+
+    path('dependents/list', dependents_page, name="dependents_page"),
+    path('dependents/add', add_dependent_page, name="add_dependent_page"),
+    path('dependents/update/<int:pk>', UpdateDependentsView.as_view(), name="update_dependent_page"),
+    path('dependents/delete/<int:pk>', DeleteDependentDetails.as_view(), name="delete_dependent_page"),
 ]

@@ -11,6 +11,38 @@ from django.contrib.auth.views import PasswordChangeView
 from system.mixins import CustomLoginRequiredMixin
 
 
+class UpdateDependentsView(UpdateView):
+    pk_url_kwarg = "pk"
+    template_name = 'pages/update.html'
+    model = Dependents
+    form_class = DependentForm
+    success_url = reverse_lazy("dependents_page")
+
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        success(
+            self.request,
+            "Dependent details updated successfully.",
+            extra_tags="success_tag",
+        )
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update Dependent Details"
+        return context
+    
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
+        return super().form_invalid(form)
+
+
 class UpdatePasswordDetails(CustomLoginRequiredMixin, PasswordChangeView):
     pk_url_kwarg = "pk"
     model = AuthUser

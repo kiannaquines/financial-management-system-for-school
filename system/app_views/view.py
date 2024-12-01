@@ -337,7 +337,40 @@ def monthly_due_page(request):
 
 
 @login_required(login_url="/auth/")
-def all_expense_page(request):
+def dependents_page(request):
+    path = reverse_lazy("add_dependent_page")
+    header_list = ["Firstname","Middlename", "Lastname", "Gender","Relationship"]
+    field_list = ["id", "dependent_first_name", "dependent_middle_name", "dependent_last_name", "gender", "relationship_to_member"]
+    context = oneshot_view_function(
+        Dependents.objects.values(*field_list),
+        "Dependents",
+        "Dependent List",
+        "Add Dependents Expense",
+        path,
+        header_list,
+    )
+
+    return render(request, "pages/view.html", context)
+
+
+@login_required(login_url="/auth/")
+def other_expense_page(request):
+    path = reverse_lazy("add_expense_page_form")
+    header_list = ["Expense", "Amount", "Date"]
+    field_list = ["id", "expense_type", "amount", "date_added"]
+    context = oneshot_view_function(
+        Expenses.objects.values(*field_list),
+        "Other Expense",
+        "Other Expense List",
+        "Add Other Expense",
+        path,
+        header_list,
+    )
+
+    return render(request, "pages/view.html", context)
+
+@login_required(login_url="/auth/")
+def other_report_expense_page(request):
     path = reverse_lazy("add_expense_page_form")
     header_list = ["Expense", "Amount", "Date"]
     field_list = ["id", "expense_type", "amount", "date_added"]
@@ -345,12 +378,42 @@ def all_expense_page(request):
         Expenses.objects.values(*field_list),
         "Expense",
         "Expense List",
-        "Add Expense",
+        "Export Other Expense",
         path,
         header_list,
     )
 
-    print(path)
+    return render(request, "pages/view.html", context)
+
+@login_required(login_url="/auth/")
+def assistance_expense_page(request):
+    path = reverse_lazy("add_assistance_page")
+    header_list = ["Firstname","Lastname", "Amount Released", "Date Released"]
+    field_list = ["id", "request_by__first_name", "request_by__last_name", "amount_released", "date_released"]
+    context = oneshot_view_function(
+        Assistance.objects.values(*field_list),
+        "Assistance Expense",
+        "Assistance Expense List",
+        "Add Assistance Expense",
+        path,
+        header_list,
+    )
+
+    return render(request, "pages/view.html", context)
+
+@login_required(login_url="/auth/")
+def assistance_report_expense_page(request):
+    path = reverse_lazy("add_assistance_page")
+    header_list = ["Firstname","Lastname", "Amount Released", "Date Released"]
+    field_list = ["id", "request_by__first_name", "request_by__last_name", "amount_released", "date_released"]
+    context = oneshot_view_function(
+        Assistance.objects.values(*field_list),
+        "Export Assistance Expense",
+        "Export Assistance Expense List",
+        "Export Assistance Expense",
+        path,
+        header_list,
+    )
 
     return render(request, "pages/view.html", context)
 

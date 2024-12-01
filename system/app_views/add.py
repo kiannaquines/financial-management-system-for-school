@@ -10,6 +10,39 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.messages import success, error
 
 
+
+@login_required(login_url="/auth/")
+def add_dependent_page(request):
+    path = reverse_lazy("dependents_page")
+
+    if request.method == "POST":
+        form_data = DependentForm(request.POST)
+
+        if form_data.is_valid():
+            form_data.save()
+            success(
+                request,
+                "You have succesfully added new expense information",
+                extra_tags="success_tag",
+            )
+            return HttpResponseRedirect(path)
+        else:
+            for field, errors in form_data.errors.items():
+                for err in errors:
+                    error(
+                        request,
+                        f"{err}",
+                        extra_tags="error_tag",
+                    )
+            return HttpResponseRedirect(reverse_lazy("add_expense_page"))
+
+    form = DependentForm()
+    context = oneshot_add_function(
+        form, "Dependents", "Dependent Management", "Add Dependent",
+    )
+    return render(request, "pages/add.html", context)
+
+
 @login_required(login_url="/auth/")
 def add_expense_page(request):
     path = reverse_lazy("expenses_page")

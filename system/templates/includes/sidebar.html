@@ -45,7 +45,12 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'beneficiary_page' %}">
-                                Beneficiary List
+                                Beneficiaries
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'dependents_page' %}">
+                                Dependents
                             </a>
                         </li>
                     </ul>
@@ -120,8 +125,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'expenses_page' %}">
+                            <a class="nav-link " href="{% url 'release_expense_page' %}">
                                 Expenses
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'other_expense_page' %}">
+                                Other Expenses
                             </a>
                         </li>
                     </ul>
@@ -155,8 +165,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'report_expense_page' %}">
-                                Expenses Report
+                            <a class="nav-link " href="{% url 'assistance_report_expense_page' %}">
+                                Release Expenses
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'other_report_expense_page' %}">
+                                Other Expense
                             </a>
                         </li>
                     </ul>

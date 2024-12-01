@@ -2,6 +2,18 @@ from django import forms
 from system.models import *
 
 
+class DependentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(DependentForm, self).__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+            
+    class Meta:
+        model = Dependents
+        fields = '__all__'
+        
+
 class ExpenseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -68,15 +80,20 @@ class AssistanceForm(forms.ModelForm):
             {"placeholder": "Type of Assistance", "class": "form-control"}
         )
         self.fields["assistance_evidence_first"].widget.attrs.update(
-            {"placeholder": "Proof of Evidence 1", "class": "form-control"}
+            {"placeholder": "Medical Certificate", "class": "form-control"}
         )
         self.fields["assistance_evidence_second"].widget.attrs.update(
-            {"placeholder": "Proof of Evidence 2", "class": "form-control"}
+            {"placeholder": "Hospital Billing", "class": "form-control"}
+        )
+
+        self.fields["death_cert"].widget.attrs.update(
+            {"placeholder": "Death Certificate", "class": "form-control"}
         )
 
 
         self.fields['assistance_evidence_first'].label = "Medical Certificate"
         self.fields['assistance_evidence_second'].label = "Hospital Billing"
+        self.fields['death_cert'].label = "Death Certificate"
 
     class Meta:
         model = Assistance
@@ -90,6 +107,7 @@ class AssistanceForm(forms.ModelForm):
             "type_of_assistance",
             "assistance_evidence_first",
             "assistance_evidence_second",
+            "death_cert",
             "released_status",
         ]
 

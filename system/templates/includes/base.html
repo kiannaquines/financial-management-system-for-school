@@ -208,21 +208,47 @@
 
         fetchMembershipData();
 
-
-
-
-
-
         function back(){
             window.history.back()
         }
 
         $(document).ready(function(){
-            if($("#id_type_of_assistance").length > 0) {
-              $("#id_type_of_assistance").on('change', function(){
-                alert($("#id_type_of_assistance").val())
-              })
-            }
+
+          window.onload = function () {
+              if ($("#id_assistance_evidence_first").length > 0 && $("#id_assistance_evidence_second").length > 0 && $("#id_death_cert").length > 0) {
+
+                $(".id_assistance_evidence_first").css('display', 'none');
+                $(".id_assistance_evidence_second").css('display', 'none');
+                $(".id_death_cert").css('display', 'none');
+
+                if ($("#id_type_of_assistance").length > 0) {
+                    $("#id_type_of_assistance").on('change', function() {
+                        let type = $("#id_type_of_assistance").val();
+
+                        switch (type) {
+                            case 'Death':
+                                $(".id_assistance_evidence_first").css('display', 'none');
+                                $(".id_assistance_evidence_second").css('display', 'none');
+                                $(".id_death_cert").css('display', 'block');
+                                break;
+
+                            case 'Hospitalization':
+                                $(".id_assistance_evidence_first").css('display', 'block');
+                                $(".id_assistance_evidence_second").css('display', 'block');
+                                $(".id_death_cert").css('display', 'none');
+                                break;
+
+                            default:
+                                $("#id_assistance_evidence_first").css('display', 'none');
+                                $("#id_assistance_evidence_second").css('display', 'none');
+                                $("#id_death_cert").css('display', 'none');
+                                break;
+                        }
+                    });
+                }
+              }
+          };
+            
             if ($("#datatable").length > 0) {
               
               if (window.location.pathname == "/members/pending/list" || window.location.pathname == "/members/list") {

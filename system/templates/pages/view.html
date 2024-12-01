@@ -114,6 +114,9 @@
                                             {% elif request.path == "/expenses/list" %}
                                             <a class="dropdown-item" href="{% url 'update_expense_page_form' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_expense_page_form' pk=item.id %}">Remove</a>
+                                            {% elif request.path == "/dependents/list" %}
+                                            <a class="dropdown-item" href="{% url 'update_dependent_page' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_dependent_page' pk=item.id %}">Remove</a>
                                             {% else %}
                                             <a class="dropdown-item" href="{% url 'update_payment' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_payment' pk=item.id %}">Remove</a>
