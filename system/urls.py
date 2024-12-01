@@ -33,6 +33,7 @@ urlpatterns = [
     
     # Update Route
     path("members/edit/<int:pk>",UpdateMembershipDetails.as_view(),name="update_membership"),
+    path("members/dependent/edit/<int:pk>",UpdateDependentsInfoView.as_view(),name="update_dependent_membership"),
     path("beneficiary/edit/<int:pk>",UpdateBeneficiaryDetails.as_view(),name="update_beneficiary"),
     path("payments/edit/<int:pk>", UpdatePaymentDetails.as_view(), name="update_payment"),
     path("users/edit/<int:pk>", UpdateUserDetails.as_view(), name="update_user"),
@@ -53,6 +54,10 @@ urlpatterns = [
     path("report/fee/generate/list", generate_annual_fee, name="generate_annual_fee"),
     path("report/monthly/dues/generate/list", generate_dues_fee, name="generate_dues_fee"),
     path("report/expense/dues/generate/list",generate_expense_fee,name="generate_expense_fee"),
+
+    # Other and Assistance Expense
+    path("report/others/expense/generate/list", generate_other_expense, name="generate_other_expense"),
+
 
     path("report/expense/assistance/list",assistance_report_expense_page,name="assistance_report_expense_page"),
     path("report/other_expense/assistance/list",other_report_expense_page,name="other_report_expense_page"),

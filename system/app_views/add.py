@@ -45,7 +45,7 @@ def add_dependent_page(request):
 
 @login_required(login_url="/auth/")
 def add_expense_page(request):
-    path = reverse_lazy("expenses_page")
+    path = reverse_lazy("other_expense_page")
 
     if request.method == "POST":
         form_data = ExpenseForm(request.POST)

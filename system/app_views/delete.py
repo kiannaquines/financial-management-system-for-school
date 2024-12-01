@@ -160,7 +160,7 @@ class DeleteMembershipDetails(DeleteView):
 class DeleteExpenseDetails(DeleteView):
     pk_url_kwarg = "pk"
     model = Expenses
-    success_url = reverse_lazy("expenses_page")
+    success_url = reverse_lazy("other_expense_page")
     template_name = "pages/delete.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:

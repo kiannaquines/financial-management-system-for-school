@@ -371,7 +371,7 @@ def other_expense_page(request):
 
 @login_required(login_url="/auth/")
 def other_report_expense_page(request):
-    path = reverse_lazy("add_expense_page_form")
+    path = reverse_lazy("generate_other_expense")
     header_list = ["Expense", "Amount", "Date"]
     field_list = ["id", "expense_type", "amount", "date_added"]
     context = oneshot_view_function(
@@ -403,7 +403,7 @@ def assistance_expense_page(request):
 
 @login_required(login_url="/auth/")
 def assistance_report_expense_page(request):
-    path = reverse_lazy("add_assistance_page")
+    path = reverse_lazy("generate_assistance_expense")
     header_list = ["Firstname","Lastname", "Amount Released", "Date Released"]
     field_list = ["id", "request_by__first_name", "request_by__last_name", "amount_released", "date_released"]
     context = oneshot_view_function(

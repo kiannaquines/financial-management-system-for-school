@@ -2,8 +2,8 @@ from django.shortcuts import render
 from system.models import *
 from django.db.models import Sum
 from authentication.models import AuthUser
-from system.utils import one_shot_pdf_generation, one_shot_pdf_generation_expense
-from django.http import HttpResponseRedirect, JsonResponse
+from system.utils import one_shot_pdf_generation, one_shot_pdf_generation_expense, one_shot_pdf_generation_other_expense
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.contrib.messages import success
 from django.db.models import Q
@@ -113,7 +113,7 @@ def generate_expense_fee(request):
         Q(assistance_status=True) & Q(amount_released__gt=0)
     ).all()
     result = one_shot_pdf_generation_expense(
-        request, "expense_fee_report", "Expenses Report", query
+        request, "expense_fee_report", "Assistance Expenses Report", query
     )
     return result
 
@@ -169,3 +169,13 @@ def activate_user(request, pk):
         extra_tags="success_tag",
     )
     return HttpResponseRedirect(reverse_lazy("users_page"))
+
+
+
+def generate_other_expense(request):
+    if request.method == "GET":
+        query = Expenses.objects.all()
+        result = one_shot_pdf_generation_other_expense(
+            request, "other_expense_fee_report", "Other Expenses Report", query
+        )
+        return result

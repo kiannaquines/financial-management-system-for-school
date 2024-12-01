@@ -25,6 +25,10 @@
                                 </a>
                             {% elif "dues" in request.path %}
                                 <a class="btn btn-primary" href="{% url 'generate_dues_fee' %}">Export Report</a>
+                            {% elif "other_expense" in request.path %}
+                                <a class="btn btn-primary" href="{% url 'generate_other_expense' %}">Export Other Expense Report</a>
+                            {% elif "assistance" in request.path %}
+                                <a class="btn btn-primary" href="{% url 'generate_expense_fee' %}">Export Assistance Expense Report</a>
                             {% else %}
                                 <a class="btn btn-primary" href="{% url 'generate_expense_fee' %}">Export Report</a>
                             {% endif %}
@@ -85,6 +89,7 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
                                             {% if request.path == '/members/list' %}
                                             <a class="dropdown-item" href="{% url 'update_membership' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'update_dependent_membership' pk=item.id %}">Dependents</a>
                                             <a class="dropdown-item" href="{% url 'delete_membership' pk=item.id %}">Unenroll Member</a>
                                             {% elif request.path == '/members/pending/list' %}
                                             <a class="dropdown-item" href="{% url 'approve_membership' pk=item.id %}">Approve Membership</a>
@@ -111,9 +116,12 @@
                                             {% elif "assistance" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_assistance' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_assistance' pk=item.id %}">Remove</a>
-                                            {% elif request.path == "/expenses/list" %}
+                                            {% elif request.path == "/expenses/list" or request.path == "/report/other_expense/assistance/list" %}
                                             <a class="dropdown-item" href="{% url 'update_expense_page_form' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_expense_page_form' pk=item.id %}">Remove</a>
+                                            {% elif request.path == "/report/expense/assistance/list" %}
+                                            <a class="dropdown-item" href="{% url 'update_assistance' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_assistance' pk=item.id %}">Remove</a>
                                             {% elif request.path == "/dependents/list" %}
                                             <a class="dropdown-item" href="{% url 'update_dependent_page' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_dependent_page' pk=item.id %}">Remove</a>

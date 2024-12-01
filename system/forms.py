@@ -1,6 +1,19 @@
 from django import forms
 from system.models import *
 
+class UpdateDependentsForm(forms.ModelForm):
+    def __init__(self, user=None, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(UpdateDependentsForm, self).__init__(*args, **kwargs)
+        
+        if user:
+            self.fields['my_dependents'].queryset = Dependents.objects.filter(related_to_member=user)
+        self.fields['my_dependents'].widget.attrs.update({'class': 'form-control'})
+    
+    class Meta:
+        model = Membership
+        fields = ['my_dependents']
+
 
 class DependentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

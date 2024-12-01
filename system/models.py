@@ -196,7 +196,7 @@ class Membership(models.Model):
     ]
 
     SCHOOL_AFFILIATION = [
-        ("Dapiawan CES", "Dapiowan CES"),
+        ("Dapiawan CES", "Dapiawan CES"),
         ("Datu Pendililang ES", "Datu Pendililang ES"),
         ("Madia IS", "Madia IS"),
         ("Elian ES", "Elian ES"),
@@ -247,6 +247,10 @@ class Membership(models.Model):
         null=True,
         on_delete=models.CASCADE,
         help_text="Select beneficiary of the employee, select only one.",
+    )
+    my_dependents = models.ManyToManyField(
+        Dependents, blank=True, null=True,
+        help_text="Select dependent of the employee, select multiple.",
     )
     membership_status = models.BooleanField(
         default=False, help_text="Membership status of the employee"

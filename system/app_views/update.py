@@ -10,6 +10,40 @@ from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordChangeView
 from system.mixins import CustomLoginRequiredMixin
 
+class UpdateDependentsInfoView(CustomLoginRequiredMixin, UpdateView):
+    pk_url_kwarg = "pk"
+    template_name = 'pages/update.html'
+    model = Membership
+    form_class = UpdateDependentsForm
+    success_url = reverse_lazy("membership_page")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        success(
+            self.request,
+            "Dependent details updated successfully.",
+            extra_tags="success_tag",
+        )
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update Dependent Details"
+        return context
+    
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
+        return super().form_invalid(form)
 
 class UpdateDependentsView(UpdateView):
     pk_url_kwarg = "pk"
@@ -272,7 +306,7 @@ class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     model = Expenses
     form_class = ExpenseForm
-    success_url = reverse_lazy("expenses_page")
+    success_url = reverse_lazy("other_expense_page")
     template_name = "pages/update.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
