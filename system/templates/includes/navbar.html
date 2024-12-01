@@ -32,7 +32,7 @@
                         {% if request.user.user_type == 'Employee' %}
                         <li>
                             <a class="dropdown-item" href="{% url 'membership_me' pk=request.user.id %}">
-                                <i class="me-2 icon-xxs dropdown-item-icon" data-feather=""></i>
+                                <i class="me-2 icon-xxs dropdown-item-icon" data-feather="user"></i>
                                 Membership Details
                             </a>
                         </li>

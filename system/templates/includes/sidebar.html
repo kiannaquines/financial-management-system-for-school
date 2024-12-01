@@ -35,7 +35,7 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'membership_page' %}">
-                                Members List
+                                Enrolled Members
                             </a>
                         </li>
                         <li class="nav-item">
@@ -43,23 +43,6 @@
                                 Pending Members
                             </a>
                         </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item {% if 'beneficiary' in request.path %}active{% endif %}">
-                <a
-                    class="nav-link has-arrow collapsed"
-                    href="#!"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#beneficiary"
-                    aria-expanded="false"
-                    aria-controls="beneficiary"
-                >
-                    <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
-                    Beneficiary
-                </a>
-                <div id="beneficiary" class="collapse {% if 'beneficiary' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
-                    <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'beneficiary_page' %}">
                                 Beneficiary List
@@ -136,6 +119,11 @@
                                 List of Assistance
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'expenses_page' %}">
+                                Expenses
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -158,17 +146,17 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'membership_fee_page' %}">
-                                Membership Fee
+                                Membership Report
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'monthly_due_page' %}">
-                                Monthly Dues
+                                Monthly Dues Report
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'expense_page' %}">
-                                Expenses
+                            <a class="nav-link " href="{% url 'report_expense_page' %}">
+                                Expenses Report
                             </a>
                         </li>
                     </ul>

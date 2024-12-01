@@ -11,6 +11,38 @@ from django.contrib.messages import success, error
 
 
 @login_required(login_url="/auth/")
+def add_expense_page(request):
+    path = reverse_lazy("expenses_page")
+
+    if request.method == "POST":
+        form_data = ExpenseForm(request.POST)
+
+        if form_data.is_valid():
+            form_data.save()
+            success(
+                request,
+                "You have succesfully added new expense information",
+                extra_tags="success_tag",
+            )
+            return HttpResponseRedirect(path)
+        else:
+            for field, errors in form_data.errors.items():
+                for err in errors:
+                    error(
+                        request,
+                        f"{err}",
+                        extra_tags="error_tag",
+                    )
+            return HttpResponseRedirect(reverse_lazy("add_expense_page"))
+
+    form = ExpenseForm()
+    context = oneshot_add_function(
+        form, "Add Expense", "Expense Management", "Add Expense"
+    )
+    return render(request, "pages/add.html", context)
+
+
+@login_required(login_url="/auth/")
 def add_assistance_page(request):
     path = reverse_lazy("assistance_page")
 
@@ -110,7 +142,7 @@ def add_member_page(request):
 
     form = MembershipForm()
     context = oneshot_add_function(
-        form, "Add Membership", "Membership Management", "Add Membership"
+        form, "Enroll Member", "Membership Management", "Enroll Member"
     )
     return render(request, "pages/add.html", context)
 

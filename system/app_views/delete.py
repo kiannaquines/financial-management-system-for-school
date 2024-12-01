@@ -155,3 +155,33 @@ class DeleteMembershipDetails(DeleteView):
             extra_tags="error_tag",
         )
         return response
+
+
+class DeleteExpenseDetails(DeleteView):
+    pk_url_kwarg = "pk"
+    model = Expenses
+    success_url = reverse_lazy("expenses_page")
+    template_name = "pages/delete.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Removed Expense Detail"
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_valid(form)
+        success(
+            self.request,
+            "Expense details removed successfully.",
+            extra_tags="success_tag",
+        )
+        return response
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_invalid(form)
+        error(
+            self.request,
+            "There is an error while trying to removed the expense details",
+            extra_tags="error_tag",
+        )
+        return response

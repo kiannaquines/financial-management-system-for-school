@@ -235,3 +235,35 @@ class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView)
                     extra_tags="error_tag",
                 )
         return response
+
+class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
+    pk_url_kwarg = "pk"
+    model = Expenses
+    form_class = ExpenseForm
+    success_url = reverse_lazy("expenses_page")
+    template_name = "pages/update.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update Expense Detail"
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_valid(form)
+        success(
+            self.request,
+            "Expense details updated successfully.",
+            extra_tags="success_tag",
+        )
+        return response
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_invalid(form)
+        for field, errors in form.errors.items():
+            for err in errors:
+                error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="error_tag",
+                )
+        return response

@@ -20,9 +20,6 @@
                                 {% for header_name in header_list %}
                                 <th>{{ header_name }}</th>
                                 {% endfor %}
-                                {% if not request.path == '/employee/payment/list' %}
-                                <th>Action</th>
-                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -31,42 +28,30 @@
                                 {% for field, value in item.items %}
                                     {% if field != "id" %}
                                         <td class="align-middle">
-                                            {% if value == True %}
-                                                Approved
-                                            {% elif value == False %}
-                                                Pending
+                                            {% if field == "payment_type" %}
+                                                {% if value == "Membership" %}
+                                                    <span class="badge bg-primary">{{ value }}</span>
+                                                {% elif value == "Delegation Pay" %}
+                                                    <span class="badge bg-primary">{{ value }}</span>
+                                                {% elif value == "Trust Fund" %}
+                                                    <span class="badge bg-primary">{{ value }}</span>
+                                                {% else %}
+                                                    <span class="badge bg-primary">{{ value }}</span>
+                                                {% endif %}
                                             {% else %}
-                                                {{ value }}
+                                                {% if value == True %}
+                                                    <span class="badge bg-primary">Approved</span>
+                                                {% elif value == False %}
+                                                    <span class="badge bg-warning">Pending</span>
+                                                {% else %}
+                                                    {{ value }}
+                                                {% endif %}
                                             {% endif %}
                                         </td>
                                     {% endif %}
+
+
                                 {% endfor %}
-                                {% if not request.path == '/employee/payment/list' %}
-                                <td class="align-middle">
-                                    <div class="dropdown dropstart">
-                                        <a
-                                            class="text-muted text-primary-hover"
-                                            href="#"
-                                            role="button"
-                                            id="dropdownTeamOne"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-xxs" data-feather="more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
-                                            {% if request.path == '/employee/beneficiary/list' %}
-                                            <a class="dropdown-item" href="{% url 'employee_update_beneficiary' pk=item.id %}">Edit</a>
-                                            <a class="dropdown-item" href="{% url 'employee_delete_beneficiary' pk=item.id %}">Remove</a>
-                                            {% elif request.path == '/employee/assistance/list' %}
-                                            <a class="dropdown-item" href="{% url 'employee_update_assistance' pk=item.id %}">Edit</a>
-                                            <a class="dropdown-item" href="{% url 'employee_delete_assistance' pk=item.id %}">Remove</a>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </td>
-                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -1,8 +1,20 @@
 from django import forms
 from system.models import *
-from django.db.models import Q
 
 
+class ExpenseForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ExpenseForm, self).__init__(*args, **kwargs)
+        self.fields['amount'].widget.attrs.update({'class':'form-control'})
+        self.fields['expense_type'].widget.attrs.update({'class':'form-control'})
+
+    class Meta:
+        model = Expenses
+        fields = [
+            "amount",
+            "expense_type",
+        ]
 
 
 class AssistanceReleaseStatusForm(forms.ModelForm):
@@ -24,6 +36,12 @@ class AssistanceReleaseStatusForm(forms.ModelForm):
 class AssistanceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AssistanceForm, self).__init__(*args, **kwargs)
+
+        if 'released_status' in self.fields:
+            self.fields['released_status'].widget.attrs.update(
+                {'class': 'form-check-input'}
+            )
+
         self.fields["assistance_first_name"].widget.attrs.update(
             {"placeholder": "First Name", "class": "form-control"}
         )
@@ -58,7 +76,7 @@ class AssistanceForm(forms.ModelForm):
 
 
         self.fields['assistance_evidence_first'].label = "Medical Certificate"
-        self.fields['assistance_evidence_second'].label = "Birth Certificate"
+        self.fields['assistance_evidence_second'].label = "Hospital Billing"
 
     class Meta:
         model = Assistance

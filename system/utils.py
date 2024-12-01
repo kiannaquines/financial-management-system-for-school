@@ -46,7 +46,7 @@ def one_shot_pdf_generation(request, filename, title, query):
     context["logo_path"] = os.path.join(settings.MEDIA_ROOT, "logo", "seaoil-logo.svg")
     context["query_info"] = query
     context["title"] = title
-    context['total_amount_paid'] = total_amount
+    context['total_amount_paid'] = f'{total_amount:,}'
     template = get_template("template.html")
 
     rendered_html = template.render(context)
@@ -71,7 +71,6 @@ def one_shot_pdf_generation_expense(request, filename, title, query):
 
     total_amount = 0
     for item in query:
-        print(item)
         total_amount += item.amount_released
 
     current_date = datetime.now()
@@ -84,7 +83,7 @@ def one_shot_pdf_generation_expense(request, filename, title, query):
     context["logo_path"] = os.path.join(settings.MEDIA_ROOT, "logo", "seaoil-logo.svg")
     context["expenses"] = query
     context["title"] = title
-    context['total_amount'] = total_amount
+    context['total_amount'] = f'{total_amount:,}'
     template = get_template("expense_template.html")
 
     rendered_html = template.render(context)

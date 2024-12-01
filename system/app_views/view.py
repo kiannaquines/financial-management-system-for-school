@@ -5,6 +5,16 @@ from system.utils import oneshot_view_function
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from datetime import datetime, timedelta
+from django.utils import timezone
+from calendar import monthrange
+from django.db.models import Sum
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 
 
 @login_required(login_url="/auth/")
@@ -41,10 +51,19 @@ def beneficiary_page(request):
 @login_required(login_url="/auth/")
 def payments_page(request):
     path = reverse_lazy("add_payment_page")
-    header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
+    header_list = [
+        "Firstname",
+        "Lastname",
+        "Employee ID",
+        "Amount",
+        "Payment Type",
+        "Date Paid",
+    ]
     field_list = [
         "id",
         "paid_by__user_id__first_name",
+        "paid_by__user_id__last_name",
+        "paid_by__employee_id",
         "amount",
         "payment_type",
         "date_paid",
@@ -64,8 +83,8 @@ def payments_page(request):
 @login_required(login_url="/auth/")
 def users_page(request):
     path = reverse_lazy("add_user_page")
-    header_list = ["Username", "Firstname", "Lastname", "Email", "Type"]
-    field_list = ["id", "username", "first_name", "last_name", "email", "user_type"]
+    header_list = ["Username", "Firstname", "Lastname", "Type"]
+    field_list = ["id", "username", "first_name", "last_name", "user_type"]
     context = oneshot_view_function(
         AuthUser.objects.filter(is_active=True).values(*field_list),
         "User",
@@ -123,7 +142,7 @@ def membership_page(request):
         Membership.objects.filter(membership_status=True).values(*field_list),
         "Membership",
         "Memberships List",
-        "Add Member",
+        "Enroll Member",
         path,
         header_list,
     )
@@ -163,7 +182,7 @@ def pending_membership_page(request):
 @login_required(login_url="/auth/")
 def assistance_page(request):
     path = reverse_lazy("add_assistance_page")
-    header_list = ["Firstname", "Middlename", "Lastname","Assistance Type", "Status"]
+    header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
     field_list = [
         "id",
         "assistance_first_name",
@@ -215,7 +234,7 @@ def assistance_page(request):
         "Middlename",
         "Lastname",
         "Assistance Type",
-        "Amount Released",
+        "Amount Applied",
         "Release Status",
         "Status",
     ]
@@ -234,6 +253,33 @@ def assistance_page(request):
         "Assistance",
         "Assistance List",
         "Add Assistance",
+        path,
+        header_list,
+    )
+    return render(request, "pages/view.html", context)
+
+
+@login_required(login_url="/auth/")
+def payment_page(request):
+    path = reverse_lazy("add_assistance_page")
+    header_list = [
+        "Firstname",
+        "Lastname",
+        "Employee ID",
+        "Expense Type",
+    ]
+    field_list = [
+        "id",
+        "paid_by__first_name",
+        "paid_by__last_name",
+        "paid_by__employee_id",
+        "payment_type",
+    ]
+    context = oneshot_view_function(
+        Payment.objects.values(*field_list),
+        "Payment",
+        "Payment List",
+        "Add Payment",
         path,
         header_list,
     )
@@ -291,26 +337,20 @@ def monthly_due_page(request):
 
 
 @login_required(login_url="/auth/")
-def expense_page(request):
-    path = reverse_lazy("add_payment_page")
-    path = reverse_lazy("add_assistance_page")
-    header_list = ["Firstname", "Middlename", "Lastname", "Assistance Type", "Status"]
-    field_list = [
-        "id",
-        "assistance_first_name",
-        "assistance_middle_name",
-        "assistance_last_name",
-        "type_of_assistance",
-        "assistance_status",
-    ]
+def all_expense_page(request):
+    path = reverse_lazy("add_expense_page_form")
+    header_list = ["Expense", "Amount", "Date"]
+    field_list = ["id", "expense_type", "amount", "date_added"]
     context = oneshot_view_function(
-        Assistance.objects.values(*field_list),
+        Expenses.objects.values(*field_list),
         "Expense",
         "Expense List",
-        "Add Payment",
+        "Add Expense",
         path,
         header_list,
     )
+
+    print(path)
 
     return render(request, "pages/view.html", context)
 
@@ -321,19 +361,6 @@ def is_exactly_11_months(start_date, end_date):
     )
     print(months_difference)
     return months_difference == 11
-
-
-from datetime import datetime, timedelta
-from django.utils import timezone
-from calendar import monthrange
-from django.db.models import Sum
-from django.http import HttpResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
 
 
 @login_required(login_url="/auth/")
@@ -406,7 +433,7 @@ def generate_annual_membership_report(request):
                 )
 
                 total_paid = month_payments.aggregate(total=Sum("amount"))["total"] or 0
-                monthly_payments[current_date.strftime("%m")] = f'{int(total_paid):,}'
+                monthly_payments[current_date.strftime("%m")] = f"{int(total_paid):,}"
                 member_total_paid += int(total_paid)
                 current_date += timedelta(days=last_day)
 
@@ -414,7 +441,7 @@ def generate_annual_membership_report(request):
                 {
                     "fullname": fullname,
                     "monthly_payments": monthly_payments,
-                    "total_paid": f'{int(member_total_paid):,}',
+                    "total_paid": f"{int(member_total_paid):,}",
                 }
             )
 
@@ -427,8 +454,8 @@ def generate_annual_membership_report(request):
             "school_year": f"SCHOOL YEAR {start_date.year} - {end_date.year}",
             "total_amount": f"{total_paid_amount:,}",
             "report_date": timezone.now().strftime("%B %d, %Y"),
-            "prepared_by": f'{request.user.first_name} {request.user.last_name}',
-            "report_type": f'Annual Membership Report',
+            "prepared_by": f"{request.user.first_name} {request.user.last_name}",
+            "report_type": f"Annual Membership Report",
         }
 
         template = get_template("membership_report.html")

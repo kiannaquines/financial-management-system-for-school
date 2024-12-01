@@ -5,7 +5,6 @@
 {% block content %}
 <div class="container-fluid mt-n22 px-6 mt-6">
     <div class="row my-6">
-        <h4>View your data here</h4>
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
             {% include './../includes/message.html' %}
             <div class="card">
@@ -13,23 +12,25 @@
                     <h4 class="mb-0">{{ header_title }}</h4>
                     {% if request.user.user_type == "Treasurer" %}
                     <div>
-                        <a href="{{ path }}" class="btn btn-primary">{{ add_button_name }}</a>
                         {% if "report" in request.path %}
                             {% if "fee" in request.path %}
-                        <a
-                            class="btn btn-primary"
-                            type="button"
-                            class="btn btn-primary"
-                            data-bs-toggle="modal"
-                            data-bs-target="#membershipModal"
-                        >
-                            Membership Report
-                        </a>
-                        {% elif "dues" in request.path %}
-                        <a class="btn btn-primary" href="{% url 'generate_dues_fee' %}">Export Report</a>
+                                <a
+                                    class="btn btn-primary"
+                                    type="button"
+                                    class="btn btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#membershipModal"
+                                >
+                                    Membership Report
+                                </a>
+                            {% elif "dues" in request.path %}
+                                <a class="btn btn-primary" href="{% url 'generate_dues_fee' %}">Export Report</a>
+                            {% else %}
+                                <a class="btn btn-primary" href="{% url 'generate_expense_fee' %}">Export Report</a>
+                            {% endif %}
+
                         {% else %}
-                        <a class="btn btn-primary" href="{% url 'generate_expense_fee' %}">Export Report</a>
-                        {% endif %}
+                            <a href="{{ path }}" class="btn btn-primary">{{ add_button_name }}</a>
                         {% endif %}
                     </div>
                     {% endif %}
@@ -84,7 +85,7 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
                                             {% if request.path == '/members/list' %}
                                             <a class="dropdown-item" href="{% url 'update_membership' pk=item.id %}">Edit</a>
-                                            <a class="dropdown-item" href="{% url 'delete_membership' pk=item.id %}">Remove</a>
+                                            <a class="dropdown-item" href="{% url 'delete_membership' pk=item.id %}">Unenroll Member</a>
                                             {% elif request.path == '/members/pending/list' %}
                                             <a class="dropdown-item" href="{% url 'approve_membership' pk=item.id %}">Approve Membership</a>
                                             {% elif "beneficiary" in request.path %}
@@ -110,6 +111,9 @@
                                             {% elif "assistance" in request.path %}
                                             <a class="dropdown-item" href="{% url 'update_assistance' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_assistance' pk=item.id %}">Remove</a>
+                                            {% elif request.path == "/expenses/list" %}
+                                            <a class="dropdown-item" href="{% url 'update_expense_page_form' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_expense_page_form' pk=item.id %}">Remove</a>
                                             {% else %}
                                             <a class="dropdown-item" href="{% url 'update_payment' pk=item.id %}">Edit</a>
                                             <a class="dropdown-item" href="{% url 'delete_payment' pk=item.id %}">Remove</a>

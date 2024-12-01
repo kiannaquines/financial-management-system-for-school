@@ -35,11 +35,14 @@
         <script>
         
         $(document).ready(function(){
-          $('option').each(function() {
-              if ($(this).text() === '---------') {
-                  $(this).text('Select Option');
-              }
-          });
+
+          if($('option').length > 0) {
+            $('option').each(function() {
+                if ($(this).text() === '---------') {
+                    $(this).text('Select Option');
+                }
+            });
+          }
         })
 
           fetch('/get_monthly_payment_data/')
@@ -107,8 +110,10 @@
             }
           };
 
-          var chart = new ApexCharts(document.querySelector("#chart"), options);
-          chart.render();
+          if (document.querySelector('#chart')) {
+            var chart = new ApexCharts(document.querySelector("#chart"), options);
+            chart.render();
+          }
         })
         .catch(error => console.error('Error fetching data:', error));
         
@@ -128,7 +133,7 @@
                         },
                         labels: ['Hospitalization', 'Death'],
                         legend: {
-                        show: false  // Hide the legend
+                        show: false 
                     },
                         responsive: [{
                             breakpoint: 480,
@@ -143,8 +148,10 @@
                         }]
                     };
 
-                    var chart = new ApexCharts(document.querySelector("#yawa"), options);
-                    chart.render();
+                    if (document.querySelector("#yawa")) {
+                      var chart = new ApexCharts(document.querySelector("#yawa"), options);
+                      chart.render();
+                    }
                 } else {
                     console.error('Error fetching data:', data);
                 }
@@ -172,7 +179,7 @@
                         },
                         labels: labels,
                         legend: {
-                        show: false  // Hide the legend
+                        show: false
                     },
                         responsive: [{
                             breakpoint: 480,
@@ -187,8 +194,10 @@
                         }]
                     };
 
-                    var chart = new ApexCharts(document.querySelector("#piste"), options);
-                    chart.render();
+                    if (document.querySelector("#piste")) {
+                      var chart = new ApexCharts(document.querySelector("#piste"), options);
+                      chart.render();
+                    }
                 } else {
                     console.error('Error fetching data:', data);
                 }
@@ -209,12 +218,74 @@
         }
 
         $(document).ready(function(){
-            $("#datatable").DataTable()
-            var datatable = document.querySelector("#datatable_wrapper")
-            var lastElement = datatable.children[2];
-            lastElement.classList.add('mb-2')
+            if($("#id_type_of_assistance").length > 0) {
+              $("#id_type_of_assistance").on('change', function(){
+                alert($("#id_type_of_assistance").val())
+              })
+            }
+            if ($("#datatable").length > 0) {
+              
+              if (window.location.pathname == "/members/pending/list" || window.location.pathname == "/members/list") {
+                $("#datatable").DataTable({
+                    paging: true,
+                    lengthChange: true,
+                    searching: true,
+                    ordering: true,
+                    info: true,
+                    autoWidth: false,
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    columnDefs: [
+                        { 
+                            searchable: false,
+                            targets: [3],
+                        },
+                    ],
+                    pageLength: 50
+                });
+                $("#dt-search-0").attr('placeholder', 'Search by Name or ID')
+              } else if (window.location.pathname == "/payments/list"){
+                $("#datatable").DataTable({
+                    paging: true,
+                    lengthChange: true,
+                    searching: true,
+                    ordering: true,
+                    info: true,
+                    autoWidth: false,
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    columnDefs: [
+                        { 
+                            searchable: false,
+                            targets: [3, 4, 5],
+                        },
+                    ],
+                    pageLength: 50
+                });
+                $("#dt-search-0").attr('placeholder', 'Search using Name or ID....')
+              }  else {
+                $("#datatable").DataTable({
+                    paging: true,
+                    lengthChange: true,
+                    searching: true,
+                    ordering: true,
+                    info: true,
+                    autoWidth: false,
+                    responsive: true,
+                    order: [[0, "desc"]],
+                    
+                    pageLength: 50
+                });
+                $("#dt-search-0").attr('placeholder', 'Search....')
+              }
 
-            var removeBackground = document.querySelector("thead")
+              
+              var datatable = document.querySelector("#datatable_wrapper")
+              var lastElement = datatable.children[2];
+              lastElement.classList.add('mb-2')
+              var removeBackground = document.querySelector("thead")
+            }
+
         });
         </script>
     </body>

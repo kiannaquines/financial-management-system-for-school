@@ -33,7 +33,7 @@ def employee_apply_membership(request):
             return HttpResponseRedirect(reverse_lazy('employee_apply_membership'))
         
     context['form'] = form
-    context['header_title'] = "Apply Membership"
+    context['header_title'] = "Enroll Membership"
     return render(request,'employee/add.html',context)
 
 @login_required(login_url='/auth/')
@@ -127,7 +127,7 @@ def employee_view_payments(request):
     header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
     field_list = [
         "id",
-        "paid_by__user_id",
+        "paid_by__user_id__first_name",
         "amount",
         "payment_type",
         "date_paid",

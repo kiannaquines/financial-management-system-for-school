@@ -18,7 +18,7 @@ class Assistance(models.Model):
     type_of_assistance = models.CharField(max_length=50, choices=ASSISTANCE_TYPE, help_text="Choose type of assistance")
     assistance_status = models.BooleanField(default=False, help_text="Assistance status")
     assistance_evidence_first = models.ImageField(upload_to="assistance/proof/", help_text="Upload medical certification")
-    assistance_evidence_second = models.ImageField(upload_to="assistance/proof/", help_text="Upload death certificate")
+    assistance_evidence_second = models.ImageField(upload_to="assistance/proof/", help_text="Upload hospital certificate")
     released_status = models.BooleanField(default=False, help_text="Release status of the assistance")
     amount_released = models.DecimalField(max_digits=10, default=0.00, decimal_places=2, help_text="Amoutnt to be released by the assistance")
     date_released = models.DateTimeField(auto_now_add=True)
@@ -66,13 +66,15 @@ class Beneficiary(models.Model):
 class Membership(models.Model):
 
     POSITION = [
+        ("ISAL", "ISAL"),
+        ("ALIVE", "ALIVE"),
         ("Teacher 1", "Teacher 1"),
         ("Teacher 2", "Teacher 2"),
         ("Teacher 3", "Teacher 3"),
-        ("Teacher 4", "Teacher 4"),
-        ("Teacher 5", "Teacher 5"),
-        ("Principal", "Principal"),
-        ("ADAS", "ADAS"),
+        ("MS Teacher 1", "MS Teacher 1"),
+        ("MS Teacher 2", "MS Teacher 2"),
+        ("MS Teacher 3", "MS Teacher 3"),
+        ("School Head", "School Head"),
     ]
 
     GENDER = [
@@ -81,20 +83,20 @@ class Membership(models.Model):
     ]
 
     SCHOOL_AFFILIATION = [
-        ("Dapiowan Central ES", "Dapiowan Central ES"),
+        ("Dapiawan CES", "Dapiowan CES"),
         ("Datu Pendililang ES", "Datu Pendililang ES"),
-        ("Madia ES", "Madia ES"),
+        ("Madia IS", "Madia IS"),
         ("Elian ES", "Elian ES"),
         ("Gawang ES", "Gawang ES"),
         ("Kitango ES", "Kitango ES"),
         ("Kitapok ES", "Kitapok ES"),
         ("Datu Kogia ES", "Datu Kogia ES"),
-        ("Dimaukon Utto ES", "Dimaukon Utto ES"),
-        ("Dimankom ES", "Dimankom ES"),
+        ("Dimaukom Utto ES", "Dimaukom Utto ES"),
+        ("Dimaukom ES", "Dimaukom ES"),
     ]
 
     id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(AuthUser, on_delete=models.CASCADE, help_text="Employee who want to be a member", limit_choices_to={'user_type':'Employee'})
+    user_id = models.OneToOneField(AuthUser, on_delete=models.CASCADE, help_text="Employee who want to be a member", limit_choices_to={'user_type':'Employee'}, unique=True)
     first_name = models.CharField(max_length=50, help_text="Employee first name")
     middle_name = models.CharField(max_length=50, blank=True, help_text="Employee middle name")
     last_name = models.CharField(max_length=50, help_text="Employee last name")
@@ -106,7 +108,7 @@ class Membership(models.Model):
     position = models.CharField(max_length=50, choices=POSITION, help_text="Position of the employee")
     gender = models.CharField(max_length=20, choices=GENDER, help_text="Gender of the employee")
     school_affiliation = models.CharField(max_length=100, choices=SCHOOL_AFFILIATION, help_text="School affiliation of the employee")
-    beneficiary = models.ManyToManyField(Beneficiary,blank=True, help_text="Select beneficiary of the employee")
+    beneficiary = models.OneToOneField(Beneficiary,blank=True, null=True, on_delete=models.CASCADE, help_text="Select beneficiary of the employee, select only one.")
     membership_status = models.BooleanField(default=False, help_text="Membership status of the employee")
 
     def __str__(self) -> str:
@@ -116,6 +118,27 @@ class Membership(models.Model):
         db_table = "membership"
         verbose_name = "Membership"
         verbose_name_plural = "Membership"
+
+
+class Expenses(models.Model):
+    EXPENSE_TYPE = (
+        ("Claims", "Claims"),
+        ("District Activities", "District Activities"),
+        ("Visitors Fund", "Visitors Fund"),
+    )
+
+    expense_type = models.CharField(max_length=255, choices=EXPENSE_TYPE)
+    amount = models.FloatField(help_text="Amount of Expenses")
+    date_added = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self) -> str:
+        return self.expense_type
+    
+    class Meta:
+        verbose_name = "Expense"
+        verbose_name_plural = "Expenses"
+        db_table = "expenses"
 
 
 class Payment(models.Model):
