@@ -55,7 +55,7 @@ def payments_page(request):
         "Firstname",
         "Lastname",
         "Employee ID",
-        "Amount",
+        "Collection",
         "Payment Type",
         "Date Paid",
     ]
@@ -289,7 +289,7 @@ def payment_page(request):
 @login_required(login_url="/auth/")
 def membership_fee_page(request):
     path = reverse_lazy("add_payment_page")
-    header_list = ["Paid By", "Amount", "Payment Type", "Date Paid"]
+    header_list = ["Paid By", "Collection", "Payment Type", "Date Paid"]
     field_list = [
         "id",
         "paid_by__user_id__first_name",

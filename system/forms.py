@@ -2,6 +2,31 @@ from django import forms
 from system.models import *
 from .models import Membership, Beneficiary
 
+
+class LedgerForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(LedgerForm, self).__init__(*args, **kwargs)
+        for field_name, field_instance in self.fields.items():
+            field_instance.widget.attrs.update({"class": "form-control"})
+
+    class Meta:
+        model = Ledger
+        fields = "__all__"
+        widgets = {
+            "transaction_date": forms.DateInput(
+                {
+                    "type": "date",
+                }
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "rows": 2,
+                }
+            ),
+        }
+        exclude = ["recorded_by"]
+
+
 class UpdateMembershipInforDependentsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)

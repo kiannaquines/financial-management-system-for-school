@@ -5,9 +5,11 @@
 <div class="container-fluid mt-n20 px-6">
     <div class="row my-6">
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            {% include './includes/message.html' %}
             <div class="card h-100">
-                <div class="card-header border-0 bg-white py-4">
+                <div class="card-header border-0 bg-white py-4 d-flex align-items-center justify-content-between">
                     <h4 class="mb-0">Financial Transactions Ledger</h4>
+                    <a href="{% url 'ledger_add' %}" class="btn btn-primary">Add Transaction</a>
                 </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="datatable">
@@ -15,17 +17,18 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Description</th>
-                                <th>Debit Amount</th>
-                                <th>Credit Amount</th>
+                                <th>Amount</th>
+                                <th>Transaction Type</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for transaction in transactions %}
                             <tr>
-                                <td class="align-middle">14/02/2024</td>
-                                <td class="align-middle">Your record from sales transaction.</td>
-                                <td class="align-middle">10,000</td>
-                                <td class="align-middle"></td>
+                                <td class="align-middle">{{ transaction.transaction_date }}</td>
+                                <td class="align-middle">{{ transaction.description }}</td>
+                                <td class="align-middle">{{ transaction.amount }}</td>
+                                <td class="align-middle">{{ transaction.transaction_type }}</td>
                                 <td class="align-middle">
                                     <div class="dropdown dropstart">
                                         <a
@@ -40,37 +43,13 @@
                                             <i class="icon-xxs" data-feather="more-vertical"></i>
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
-                                            <a class="dropdown-item" href="#">Edit</a>
-                                            <a class="dropdown-item" href="#">Remove</a>
+                                            <a class="dropdown-item" href="{% url 'update_ledger' pk=transaction.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_ledger' pk=transaction.id %}">Remove</a>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="align-middle">15/02/2024</td>
-                                <td class="align-middle">Cash Assistance to Death.</td>
-                                <td class="align-middle"></td>
-                                <td class="align-middle">10,000</td>
-                                <td class="align-middle">
-                                    <div class="dropdown dropstart">
-                                        <a
-                                            class="text-muted text-primary-hover"
-                                            href="#"
-                                            role="button"
-                                            id="dropdownTeamOne"
-                                            data-bs-toggle="dropdown"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
-                                            <i class="icon-xxs" data-feather="more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
-                                            <a class="dropdown-item" href="#">Edit</a>
-                                            <a class="dropdown-item" href="#">Remove</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

@@ -14,10 +14,10 @@ class Ledger(models.Model):
         ],
     )
     recorded_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
-    date_transaction = models.DateTimeField(auto_now_add=True)
+    date_transaction = models.DateTimeField(auto_now_add=True)        
 
     def __str__(self) -> str:
-        return f'{self.transaction_date} {self.amount}'
+        return f'Ledger for {self.transaction_date}- ₱ {self.amount}'
     
 class UnenrollReason(models.Model):
     unenrolled_member_name = models.CharField(max_length=255)
