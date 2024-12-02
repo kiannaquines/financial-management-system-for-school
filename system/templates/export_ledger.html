@@ -1,0 +1,43 @@
+{% extends './includes/base.html' %}
+{% load static %}
+{% block title %}DSAPTEA Financial Management System | Dashboard{% endblock title %}
+{% block content %}
+<div class="container-fluid mt-n20 px-6">
+    <div class="row my-6">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            <div class="card h-100">
+                <div class="card-header border-0 bg-white py-4 d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0">Export Financial Transactions Ledger</h4>
+                    <a href="#" class="btn btn-primary">Export Ledger</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Debit Amount</th>
+                                <th>Credit Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="align-middle">14/02/2024</td>
+                                <td class="align-middle">Your record from sales transaction.</td>
+                                <td class="align-middle">10,000</td>
+                                <td class="align-middle"></td>
+                            </tr>
+                            <tr>
+                                <td class="align-middle">15/02/2024</td>
+                                <td class="align-middle">Cash Assistance to Death.</td>
+                                <td class="align-middle"></td>
+                                <td class="align-middle">10,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

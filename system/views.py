@@ -18,6 +18,12 @@ from django.db.models import Count
 from django.views.generic import View
 
 
+class ExportLedgerView(View):
+    template_name = "export_ledger.html"
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return render(request, self.template_name, context)
+
 class LedgerView(View):
     template_name = "ledger.html"
     def get(self, request, *args, **kwargs):
