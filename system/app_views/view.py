@@ -306,6 +306,7 @@ def membership_fee_page(request):
         header_list,
     )
     context["schools"] = [school[0] for school in Membership.SCHOOL_AFFILIATION]
+    context["members"] = Membership.objects.all().distinct()
     return render(request, "pages/view.html", context)
 
 
@@ -437,6 +438,7 @@ def generate_annual_membership_report(request):
         school_year_from = request.POST.get("range_from")
         school_year_to = request.POST.get("range_to")
         school = request.POST.get("school")
+        member_id = request.POST.get("member")
 
         start_date = timezone.make_aware(
             datetime.strptime(school_year_from, "%Y-%m-%d")
@@ -466,6 +468,9 @@ def generate_annual_membership_report(request):
 
         if school and school != "All":
             payments = payments.filter(paid_by__school_affiliation=school)
+
+        if member_id:
+            payments = payments.filter(paid_by=member_id)
 
         if not payments.exists():
             messages.warning(

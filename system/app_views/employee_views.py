@@ -140,7 +140,7 @@ def employee_view_payments(request):
 @login_required(login_url='/auth/')
 def employee_assistance_request(request):
     context = {}
-    header_list = ["Firstname", "Middlename", "Lastname","Amount Released", "Assistance Type", "Status"]
+    header_list = ["Firstname", "Middlename", "Lastname","Amount Applied", "Assistance Type", "Status"]
     field_list = [
         "id",
         "assistance_first_name",
@@ -161,15 +161,15 @@ def my_membership(request, pk):
     membership = Membership.objects.filter(user_id=pk).first()
 
     if not membership:
-        messages.error(request, "No associated membership for your account, please try again.")
+        messages.error(request, "No associated membership for your account, please try again.", extra_tags="error_tag")
         return redirect('employee_apply_membership')
 
-    user_membership_form = ViewUserMembershipForm(instance=membership)
-
+    user_membership_form = ViewUserMembershipForm(instance=membership, user=request.user.membership)
     context = {
-        'user_membership_form': user_membership_form
+        'user_membership_form': user_membership_form,
+        'membership_id': membership.id,
     }
-    
+
     return render(request, 'employee/membership_details.html', context)
 
 class BeneficiaryUpdateView(UpdateView):

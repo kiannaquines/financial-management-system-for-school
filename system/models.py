@@ -9,7 +9,7 @@ class Dependents(models.Model):
         ("Female", "Female"),
     ]
 
-    RELATIONSHIP_TYPE = (("Daughter", "Daughter"), ("Son", "Son"))
+    RELATIONSHIP_TYPE = (("Daughter", "Daughter"), ("Son", "Son"), ("Spouse", "Spouse"), ("Father", "Father"), ("Mother", "Mother"))
     related_to_member = models.ForeignKey(
         "Membership", on_delete=models.CASCADE, null=True, blank=True
     )
@@ -43,7 +43,7 @@ class Dependents(models.Model):
 
     def get_full_name_of_dependent(self):
         return (
-            f"{self.dependent_first_name} {self.dependent_middle_name} {self.dependent_last_name}"
+            f"{self.dependent_first_name} {self.dependent_last_name}"
             if self.suffix
             else f"{self.dependent_first_name} {self.dependent_last_name}"
         )
@@ -259,6 +259,10 @@ class Membership(models.Model):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
+
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+    
     class Meta:
         db_table = "membership"
         verbose_name = "Membership"

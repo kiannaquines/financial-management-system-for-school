@@ -18,6 +18,8 @@
                   {{ input }}
                 </div>
                 {% endfor %}
+
+                <a href="{% url 'update_membership_dependent_page' pk=membership_id %}" class="btn btn-primary mt-3">Add Beneficiary and Dependents</a>
                 </form>
             </div>
         </div>

@@ -11,6 +11,14 @@
         <link href="{% static 'assets/libs/@mdi/font/css/materialdesignicons.min.css' %}" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'assets/css/theme.min.css' %}">
         <link href="https://cdn.datatables.net/v/bs5/dt-2.1.7/datatables.min.css" rel="stylesheet">
+        <style>
+          #piste {
+              min-height: 400px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+          }
+        </style>
     </head>
     <body class="bg-light">
         <div id="db-wrapper">
@@ -120,91 +128,121 @@
 
 
         async function fetchAssistanceData() {
-            try {
-                const response = await fetch('{% url "assistance_type_count" %}');
-                const data = await response.json();
+    try {
+        const response = await fetch('{% url "assistance_type_count" %}');
+        const data = await response.json();
 
-                if (response.ok) {
-                    var options = {
-                        series: [data.hospitalization_count, data.death_count],
-                        chart: {
-                            width: 380,
-                            type: 'pie',
-                        },
-                        labels: ['Hospitalization', 'Death'],
-                        legend: {
-                        show: false 
-                    },
-                        responsive: [{
-                            breakpoint: 480,
-                            options: {
-                                chart: {
-                                    width: 200
-                                },
-                                legend: {
-                                    position: 'bottom'
-                                }
-                            }
-                        }]
-                    };
-
-                    if (document.querySelector("#yawa")) {
-                      var chart = new ApexCharts(document.querySelector("#yawa"), options);
-                      chart.render();
+        if (response.ok) {
+            var options = {
+                series: [data.hospitalization_count, data.death_count],
+                chart: {
+                    type: 'pie',
+                    height: 340,
+                },
+                plotOptions: {
+                    pie: {
+                        offsetY: 0,
+                        offsetX: 0,
+                        size: 250,
                     }
-                } else {
-                    console.error('Error fetching data:', data);
-                }
-            } catch (error) {
-                console.error('Error fetching assistance data:', error);
+                },
+                labels: ['Hospitalization', 'Death'],
+                legend: {
+                    position: 'right',
+                    horizontalAlign: 'center',
+                    floating: false,
+                    fontSize: '14px'
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            height: 350
+                        },
+                        legend: {
+                            position: 'bottom'
+                        },
+                        plotOptions: {
+                            pie: {
+                                size: 200
+                            }
+                        }
+                    }
+                }]
+            };
+
+            if (document.querySelector("#yawa")) {
+                var chart = new ApexCharts(document.querySelector("#yawa"), options);
+                chart.render();
             }
+        } else {
+            console.error('Error fetching data:', data);
         }
+    } catch (error) {
+        console.error('Error fetching assistance data:', error);
+    }
+}
 
         fetchAssistanceData();
 
         async function fetchMembershipData() {
-            try {
-                const response = await fetch('{% url "membership_statistics" %}');
-                const data = await response.json();
+          try {
+              const response = await fetch('{% url "membership_statistics" %}');
+              const data = await response.json();
 
-                if (response.ok) {
-                    const labels = Object.keys(data);
-                    const series = Object.values(data);
+              if (response.ok) {
+                  const labels = Object.keys(data);
+                  const series = Object.values(data);
 
-                    var options = {
-                        series: series,
-                        chart: {
-                            width: 380,
-                            type: 'pie',
-                        },
-                        labels: labels,
-                        legend: {
-                        show: false
-                    },
-                        responsive: [{
-                            breakpoint: 480,
-                            options: {
-                                chart: {
-                                    width: 200
-                                },
-                                legend: {
-                                    position: 'bottom'
-                                }
-                            }
-                        }]
-                    };
+                  var options = {
+                      series: series,
+                      chart: {
+                          type: 'pie',
+                          height: 380,
+                      },
+                      plotOptions: {
+                          pie: {
+                              offsetY: 0,
+                              offsetX: 0,
+                              size: 250,
+                          }
+                      },
+                      labels: labels,
+                      legend: {
+                          position: 'right',
+                          horizontalAlign: 'center',
+                          floating: false,
+                          fontSize: '14px'
+                      },
+                      responsive: [{
+                          breakpoint: 480,
+                          options: {
+                              chart: {
+                                  height: 350
+                              },
+                              legend: {
+                                  position: 'bottom'
+                              },
+                              plotOptions: {
+                                  pie: {
+                                      size: 200
+                                  }
+                              }
+                          }
+                      }]
+                  };
 
-                    if (document.querySelector("#piste")) {
+                  if (document.querySelector("#piste")) {
                       var chart = new ApexCharts(document.querySelector("#piste"), options);
                       chart.render();
-                    }
-                } else {
-                    console.error('Error fetching data:', data);
-                }
-            } catch (error) {
-                console.error('Error fetching membership data:', error);
-            }
-        }
+                  }
+              } else {
+                  console.error('Error fetching data:', data);
+              }
+          } catch (error) {
+              console.error('Error fetching membership data:', error);
+          }
+      }
 
         fetchMembershipData();
 

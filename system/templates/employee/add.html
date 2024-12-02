@@ -15,11 +15,22 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% for input in form %}
-                            <div class="mb-3">
-                                <label class="form-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
-                                {{ input }}
-                                <small class="text-muted">{{ input.help_text }}</small>
-                            </div>
+
+                        {% if input.id_for_label == 'id_assistance_evidence_first' or input.id_for_label == 'id_assistance_evidence_second' or input.id_for_label == 'id_death_cert' %}
+                        <div class="mb-3 {{ input.id_for_label }}">
+                            <label class="form-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
+                            {{ input }}
+                            <small class="text-muted">{{ input.help_text }}</small>
+                        </div>
+                        {% else %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
+                            {{ input }}
+                            <small class="text-muted">{{ input.help_text }}</small>
+                        </div>
+                        {% endif %}
+
+                          
                         {% endfor %}
                         <input type="submit" value="{{ header_title }}" class="btn btn-primary mt-2">
                         <button type="button" onclick="back()" class="btn btn-secondary mt-2">Back</button>

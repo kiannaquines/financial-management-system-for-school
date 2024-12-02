@@ -33,7 +33,7 @@ urlpatterns = [
     
     # Update Route
     path("members/edit/<int:pk>",UpdateMembershipDetails.as_view(),name="update_membership"),
-    path("members/dependent/edit/<int:pk>",UpdateDependentsInfoView.as_view(),name="update_dependent_membership"),
+    path("members/dependent/edit/<int:pk>",UpdateMemberInfoDependents.as_view(),name="update_dependent_membership"),
     path("beneficiary/edit/<int:pk>",UpdateBeneficiaryDetails.as_view(),name="update_beneficiary"),
     path("payments/edit/<int:pk>", UpdatePaymentDetails.as_view(), name="update_payment"),
     path("users/edit/<int:pk>", UpdateUserDetails.as_view(), name="update_user"),
@@ -93,4 +93,8 @@ urlpatterns = [
     path('dependents/add', add_dependent_page, name="add_dependent_page"),
     path('dependents/update/<int:pk>', UpdateDependentsView.as_view(), name="update_dependent_page"),
     path('dependents/delete/<int:pk>', DeleteDependentDetails.as_view(), name="delete_dependent_page"),
+
+
+
+    path('member/update/info/<int:pk>', UpdateMemberInfoDependents.as_view(), name="update_membership_dependent_page"),
 ]

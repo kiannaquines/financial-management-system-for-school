@@ -3,47 +3,36 @@ from django.forms import BaseModelForm
 from system.models import *
 from system.forms import *
 from authentication.forms import *
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib.messages import success, error
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordChangeView
 from system.mixins import CustomLoginRequiredMixin
 
-class UpdateDependentsInfoView(CustomLoginRequiredMixin, UpdateView):
+class UpdateMemberInfoDependents(UpdateView):
     pk_url_kwarg = "pk"
-    template_name = 'pages/update.html'
+    template_name = "pages/update.html"
     model = Membership
-    form_class = UpdateDependentsForm
-    success_url = reverse_lazy("membership_page")
+    form_class = UpdateMembershipInforDependentsForm
+    success_url = reverse_lazy("employee_apply_membership")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
 
-    def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        success(
-            self.request,
-            "Dependent details updated successfully.",
-            extra_tags="success_tag",
-        )
+    def form_valid(self, form):
         return super().form_valid(form)
-    
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+
+    def get_object(self, queryset=None):
+        return Membership.objects.get(pk=self.kwargs.get(self.pk_url_kwarg))
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["header_title"] = "Update Dependent Details"
+        context["header_title"] = "Update Member Information"
         return context
-    
-    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
-        for field, errors in form.errors.items():
-            for err in errors:
-                error(
-                    self.request,
-                    f"{err}",
-                    extra_tags="error_tag",
-                )
-        return super().form_invalid(form)
+
 
 class UpdateDependentsView(UpdateView):
     pk_url_kwarg = "pk"
@@ -246,6 +235,8 @@ class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context["header_title"] = "Update Membership Details"
         return context
+    
+
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
@@ -268,7 +259,7 @@ class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
         return response
 
 
-
+from django.db.models import Sum
 
 class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
@@ -283,6 +274,19 @@ class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView)
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
+
+        sum_of_collections = Payment.objects.aggregate(
+            total=Sum('amount')
+        )['total'] or 0
+
+        if form.cleaned_data['amount_released'] > sum_of_collections:
+            error(
+                self.request,
+                "Insufficient funds available for this transaction",
+                extra_tags="error_tag",
+            )
+            return HttpResponseRedirect(reverse_lazy("assistance_page"))
+        
         response = super().form_valid(form)
         success(
             self.request,

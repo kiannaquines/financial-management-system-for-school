@@ -78,11 +78,23 @@ def add_expense_page(request):
 @login_required(login_url="/auth/")
 def add_assistance_page(request):
     path = reverse_lazy("assistance_page")
-
+    from django.db.models import F, Sum
     if request.method == "POST":
         form_data = AssistanceForm(request.POST, request.FILES)
 
         if form_data.is_valid():
+            sum_of_collections = Payment.objects.aggregate(
+                total=Sum('amount')
+            )['total'] or 0
+
+            if form_data.cleaned_data['amount'] > sum_of_collections:
+                error(
+                    request,
+                    "Insufficient funds available for this transaction",
+                    extra_tags="error_tag",
+                )
+                return HttpResponseRedirect(reverse_lazy("add_assistance_page"))
+
             form_data.save()
             success(
                 request,

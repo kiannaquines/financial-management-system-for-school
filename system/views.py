@@ -1,4 +1,8 @@
+from pyexpat.errors import messages
+from typing import Any
+from django.forms import BaseModelForm
 from django.shortcuts import render
+from system.forms import UpdateMembershipInforDependentsForm
 from system.models import *
 from django.db.models import Sum
 from authentication.models import AuthUser
@@ -171,7 +175,6 @@ def activate_user(request, pk):
     return HttpResponseRedirect(reverse_lazy("users_page"))
 
 
-
 def generate_other_expense(request):
     if request.method == "GET":
         query = Expenses.objects.all()
@@ -179,3 +182,29 @@ def generate_other_expense(request):
             request, "other_expense_fee_report", "Other Expenses Report", query
         )
         return result
+    
+from django.views.generic import UpdateView
+
+class UpdateMemberInfoDependents(UpdateView):
+    pk_url_kwarg = "pk"
+    template_name = "pages/update.html"
+    model = Membership
+    form_class = UpdateMembershipInforDependentsForm
+    success_url = reverse_lazy("employee_apply_membership")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update Member"
+        return context
+
