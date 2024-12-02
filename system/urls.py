@@ -102,4 +102,6 @@ urlpatterns = [
     path('ledger/update/<int:pk>', UpdateTransactionToLedger.as_view(), name="update_ledger"),
     path('ledger/delete/<int:pk>', DeleteTransactionToLedger.as_view(), name="delete_ledger"),
     path('ledger/list/export', ExportLedgerView.as_view(), name="export_ledger_list"),
+
+    path('ledger/export', ExportLedgerView.as_view(), name="export_ledger_list"),
 ]
