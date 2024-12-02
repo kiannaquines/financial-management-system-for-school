@@ -1,6 +1,24 @@
 from django.db import models
 from authentication.models import AuthUser
 
+
+class Ledger(models.Model):
+    transaction_date = models.DateField()
+    description = models.TextField(max_length=255)
+    amount = models.FloatField()
+    transaction_type = models.CharField(
+        max_length=255,
+        choices=[
+            ("Debit", "Debit"),
+            ("Credit", "Credit"),
+        ],
+    )
+    recorded_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    date_transaction = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f'{self.transaction_date} {self.amount}'
+    
 class UnenrollReason(models.Model):
     unenrolled_member_name = models.CharField(max_length=255)
     reason = models.CharField(max_length=255)
@@ -9,6 +27,7 @@ class UnenrollReason(models.Model):
     def __str__(self) -> str:
         return self.unenrolled_member_name
 
+
 class Dependents(models.Model):
 
     GENDER = [
@@ -16,7 +35,13 @@ class Dependents(models.Model):
         ("Female", "Female"),
     ]
 
-    RELATIONSHIP_TYPE = (("Daughter", "Daughter"), ("Son", "Son"), ("Spouse", "Spouse"), ("Father", "Father"), ("Mother", "Mother"))
+    RELATIONSHIP_TYPE = (
+        ("Daughter", "Daughter"),
+        ("Son", "Son"),
+        ("Spouse", "Spouse"),
+        ("Father", "Father"),
+        ("Mother", "Mother"),
+    )
     related_to_member = models.ForeignKey(
         "Membership", on_delete=models.CASCADE, null=True, blank=True
     )
@@ -256,7 +281,8 @@ class Membership(models.Model):
         help_text="Select beneficiary of the employee, select only one.",
     )
     my_dependents = models.ManyToManyField(
-        Dependents, blank=True,
+        Dependents,
+        blank=True,
         help_text="Select dependent of the employee, select multiple.",
     )
     membership_status = models.BooleanField(
@@ -266,10 +292,9 @@ class Membership(models.Model):
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
 
-
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
-    
+
     class Meta:
         db_table = "membership"
         verbose_name = "Membership"

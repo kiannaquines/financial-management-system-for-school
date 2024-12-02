@@ -97,4 +97,5 @@ urlpatterns = [
 
 
     path('member/update/info/<int:pk>', UpdateMemberInfoDependents.as_view(), name="update_membership_dependent_page"),
+    path('ledger/list', LedgerView.as_view(), name="ledger_list"),
 ]

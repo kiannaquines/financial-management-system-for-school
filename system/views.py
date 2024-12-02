@@ -15,6 +15,15 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
+from django.views.generic import View
+
+
+class LedgerView(View):
+    template_name = "ledger.html"
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return render(request, self.template_name, context)
+
 
 
 

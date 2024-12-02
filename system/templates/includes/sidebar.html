@@ -105,6 +105,36 @@
                     </ul>
                 </div>
             </li>
+
+
+            <li class="nav-item {% if 'ledger' in request.path %}active{% endif %}">
+                <a
+                    class="nav-link has-arrow  collapsed "
+                    href="#!"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#users"
+                    aria-expanded="false"
+                    aria-controls="users"
+                >
+                    <i data-feather="users" class="nav-icon icon-xs me-2"></i>
+                    Financial Ledger
+                </a>
+                <div id="users" class="collapse {% if 'ledger' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'ledger_list' %}">
+                                Ledger Account
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'ledger_list' %}">
+                                Export Ledger
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
             <li class="nav-item {% if 'assistance' in request.path %}active{% endif %}">
                 <a
                     class="nav-link has-arrow  collapsed "
