@@ -1,6 +1,13 @@
 from django.db import models
 from authentication.models import AuthUser
 
+class UnenrollReason(models.Model):
+    unenrolled_member_name = models.CharField(max_length=255)
+    reason = models.CharField(max_length=255)
+    date_unenrolled = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.unenrolled_member_name
 
 class Dependents(models.Model):
 
@@ -249,7 +256,7 @@ class Membership(models.Model):
         help_text="Select beneficiary of the employee, select only one.",
     )
     my_dependents = models.ManyToManyField(
-        Dependents, blank=True, null=True,
+        Dependents, blank=True,
         help_text="Select dependent of the employee, select multiple.",
     )
     membership_status = models.BooleanField(
