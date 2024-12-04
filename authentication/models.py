@@ -10,7 +10,7 @@ class AuthUser(AbstractUser):
         ("Treasurer", "Treasurer"),
         ("Employee", "Employee"),
     ]
-
+    middle_name = models.CharField(max_length=255, blank=True, null=True)
     user_type = models.CharField(max_length=50, choices=USER_TYPE)
 
     def __str__(self) -> str:

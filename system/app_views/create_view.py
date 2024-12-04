@@ -1,3 +1,4 @@
+from django.forms import BaseModelForm
 from django.utils import timezone
 from django.shortcuts import render
 from system.models import *
@@ -8,8 +9,72 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages import success, error
+from django.contrib import messages
+from django.http import HttpResponse
+from typing import Any
+from django.views.generic import CreateView
 
+class AddTransactionToLedger(CreateView):
+    template_name = 'pages/add.html'
+    model = Ledger
+    form_class = LedgerForm
+    success_url = reverse_lazy('ledger_list')
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['header_title'] = 'Add Transaction'
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        form.instance.recorded_by = self.request.user
+        messages.success(
+            self.request,
+            'You have successfully added a new transaction to the ledger.',
+            extra_tags='success_tag'
+        )
+        return super().form_valid(form)
+    
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+
+@login_required(login_url="/auth/")
+def add_my_dependent_page(request):
+    path = reverse_lazy("employee_view_dependents")
+
+    if request.method == "POST":
+        form_data = MyDependentForm(request.POST)
+
+        if form_data.is_valid():
+            get_membership = Membership.objects.filter(
+                user_id=request.user
+            ).first()
+            form_data.instance.related_to_member = get_membership
+
+            form_data.save()
+            success(
+                request,
+                "You have succesfully added new dependent information",
+                extra_tags="success_tag",
+            )
+            return HttpResponseRedirect(path)
+        else:
+            for field, errors in form_data.errors.items():
+                for err in errors:
+                    error(
+                        request,
+                        f"{err}",
+                        extra_tags="error_tag",
+                    )
+            return HttpResponseRedirect(reverse_lazy("add_my_dependent_page"))
+
+    form = MyDependentForm()
+    context = oneshot_add_function(
+        form, "Dependent", "Dependent Management", "Add Dependent",
+    )
+    return render(request, "employee/add.html", context)
 
 @login_required(login_url="/auth/")
 def add_dependent_page(request):
@@ -22,7 +87,7 @@ def add_dependent_page(request):
             form_data.save()
             success(
                 request,
-                "You have succesfully added new expense information",
+                "You have succesfully added new dependent information",
                 extra_tags="success_tag",
             )
             return HttpResponseRedirect(path)

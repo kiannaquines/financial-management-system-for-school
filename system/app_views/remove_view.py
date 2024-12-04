@@ -9,6 +9,50 @@ from django.contrib.messages import success, error
 from django.views.generic import DeleteView
 
 
+class DeleteTransactionToLedger(DeleteView):
+    pk_url_kwarg = 'pk'
+    template_name = 'pages/delete.html'
+    model = Ledger
+    success_url = reverse_lazy('ledger_list')
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['header_title'] = 'Delete Transaction'
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        messages.success(
+            self.request,
+            'You have successfully remove transaction to the ledger.',
+            extra_tags='success_tag'
+        )
+        return super().form_valid(form)
+    
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+
+class AssistanceDeleteView(DeleteView):
+    model = Assistance
+    success_url = reverse_lazy('employee_assistance_request')
+    template_name = 'employee/delete.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['header_title'] = "Remove Assistance Details"
+        return context
+    
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        form = super().form_valid(form)
+        success(
+            self.request,
+            "Assistance details removed successfully.",
+            extra_tags="success_tag",
+        )
+        return form
+
 class DeleteAssistanceDetails(DeleteView):
     pk_url_kwarg = "pk"
     model = Assistance

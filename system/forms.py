@@ -86,6 +86,20 @@ class DependentForm(forms.ModelForm):
         fields = "__all__"
 
 
+class MyDependentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MyDependentForm, self).__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.update({"class": "form-control"})
+
+    class Meta:
+        model = Dependents
+        fields = ("dependent_first_name","dependent_last_name", "dependent_middle_name", "dependent_last_name", "relationship_to_member", "suffix","gender",)
+        exclude = ["related_to_member",]
+
+
+
 class ExpenseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -368,15 +382,6 @@ class UserMembershipForm(forms.ModelForm):
             {"placeholder": "School Affiliation", "class": "form-control"}
         )
 
-        if user:
-            self.fields["beneficiary"].queryset = Beneficiary.objects.filter(
-                user_id=user.id, used=False
-            )
-
-        self.fields["beneficiary"].widget.attrs.update(
-            {"placeholder": "Beneficiary", "class": "form-control"}
-        )
-
     class Meta:
         model = Membership
         widgets = {
@@ -396,8 +401,8 @@ class UserMembershipForm(forms.ModelForm):
             "position",
             "gender",
             "school_affiliation",
-            "beneficiary",
         ]
+        exclude = ["beneficiary",]
 
 
 class ViewUserMembershipForm(forms.ModelForm):

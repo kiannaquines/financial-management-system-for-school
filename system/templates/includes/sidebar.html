@@ -282,13 +282,13 @@
                 <div id="assistance" class="collapse {% if request.path == '/employee/membership/add' or request.path == '/employee/assistance/add' or request.path == '/employee/assistance/list' %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'employee_assistance_request' %}">
-                                My Assistance Request
+                            <a class="nav-link " href="{% url 'employee_apply_membership' %}">
+                                Enroll Membership
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'employee_apply_membership' %}">
-                                Enroll Membership
+                            <a class="nav-link " href="{% url 'employee_assistance_request' %}">
+                                My Assistance Request
                             </a>
                         </li>
                         <li class="nav-item">
@@ -334,18 +334,28 @@
                     aria-controls="#beneficiary"
                 >
                     <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
-                    Beneficiary
+                    Member Details
                 </a>
                 <div id="beneficiary" class="collapse {% if request.path == '/employee/beneficiary/list' or request.path == '/employee/beneficiary/add' %}show{% endif %}" data-bs-parent="#sideNavbar">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'employee_view_beneficiary' %}">
-                                My Beneficiaries
+                                Beneficiaries
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'employee_view_dependents' %}">
+                                Dependents
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{% url 'employee_add_beneficiary' %}">
                                 Add Beneficiary
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{% url 'add_my_dependent_page' %}">
+                                Add Dependent
                             </a>
                         </li>
                     </ul>

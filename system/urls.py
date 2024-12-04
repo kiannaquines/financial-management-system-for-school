@@ -73,6 +73,15 @@ urlpatterns = [
     path("employee/beneficiary/add",employee_add_beneficiary,name="employee_add_beneficiary"),
     path("employee/assistance/add",employee_apply_assistance,name="employee_apply_assistance"),
     path("employee/beneficiary/list",employee_view_beneficiary,name="employee_view_beneficiary"),
+
+
+    # Dependent
+    path("employee/dependents/list",employee_view_dependents,name="employee_view_dependents"),
+
+
+    path("employee/dependents/add",add_my_dependent_page,name="add_my_dependent_page"),
+
+
     path("employee/payment/list", employee_view_payments, name="employee_view_payments"),
     path("employee/assistance/list",employee_assistance_request,name="employee_assistance_request"),
     path("employee/beneficiary/edit/<int:pk>",BeneficiaryUpdateView.as_view(),name="employee_update_beneficiary"),

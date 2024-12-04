@@ -19,14 +19,6 @@ class Ledger(models.Model):
     def __str__(self) -> str:
         return f'Ledger for {self.transaction_date}- ₱ {self.amount}'
     
-class UnenrollReason(models.Model):
-    unenrolled_member_name = models.CharField(max_length=255)
-    reason = models.CharField(max_length=255)
-    date_unenrolled = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self) -> str:
-        return self.unenrolled_member_name
-
 
 class Dependents(models.Model):
 
@@ -248,11 +240,6 @@ class Membership(models.Model):
         limit_choices_to={"user_type": "Employee"},
         unique=True,
     )
-    first_name = models.CharField(max_length=50, help_text="Employee first name")
-    middle_name = models.CharField(
-        max_length=50, blank=True, help_text="Employee middle name"
-    )
-    last_name = models.CharField(max_length=50, help_text="Employee last name")
     place_of_birth = models.CharField(max_length=50, help_text="Place of birth")
     date_of_birth = models.DateField(help_text="Date of birth")
     address = models.CharField(max_length=100, help_text="Address of the employee")
