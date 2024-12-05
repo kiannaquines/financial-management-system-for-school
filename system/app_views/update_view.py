@@ -6,33 +6,33 @@ from system.forms import *
 from authentication.forms import *
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.contrib.messages import success, error
+from django.contrib import messages
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordChangeView
 from system.mixins import CustomLoginRequiredMixin
-
+from django.db.models import Sum
 
 class UpdateTransactionToLedger(UpdateView):
-    pk_url_kwarg = 'pk'
-    template_name = 'pages/add.html'
+    pk_url_kwarg = "pk"
+    template_name = "pages/form.html"
     model = Ledger
     form_class = LedgerForm
-    success_url = reverse_lazy('ledger_list')
+    success_url = reverse_lazy("ledger_list")
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['header_title'] = 'Update Transaction'
+        context["header_title"] = "Update Transaction"
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form.instance.recorded_by = self.request.user
         messages.success(
             self.request,
-            'You have successfully updated transaction to the ledger.',
-            extra_tags='success'
+            "You have successfully updated transaction to the ledger.",
+            extra_tags="success",
         )
         return super().form_valid(form)
-    
+
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         for field, errors in form.errors.items():
             for error in errors:
@@ -42,56 +42,54 @@ class UpdateTransactionToLedger(UpdateView):
 class BeneficiaryUpdateView(UpdateView):
     model = Beneficiary
     form_class = UserBeneficiaryForm
-    pk_url_kwarg = 'pk'
-    success_url = reverse_lazy('employee_view_beneficiary')
-    template_name = 'employee/form.html'
+    pk_url_kwarg = "pk"
+    success_url = reverse_lazy("employee_view_beneficiary")
+    template_name = "employee/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['header_title'] = "Update Beneficiary Details"
+        context["header_title"] = "Update Beneficiary Details"
         return context
-    
+
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Beneficiary details updated successfully.",
             extra_tags="success",
         )
         return form
-    
+
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         for field, errors in form.errors.items():
             for error in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{error}",
                     extra_tags="danger",
                 )
         return super().form_invalid(form)
 
-
 class AssistanceUpdateView(UpdateView):
     model = Assistance
     form_class = UserAssistanceForm
-    pk_url_kwarg = 'pk'
-    success_url = reverse_lazy('employee_assistance_request')
-    template_name = 'employee/form.html'
+    pk_url_kwarg = "pk"
+    success_url = reverse_lazy("employee_assistance_request")
+    template_name = "employee/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['header_title'] = "Update Assistance Details"
+        context["header_title"] = "Update Assistance Details"
         return context
-    
+
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Assistance details updated successfully.",
             extra_tags="success",
         )
         return form
-
 
 class UpdateMemberInfoDependents(UpdateView):
     pk_url_kwarg = "pk"
@@ -102,7 +100,7 @@ class UpdateMemberInfoDependents(UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
+        kwargs["user"] = self.request.user
         return kwargs
 
     def form_valid(self, form):
@@ -116,38 +114,35 @@ class UpdateMemberInfoDependents(UpdateView):
         context["header_title"] = "Update Member Information"
         return context
 
-
 class UpdateDependentsView(UpdateView):
     pk_url_kwarg = "pk"
-    template_name = 'pages/form.html'
+    template_name = "pages/form.html"
     model = Dependents
     form_class = DependentForm
     success_url = reverse_lazy("dependents_page")
 
-
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
-        success(
+        messages.success(
             self.request,
             "Dependent details updated successfully.",
             extra_tags="success",
         )
         return super().form_valid(form)
-    
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["header_title"] = "Update Dependent Details"
         return context
-    
+
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",
                 )
         return super().form_invalid(form)
-
 
 class UpdatePasswordDetails(CustomLoginRequiredMixin, PasswordChangeView):
     pk_url_kwarg = "pk"
@@ -163,19 +158,18 @@ class UpdatePasswordDetails(CustomLoginRequiredMixin, PasswordChangeView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form.save()
-        success(self.request, "Password details updated successfully.")
+        messages.success(self.request, "Password details updated successfully.")
         return super().form_valid(form)
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",
                 )
         return super().form_invalid(form)
-
 
 class UpdateAssistanceDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
@@ -191,7 +185,7 @@ class UpdateAssistanceDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Assistance details updated successfully.",
             extra_tags="success",
@@ -202,14 +196,43 @@ class UpdateAssistanceDetails(CustomLoginRequiredMixin, UpdateView):
         response = super().form_invalid(form)
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",
                 )
         return response
 
+class UpdateSchoolYearDetails(CustomLoginRequiredMixin, UpdateView):
+    pk_url_kwarg = "pk"
+    model = SchoolYear
+    form_class = SchoolYearForm
+    success_url = reverse_lazy("school_page")
+    template_name = "pages/form.html"
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update School Year"
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_valid(form)
+        messages.success(
+            self.request, "School year details updated successfully.", extra_tags="success"
+        )
+        return response
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_invalid(form)
+        for field, errors in form.errors.items():
+            for err in errors:
+                messages.error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="danger",
+                )
+        return response
+    
 class UpdateUserDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     model = AuthUser
@@ -224,7 +247,7 @@ class UpdateUserDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request, "User details updated successfully.", extra_tags="success"
         )
         return response
@@ -233,13 +256,12 @@ class UpdateUserDetails(CustomLoginRequiredMixin, UpdateView):
         response = super().form_invalid(form)
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",
                 )
         return response
-
 
 class UpdatePaymentDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
@@ -255,7 +277,7 @@ class UpdatePaymentDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Payment details updated successfully.",
             extra_tags="success",
@@ -266,13 +288,12 @@ class UpdatePaymentDetails(CustomLoginRequiredMixin, UpdateView):
         response = super().form_invalid(form)
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",
                 )
         return response
-
 
 class UpdateBeneficiaryDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
@@ -288,7 +309,7 @@ class UpdateBeneficiaryDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Beneficiary details updated successfully.",
             extra_tags="success",
@@ -299,13 +320,12 @@ class UpdateBeneficiaryDetails(CustomLoginRequiredMixin, UpdateView):
         response = super().form_invalid(form)
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",
                 )
         return response
-
 
 class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
@@ -318,12 +338,10 @@ class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context["header_title"] = "Update Membership Details"
         return context
-    
-
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Membership details updated successfully.",
             extra_tags="success",
@@ -334,15 +352,12 @@ class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
         response = super().form_invalid(form)
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",
                 )
         return response
-
-
-from django.db.models import Sum
 
 class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
@@ -358,20 +373,20 @@ class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView)
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
 
-        sum_of_collections = Payment.objects.aggregate(
-            total=Sum('amount')
-        )['total'] or 0
+        sum_of_collections = (
+            Payment.objects.aggregate(total=Sum("amount"))["total"] or 0
+        )
 
-        if form.cleaned_data['amount_released'] > sum_of_collections:
-            error(
+        if form.cleaned_data["amount_released"] > sum_of_collections:
+            messages.error(
                 self.request,
                 "Insufficient funds available for this transaction",
                 extra_tags="danger",
             )
             return HttpResponseRedirect(reverse_lazy("assistance_page"))
-        
+
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Assistance details updated successfully.",
             extra_tags="success",
@@ -382,36 +397,80 @@ class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView)
         response = super().form_invalid(form)
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",
                 )
         return response
 
+class UpdateRelativeDependents(UpdateView):
+    pk_url_kwarg = "pk"
+    template_name = "pages/form.html"
+    model = Membership
+    form_class = AddRelativesMembershipForm
+    success_url = reverse_lazy("membership_page")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        return kwargs
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "You have successfully added your new dependents and beneficiaries.",
+            extra_tags="success",
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for err in errors:
+                messages.error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="danger",
+                )
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update Relative"
+        return context
+
 class UpdateMemberInfoDependents(UpdateView):
     pk_url_kwarg = "pk"
     template_name = "pages/form.html"
     model = Membership
-    form_class = UpdateMembershipInforDependentsForm
-    success_url = reverse_lazy("employee_apply_membership")
+    form_class = AddRelativesMembershipForm
+    success_url = reverse_lazy("employee_assistance_request")
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
         return kwargs
-    
+
     def form_valid(self, form):
+        messages.success(
+            self.request,
+            "You have successfully added your new dependents and beneficiaries.",
+            extra_tags="success",
+        )
         return super().form_valid(form)
-    
+
     def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for err in errors:
+                messages.error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="danger",
+                )
         return super().form_invalid(form)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["header_title"] = "Update Member"
+        context["header_title"] = "Update Relative"
         return context
-
 
 class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
@@ -427,7 +486,7 @@ class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Expense details updated successfully.",
             extra_tags="success",
@@ -438,7 +497,7 @@ class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
         response = super().form_invalid(form)
         for field, errors in form.errors.items():
             for err in errors:
-                error(
+                messages.error(
                     self.request,
                     f"{err}",
                     extra_tags="danger",

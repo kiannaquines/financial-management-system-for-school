@@ -120,7 +120,6 @@
     </head>
     <body>
         <div id="header_frame">
-            <img src="{{ logo_path }}" alt="DSAPSTEA" style="height: 50px; vertical-align: middle; margin-right: 10px;">
             <div class="main_header">
                 <span>DSAPSTEA Financial Management</span>
                 <span>Datu Saudi Ampatuan, Cotabato City</span>
@@ -150,7 +149,7 @@
                 </tr>
                 {% for expense in expenses %}
                 <tr>
-                    <td>{{ expense.assistance_first_name }} {{ expense.assistance_last_name }}</td>
+                    <td>{{ expense.request_by }}</td>
                     <td>{{ expense.type_of_assistance }}</td>
                     <td>{{ expense.date_released }}</td>
                     <td>{{ expense.amount_released }}</td>

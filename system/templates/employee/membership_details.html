@@ -8,18 +8,18 @@
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
             {% include './../message.html' %}
             <div class="card">
-                <div class="card-header border-0 bg-white">
+                <div class="d-flex justify-content-between align-items-center card-header p-5 border-0 bg-white">
                     <h4 class="mb-0">My Membership Details</h4>
+                    <a href="{% url 'update_membership_dependent_page' pk=membership_id %}" class="btn btn-primary">Add Beneficiary and Dependents</a>
                 </div>
-                <form method="post" class="p-3">
+                <form method="post" class="p-5">
                 {% for input in user_membership_form %}
-                <div class="form-group mt-2">
+                <div class="form-group mt-3">
                     <label for="{{ input.id_for_label }}">{{ input.label }}</label>
-                  {{ input }}
+                    {{ input }}
+                    <small class="text-muted">{{ input.help_text }}</small>
                 </div>
                 {% endfor %}
-
-                <a href="{% url 'update_membership_dependent_page' pk=membership_id %}" class="btn btn-primary mt-3">Add Beneficiary and Dependents</a>
                 </form>
             </div>
         </div>

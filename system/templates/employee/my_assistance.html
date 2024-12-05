@@ -15,15 +15,33 @@
                     <table class="table text-nowrap" id="datatable">
                         <thead>
                             <tr>
-                                <th>Requested By</th>
-                                <th>Assistance Type</th>
+                                <th>Requested by</th>
+                                <th>Assistance</th>
+                                <th>Assistance Status</th>
+                                <th>Date Requested</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for item in my_assistance_request %}
                             <tr>
-                               <td>Testing</td>
-                               <td>Testing</td>
+                                <td>
+                                    {{ item.request_by }}
+                                   </td>
+                               <td>
+                                <span class="badge bg-primary">{{ item.type_of_assistance }}</span>
+                               </td>
+                               <td>
+                                {% if item.assistance_status %}
+                                    <span class="badge bg-primary">Approved</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% endif %}
+                               </td>
+                               <td>
+                                {{ item.date_released }}
+                               </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

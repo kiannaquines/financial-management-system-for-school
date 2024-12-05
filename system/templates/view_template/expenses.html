@@ -11,28 +11,29 @@
                 <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Other Expenses</h4>
                     <div>
-                    <a href="#" class="btn btn-primary">Add Other Expenses</a>
+                    <a href="{% url 'generate_other_expense' %}" class="btn btn-primary">Export Other Expense</a>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="datatable">
                         <thead>
                             <tr>
-                                <th>Fullname</th>
+                                <th>Expense Type</th>
+                                <th>School Year</th>
                                 <th>Contact</th>
-                                <th>Gender</th>
-                                <th>Employee ID</th>
-                                <th>Position</th>
+                                <th>Date Applied</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for item in items %}
                             <tr>
-                                <td>Kian Naquines</td>
-                                <td>09050673544</td>
-                                <td>Male</td>
-                                <td>21-65759</td>
-                                <td>Master Teacher II</td>
+                                <td>{{ item.expense_type }}</td>
+                                <td>{{ item.school_year }}</td>
+                                <td>
+                                   {{ item.amount }}
+                                </td>
+                                <td>{{ item.date_added }}</td>
                                 <td class="align-middle">
                                     <div class="dropdown dropstart">
                                         <a
@@ -47,13 +48,13 @@
                                             <i class="icon-xxs" data-feather="more-vertical"></i>
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownTeamOne">
-                                            <a class="dropdown-item" href="">Dependents</a>
-                                            <a class="dropdown-item" href="">Edit</a>
-                                            <a class="dropdown-item" href="">Remove</a>
+                                            <a class="dropdown-item" href="{% url 'update_expense_page_form' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'delete_expense_page_form' pk=item.id %}">Remove</a>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

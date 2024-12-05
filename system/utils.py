@@ -25,11 +25,11 @@ def one_shot_pdf_generation(request, filename, title, query):
 
     context["date_generated"] = current_date
     context["generated_by"] = AuthUser.get_full_name(request.user)
-    context["logo_path"] = os.path.join(settings.MEDIA_ROOT, "logo", "seaoil-logo.svg")
+    context["logo_path"] = ''
     context["query_info"] = query
     context["title"] = title
     context['total_amount_paid'] = f'{total_amount:,}'
-    template = get_template("template.html")
+    template = get_template("pdf_template/template.html")
 
     rendered_html = template.render(context)
     createPDF = pisa.CreatePDF(rendered_html, dest=response)
@@ -55,11 +55,11 @@ def one_shot_pdf_generation_expense(request, filename, title, query):
     )
     context["date_generated"] = current_date
     context["generated_by"] = AuthUser.get_full_name(request.user)
-    context["logo_path"] = os.path.join(settings.MEDIA_ROOT, "logo", "seaoil-logo.svg")
+    context["logo_path"] = ''
     context["expenses"] = query
     context["title"] = title
     context['total_amount'] = f'{total_amount:,}'
-    template = get_template("expense_template.html")
+    template = get_template("pdf_template/expense_template.html")
 
     rendered_html = template.render(context)
     createPDF = pisa.CreatePDF(rendered_html, dest=response)
@@ -85,11 +85,11 @@ def one_shot_pdf_generation_other_expense(request, filename, title, query):
     )
     context["date_generated"] = current_date
     context["generated_by"] = AuthUser.get_full_name(request.user)
-    context["logo_path"] = os.path.join(settings.MEDIA_ROOT, "logo", "seaoil-logo.svg")
+    context["logo_path"] = ''
     context["expenses"] = query
     context["title"] = title
     context['total_amount'] = f'{total_amount:,}'
-    template = get_template("other_expense_template.html")
+    template = get_template("pdf_template/other_expense_template.html")
 
     rendered_html = template.render(context)
     createPDF = pisa.CreatePDF(rendered_html, dest=response)

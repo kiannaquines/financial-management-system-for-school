@@ -48,9 +48,9 @@
                                             <i class="icon-xxs" data-feather="more-vertical"></i>
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownTeamOne">
-                                            <a class="dropdown-item" href="">Dependents</a>
-                                            <a class="dropdown-item" href="">Edit</a>
-                                            <a class="dropdown-item" href="">Remove</a>
+                                            <a class="dropdown-item" href="{% url 'update_membership' pk=item.id %}">Edit</a>
+                                            <a class="dropdown-item" href="{% url 'update_dependent_membership' pk=item.id %}">Add Relative</a>
+                                            <a class="dropdown-item" href="{% url 'delete_membership' pk=item.id %}">Remove</a>
                                         </div>
                                     </div>
                                 </td>

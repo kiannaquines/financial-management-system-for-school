@@ -1,0 +1,69 @@
+{% extends './../includes/base.html' %}
+{% load static %}
+{% block title %}DSAPTEA Financial Management System{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-n22 px-6 mt-6">
+    <div class="row my-6">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            {% include './../message.html' %}
+            <div class="card">
+                <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Pending Assistance Expenses</h4>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Requested by</th>
+                                <th>Assistance Type</th>
+                                <th>Assistance Status</th>
+                                <th>Amount Applied</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in pending_assistance %}
+                            <tr>
+                                <td>{{ item.request_by }}</td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        {{ item.type_of_assistance }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if not item.assistance_status %}
+                                    <span class="badge bg-warning">
+                                        Pending
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.amount_released }}</td>
+                                <td class="align-middle">
+                                    <div class="dropdown dropstart">
+                                        <a
+                                            class="text-muted text-primary-hover"
+                                            href="#"
+                                            role="button"
+                                            id="dropdownTeamOne"
+                                            data-bs-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                        >
+                                            <i class="icon-xxs" data-feather="more-vertical"></i>
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne">
+                                            <a class="dropdown-item" href="{% url 'approve_assistance' pk=item.id %}">Approve</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

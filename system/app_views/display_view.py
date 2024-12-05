@@ -136,17 +136,24 @@ def other_expense_page(request):
     context['expenses'] = expenses
     return render(request, "view_template/other_expenses.html", context)
 
+
+@login_required(login_url="/auth/")
+def school_page(request):
+    context = {}
+    context['items'] = SchoolYear.objects.all()
+    return render(request, "view_template/school_year.html", context)
+
 @login_required(login_url="/auth/")
 def other_report_expense_page(request):
     context = {}
     other_expenses = Expenses.objects.all()
-    context['expenses'] = other_expenses
+    context['items'] = other_expenses
     return render(request, "view_template/expenses.html", context)
 
 @login_required(login_url="/auth/")
 def assistance_expense_page(request):
     context = {}
-    assistance = Assistance.objects.all()
+    assistance = Assistance.objects.filter(assistance_status=True).all()
     context["assistance"] = assistance
     return render(request, "view_template/assistance_expenses.html", context)
 
@@ -265,7 +272,7 @@ def generate_annual_membership_report(request):
             "report_type": f"Annual Membership Report",
         }
 
-        template = get_template("membership_report.html")
+        template = get_template("pdf_template/membership_report.html")
         html = template.render(context)
         pisa.CreatePDF(html, dest=response)
 
@@ -338,7 +345,7 @@ class ExportLedgerView(View):
         balance = total_income - total_expense
         data.append(['BALANCE:', '', '', f'P {balance:,.2f}', ''])
         
-        table = Table(data, colWidths=[1*inch, 1.5*inch, 4*inch, 2*inch, 2*inch])
+        table = Table(data, colWidths=[1*inch, 1.5*inch, 6*inch, 1.1*inch, 1.1*inch])
 
         
         style = TableStyle([
@@ -506,9 +513,9 @@ def approve_assistance(request, pk):
     success(
         request,
         "You have successfully approved the assistance request.",
-        extra_tags="success_tag",
+        extra_tags="success",
     )
-    return HttpResponseRedirect(reverse_lazy("assistance_page"))
+    return HttpResponseRedirect(reverse_lazy("pending_assistance_page"))
 
 
 @login_required(login_url="/auth/")
@@ -519,7 +526,7 @@ def approve_membership(request, pk):
     success(
         request,
         "You have successfully approved the membership request.",
-        extra_tags="success_tag",
+        extra_tags="success",
     )
     return HttpResponseRedirect(reverse_lazy("membership_page"))
 
@@ -532,7 +539,7 @@ def activate_user(request, pk):
     success(
         request,
         "You have successfully activated the user acount.",
-        extra_tags="success_tag",
+        extra_tags="success",
     )
     return HttpResponseRedirect(reverse_lazy("users_page"))
 

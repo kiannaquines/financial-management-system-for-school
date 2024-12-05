@@ -15,15 +15,25 @@
                     <table class="table text-nowrap" id="datatable">
                         <thead>
                             <tr>
-                                <th>Beneficiary Of</th>
-                                <th>Assistance Type</th>
+                                <th>Related to</th>
+                                <th>Beneficiary</th>
+                                <th>Relationship</th>
+                                <th>Birth Date</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for item in items %}
                             <tr>
-                               <td>Testing</td>
-                               <td>Testing</td>
+                               <td>{{ item.user_id }}</td>
+                               <td>{{ item.get_full_name }}</td>
+                               <td>
+                                <span class="badge bg-primary">
+                                    {{ item.relationship }}
+                                </span>
+                               </td>
+                               <td>{{ item.date_of_birth }}</td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

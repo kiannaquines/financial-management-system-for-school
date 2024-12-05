@@ -1,13 +1,15 @@
 from django.db import models
 from authentication.models import AuthUser
 from django.db.models import Q
-
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 
 class SchoolYear(models.Model):
     start_year = models.DateField(help_text="Start Year")
     end_year = models.DateField(help_text="End Year")
     primary_school_year = models.BooleanField(
-        default=False, help_text="Toggle for primary school years"
+        default=False, help_text="Toggle if primary school year"
     )
 
     def __str__(self) -> str:
@@ -19,7 +21,7 @@ class SchoolYear(models.Model):
                 fields=["primary_school_year"],
                 condition=Q(primary_school_year=True),
                 name="unique_primary_school_year",
-                violation_error_message="Only one primary school year should be specified, please try again later.",
+                violation_error_message="Only one school year should be specified as primary school year, please try again.",
             )
         ]
         verbose_name = "School year"
@@ -44,7 +46,6 @@ class Ledger(models.Model):
             ("Credit", "Credit"),
         ],
     )
-    recorded_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
     date_transaction = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
@@ -167,14 +168,13 @@ class Assistance(models.Model):
     )
     amount_released = models.DecimalField(
         max_digits=10,
-        default=0.00,
         decimal_places=2,
-        help_text="Amount to be released by the assistance",
+        help_text="Amount applied in assistance",
     )
     date_released = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"{self.assistance_first_name} {self.assistance_last_name} {self.suffix}"
+        return f"{self.request_by} assistance for {self.type_of_assistance}"
 
     class Meta:
         verbose_name = "Assistance"
@@ -225,7 +225,7 @@ class Beneficiary(models.Model):
 
     def __str__(self) -> str:
         return (
-            f"{self.beneficiary_first_name} {self.beneficiary_last_name} {self.suffix}"
+            f"{self.beneficiary_first_name} {self.beneficiary_last_name}"
         )
     
     def get_full_name(self):
@@ -388,3 +388,53 @@ class Payment(models.Model):
         verbose_name = "Payment"
         verbose_name_plural = "Payments"
         db_table = "payment"
+
+
+@receiver(post_save, sender=Payment)
+def handle_payment_post_save(sender, instance, created, **kwargs):
+    if created:
+        current_date = timezone.now().date()
+        description = f"Recorded payment {instance.payment_type} with amount of {instance.amount} paid by Member #{instance.paid_by.user_id.id}"
+        get_school_year = SchoolYear.objects.get(primary_school_year=True)
+        create_transaction_ledger = Ledger.objects.create(
+            transaction_date=current_date,
+            description=description,
+            amount=instance.amount,
+            transaction_type="Credit",
+            school_year_transaction=get_school_year,
+        )
+        create_transaction_ledger.save()
+
+
+@receiver(post_save, sender=Assistance)
+def handle_payment_post_save(sender, instance, created, **kwargs):
+    if created:
+        current_date = timezone.now().date()
+        description = f"Cash assistance recorded {instance.type_of_assistance} with amount of {instance.amount_released} to Member #{instance.request_by.user_id.id}"
+        get_school_year = SchoolYear.objects.get(primary_school_year=True)
+        create_transaction_ledger = Ledger.objects.create(
+            transaction_date=current_date,
+            description=description,
+            amount=instance.amount_released,
+            transaction_type="Debit",
+            school_year_transaction=get_school_year,
+        )
+        create_transaction_ledger.save()
+
+
+@receiver(post_save, sender=Expenses)
+def handle_payment_post_save(sender, instance, created, **kwargs):
+    if created:
+        current_date = timezone.now().date()
+        description = f"Expense recorded {instance.expense_type} with amount of {instance.amount}"
+        get_school_year = SchoolYear.objects.get(primary_school_year=True)
+        create_transaction_ledger = Ledger.objects.create(
+            transaction_date=current_date,
+            description=description,
+            amount=instance.amount,
+            transaction_type="Debit",
+            school_year_transaction=instance.school_year,
+        )
+        create_transaction_ledger.save()
+
+

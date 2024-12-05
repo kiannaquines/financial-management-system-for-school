@@ -259,3 +259,33 @@ class DeleteDependentDetails(DeleteView):
             extra_tags="danger",
         )
         return response
+    
+
+class RemoveSchoolYearDetails(DeleteView):
+    pk_url_kwarg = "pk"
+    model = SchoolYear
+    success_url = reverse_lazy("school_page")
+    template_name = "pages/delete.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Removed School Year Detail"
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_valid(form)
+        messages.success(
+            self.request,
+            "School year details removed successfully.",
+            extra_tags="success",
+        )
+        return response
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        response = super().form_invalid(form)
+        messages.error(
+            self.request,
+            "There is an error while trying to removed the school year details",
+            extra_tags="danger",
+        )
+        return response

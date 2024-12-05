@@ -14,7 +14,7 @@
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% for input in form %}
-                            {% if input.id_for_label == "id_is_superuser" or input.id_for_label == "id_is_active" or input.id_for_label == "id_is_staff" or input.id_for_label == "id_released_status" %}
+                            {% if input.id_for_label == "id_is_superuser" or input.id_for_label == "id_is_active" or input.id_for_label == "id_is_staff" or input.id_for_label == "id_released_status" or input.id_for_label == "id_primary_school_year" %}
                         <div class="form-check">
                             <label class="form-check-label" for="{{ input.id_for_label }}">{{ input.label }}</label>
                             {{ input }}

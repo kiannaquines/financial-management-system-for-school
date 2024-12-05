@@ -31,6 +31,7 @@ def employee_apply_membership(request):
             return HttpResponseRedirect(reverse_lazy('employee_apply_membership'))
         
     context['form'] = form
+    context['header_title'] = 'Enroll Member'
     return render(request,'employee/form.html',context)
 
 @login_required(login_url='/auth/')
@@ -62,6 +63,7 @@ def employee_add_beneficiary(request):
             return HttpResponseRedirect(reverse_lazy('employee_view_beneficiary'))
 
     context['form'] = form
+    context['header_title'] = 'Add Beneficiary'
     return render(request,'employee/form.html',context)
 
 @login_required(login_url='/auth/')
@@ -84,7 +86,7 @@ def employee_apply_assistance(request):
 
             assistance_data.request_by = query_my_membership
             assistance_data.save()
-            messages.success(request,'You have successfully applied for assistance, Thank you!.',extra_tags='success')
+            messages.success(request,'You have successfully applied for assistance, please wait until the president of the association approve your request. Thank you!.',extra_tags='warning')
             return HttpResponseRedirect(reverse_lazy('employee_assistance_request'))
         else:
             messages.error(request,'There is something wrong in applying for assistance, please try again.',extra_tags='danger')
@@ -97,26 +99,26 @@ def employee_apply_assistance(request):
 @login_required(login_url='/auth/')
 def employee_view_beneficiary(request):
     context = {}
-    context['view_data'] = Beneficiary.objects.filter(user_id__user_id=request.user)
+    context['items'] = Beneficiary.objects.filter(user_id__user_id=request.user)
     return render(request,'employee/my_beneficiary.html',context)
 
 
 @login_required(login_url='/auth/')
 def employee_view_dependents(request):
     context = {}
-    context['view_data'] = Dependents.objects.filter(related_to_member__user_id=request.user)
+    context['items'] = Dependents.objects.filter(related_to_member__user_id=request.user)
     return render(request,'employee/my_dependents.html',context)
 
 @login_required(login_url='/auth/')
 def employee_view_payments(request):
     context = {}
-    context['view_data'] = Payment.objects.filter(paid_by__user_id=request.user)
+    context['items'] = Payment.objects.filter(paid_by__user_id=request.user)
     return render(request,'employee/my_payments.html',context)
 
 @login_required(login_url='/auth/')
 def employee_assistance_request(request):
     context = {}
-    context['view_data'] = Assistance.objects.filter(request_by__user_id=request.user)
+    context['my_assistance_request'] = Assistance.objects.filter(request_by__user_id=request.user)
     return render(request,'employee/my_assistance.html',context)
 
 

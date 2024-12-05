@@ -21,19 +21,19 @@ urlpatterns = [
 
     # Payments URL's
     path("payments/list", payments_page, name="payments_page"),
-    path("payment/new", add_payment_page, name="add_payment_page"),
+    path("payments/new", add_payment_page, name="add_payment_page"),
     path("payments/edit/<int:pk>", UpdatePaymentDetails.as_view(), name="update_payment"),
     path("payments/delete/<int:pk>",DeletePaymentDetails.as_view(),name="delete_payment"),
 
     # Membership URL's
     path("members/list", membership_page, name="membership_page"),
     path("members/pending/list", pending_membership_page, name="pending_membership_page"),
-    path("member/new", add_member_page, name="add_member_page"),
+    path("members/new", add_member_page, name="add_member_page"),
     path("members/edit/<int:pk>",UpdateMembershipDetails.as_view(),name="update_membership"),
-    path("members/dependent/edit/<int:pk>",UpdateMemberInfoDependents.as_view(),name="update_dependent_membership"),
+    path("members/dependent/edit/<int:pk>",UpdateRelativeDependents.as_view(),name="update_dependent_membership"),
     path("members/delete/<int:pk>",DeleteMembershipDetails.as_view(),name="delete_membership"),
-    path("membership/approve/<int:pk>", approve_membership, name="approve_membership"),
-    path('member/update/info/<int:pk>', UpdateMemberInfoDependents.as_view(), name="update_membership_dependent_page"),
+    path("members/approve/<int:pk>", approve_membership, name="approve_membership"),
+    path('members/update/info/<int:pk>', UpdateMemberInfoDependents.as_view(), name="update_membership_dependent_page"),
 
     #  Users URL's
     path("users/list", users_page, name="users_page"),
@@ -50,10 +50,16 @@ urlpatterns = [
     path("assistance/new", add_assistance_page, name="add_assistance_page"),
     path("assistance/edit/<int:pk>",UpdateAssistanceDetails.as_view(),name="update_assistance"),
     path("assistance/delete/<int:pk>",DeleteAssistanceDetails.as_view(),name="delete_assistance"),
+
     path("assistance/pending/list",pending_assistance_page,name="pending_assistance_page"),
     path("assistance/approve/<int:pk>", approve_assistance, name="approve_assistance"),
     path('assistance/update/release/<int:pk>', UpdateAssistanceReleaseStatusDetails.as_view(), name="update_assistance_release_status_details"),
 
+    # Dependent
+    path('dependents/list', dependents_page, name="dependents_page"),
+    path('dependents/add', add_dependent_page, name="add_dependent_page"),
+    path('dependents/update/<int:pk>', UpdateDependentsView.as_view(), name="update_dependent_page"),
+    path('dependents/delete/<int:pk>', DeleteDependentDetails.as_view(), name="delete_dependent_page"),
 
     # Expenses 
     path("expenses/list", other_expense_page, name="other_expense_page"),
@@ -71,7 +77,7 @@ urlpatterns = [
     path("report/others/expense/generate/list", generate_other_expense, name="generate_other_expense"),
     path("report/monthly/dues/list", monthly_due_page, name="monthly_due_page"),
     path("report/expense/assistance/list",assistance_report_expense_page,name="assistance_report_expense_page"),
-    path("report/other_expense/assistance/list",other_report_expense_page,name="other_report_expense_page"),
+    path("report/other_expense/list",other_report_expense_page,name="other_report_expense_page"),
     
     # Ledger
     path('ledger/update/<int:pk>', UpdateTransactionToLedger.as_view(), name="update_ledger"),
@@ -83,13 +89,13 @@ urlpatterns = [
 
     # Employee
     path("employee/membership/add",employee_apply_membership,name="employee_apply_membership"),
+    path("employee/assistance/list",employee_assistance_request,name="employee_assistance_request"),
     path("employee/beneficiary/add",employee_add_beneficiary,name="employee_add_beneficiary"),
     path("employee/assistance/add",employee_apply_assistance,name="employee_apply_assistance"),
     path("employee/beneficiary/list",employee_view_beneficiary,name="employee_view_beneficiary"),
     path("employee/dependents/list",employee_view_dependents,name="employee_view_dependents"),
     path("employee/dependents/add",add_my_dependent_page,name="add_my_dependent_page"),
     path("employee/payment/list", employee_view_payments, name="employee_view_payments"),
-    path("employee/assistance/list",employee_assistance_request,name="employee_assistance_request"),
     path("employee/beneficiary/edit/<int:pk>",BeneficiaryUpdateView.as_view(),name="employee_update_beneficiary"),
     path("employee/beneficiary/delete/<int:pk>",BeneficiaryUpdateView.as_view(),name="employee_delete_beneficiary"),
     path("employee/assistance/edit/<int:pk>",AssistanceUpdateView.as_view(),name="employee_update_assistance"),
@@ -100,12 +106,11 @@ urlpatterns = [
     path("generate/report/annual/membership",generate_annual_membership_report, name="generate_annual_membership_report"),
 
 
-
-    # Dependent
-    path('dependents/list', dependents_page, name="dependents_page"),
-    path('dependents/add', add_dependent_page, name="add_dependent_page"),
-    path('dependents/update/<int:pk>', UpdateDependentsView.as_view(), name="update_dependent_page"),
-    path('dependents/delete/<int:pk>', DeleteDependentDetails.as_view(), name="delete_dependent_page"),
+    # School Year
+    path('school/year/list', school_page, name="school_page"),
+    path('school/year/list/new', AddSchoolYear.as_view(), name="add_school_year_page"),
+    path('school/year/list/edit/<int:pk>', UpdateSchoolYearDetails.as_view(), name="update_school_year_page"),
+    path('school/year/list/remove/<int:pk>', RemoveSchoolYearDetails.as_view(), name="remove_school_year_page"),
 
     # JSON data URL's
     path("get_monthly_payment_data/",get_monthly_payment_data,name="get_monthly_payment_data"),

@@ -109,6 +109,24 @@ class MyDependentForm(forms.ModelForm):
         ]
 
 
+
+class SchoolYearForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(SchoolYearForm, self).__init__(*args, **kwargs)
+        self.fields["start_year"].widget.attrs.update({"class": "form-control"})
+        self.fields["end_year"].widget.attrs.update({"class": "form-control"})
+        self.fields["primary_school_year"].widget.attrs.update({"class": "form-check-input"})
+
+    class Meta:
+        model = SchoolYear
+        fields = '__all__'
+        widgets = {
+            'start_year': forms.DateInput({'type':'date'}),
+            'end_year': forms.DateInput({'type':'date'})
+        }
+
+
 class ExpenseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
@@ -282,6 +300,24 @@ class MembershipForm(forms.ModelForm):
             "school_affiliation",
         ]
         exclude = ["beneficiary"]
+
+
+class AddRelativesMembershipForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AddRelativesMembershipForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update(
+                {"class": "form-control", "placeholder": field.label}
+            )
+            field.widget.is_required = True
+
+    class Meta:
+        model = Membership
+        fields = [
+            "my_dependents",
+            "beneficiary",
+        ]
 
 
 class PaymentForm(forms.ModelForm):

@@ -13,6 +13,31 @@ from typing import Any
 from system.models import *
 from system.forms import *
 
+class AddSchoolYear(CreateView):
+    template_name = "pages/form.html"
+    model = SchoolYear
+    form_class = SchoolYearForm
+    success_url = reverse_lazy("school_page")
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Add School Year"
+        return context
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        messages.success(
+            self.request,
+            "You have successfully added a new school year.",
+            extra_tags="success",
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form: BaseModelForm) -> HttpResponse:
+        for field, errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, error,extra_tags="danger")
+        return super().form_invalid(form)
+    
 class AddTransactionToLedger(CreateView):
     template_name = "pages/form.html"
     model = Ledger
@@ -69,6 +94,7 @@ def add_my_dependent_page(request):
 
     form = MyDependentForm()
     context["form"] = form
+    context['header_title'] = 'Add Dependent'
     return render(request, "employee/form.html", context)
 
 
@@ -111,6 +137,19 @@ def add_expense_page(request):
         form_data = ExpenseForm(request.POST)
 
         if form_data.is_valid():
+
+            sum_of_collections = (
+                Payment.objects.aggregate(total=Sum("amount"))["total"] or 0
+            )
+
+            if form_data.cleaned_data["amount"] > sum_of_collections:
+                messages.error(
+                    request,
+                    "Insufficient funds available for this transaction",
+                    extra_tags="info",
+                )
+                return HttpResponseRedirect(reverse_lazy("add_expense_page_form"))
+        
             form_data.save()
             messages.success(
                 request,
@@ -126,7 +165,7 @@ def add_expense_page(request):
                         err,
                         extra_tags="danger",
                     )
-            return HttpResponseRedirect(reverse_lazy("add_expense_page"))
+            return HttpResponseRedirect(reverse_lazy("add_expense_page_form"))
 
     form = ExpenseForm()
     context["form"] = form
