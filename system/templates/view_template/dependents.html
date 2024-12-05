@@ -6,33 +6,32 @@
 <div class="container-fluid mt-n22 px-6 mt-6">
     <div class="row my-6">
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
-            {% include './../includes/message.html' %}
+            {% include './../message.html' %}
             <div class="card">
                 <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Dependents</h4>
                     <div>
-                    <a href="#" class="btn btn-primary">Add Dependents</a>
+                    <a href="{% url 'add_dependent_page' %}" class="btn btn-primary">Add Dependents</a>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="datatable">
                         <thead>
                             <tr>
+                                <th>Related to</th>
                                 <th>Fullname</th>
-                                <th>Contact</th>
                                 <th>Gender</th>
-                                <th>Employee ID</th>
-                                <th>Position</th>
+                                <th>Relationship</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for item in dependents %}
                             <tr>
-                                <td>Kian Naquines</td>
-                                <td>09050673544</td>
-                                <td>Male</td>
-                                <td>21-65759</td>
-                                <td>Master Teacher II</td>
+                                <td>{{ item.related_to_member }}</td>
+                                <td>{{ item.get_full_name_of_dependent }}</td>
+                                <td>{{ item.gender }}</td>
+                                <td>{{ item.relationship_to_member }}</td>
                                 <td class="align-middle">
                                     <div class="dropdown dropstart">
                                         <a
@@ -46,7 +45,7 @@
                                         >
                                             <i class="icon-xxs" data-feather="more-vertical"></i>
                                         </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
+                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne">
                                             <a class="dropdown-item" href="">Dependents</a>
                                             <a class="dropdown-item" href="">Edit</a>
                                             <a class="dropdown-item" href="">Remove</a>

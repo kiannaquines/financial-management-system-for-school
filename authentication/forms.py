@@ -55,6 +55,9 @@ class RegistrationForm(UserCreationForm):
         self.fields["first_name"].widget.attrs.update(
             {"placeholder": "First Name", "class": "form-control"}
         )
+        self.fields["middle_name"].widget.attrs.update(
+            {"placeholder": "Last Name", "class": "form-control"}
+        )
         self.fields["last_name"].widget.attrs.update(
             {"placeholder": "Last Name", "class": "form-control"}
         )
@@ -79,6 +82,7 @@ class RegistrationForm(UserCreationForm):
             "password1",
             "password2",
             "first_name",
+            "middle_name",
             "last_name",
             "email",
             "user_type",

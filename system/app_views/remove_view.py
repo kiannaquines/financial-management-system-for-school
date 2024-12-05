@@ -5,7 +5,7 @@ from system.forms import *
 from authentication.forms import *
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.contrib.messages import success, error
+from django.contrib import messages
 from django.views.generic import DeleteView
 
 
@@ -24,7 +24,7 @@ class DeleteTransactionToLedger(DeleteView):
         messages.success(
             self.request,
             'You have successfully remove transaction to the ledger.',
-            extra_tags='success_tag'
+            extra_tags='success'
         )
         return super().form_valid(form)
     
@@ -46,10 +46,10 @@ class AssistanceDeleteView(DeleteView):
     
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Assistance details removed successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return form
 
@@ -66,19 +66,19 @@ class DeleteAssistanceDetails(DeleteView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Assistance details removed successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
+        messages.error(
             self.request,
             "There is an error while trying to removing the assistance details",
-            extra_tags="error_tag",
+            extra_tags="danger",
         )
         return response
 
@@ -96,17 +96,17 @@ class DeleteUserDetails(DeleteView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
-            self.request, "User details removed successfully.", extra_tags="success_tag"
+        messages.success(
+            self.request, "User details removed successfully.", extra_tags="success"
         )
         return response
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
+        messages.error(
             self.request,
             "There is an error while trying to remove the user details",
-            extra_tags="error_tag",
+            extra_tags="danger",
         )
         return response
 
@@ -124,19 +124,19 @@ class DeletePaymentDetails(DeleteView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Payment removed successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
+        messages.error(
             self.request,
             "There is an error while trying to remove the payment details",
-            extra_tags="error_tag",
+            extra_tags="danger",
         )
         return response
 
@@ -154,19 +154,19 @@ class DeleteBeneficiaryDetails(DeleteView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Beneficiary details removed successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
+        messages.error(
             self.request,
             "There is an error while trying to remove the beneficiary details",
-            extra_tags="error_tag",
+            extra_tags="danger",
         )
         return response
 
@@ -184,19 +184,19 @@ class DeleteMembershipDetails(DeleteView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Membership details removed successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
+        messages.error(
             self.request,
             "There is an error while trying to removed the membership details",
-            extra_tags="error_tag",
+            extra_tags="danger",
         )
         return response
 
@@ -214,19 +214,19 @@ class DeleteExpenseDetails(DeleteView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Expense details removed successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
+        messages.error(
             self.request,
             "There is an error while trying to removed the expense details",
-            extra_tags="error_tag",
+            extra_tags="danger",
         )
         return response
     
@@ -244,18 +244,18 @@ class DeleteDependentDetails(DeleteView):
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
-        success(
+        messages.success(
             self.request,
             "Dependent details removed successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_invalid(form)
-        error(
+        messages.error(
             self.request,
             "There is an error while trying to removed the dependent details",
-            extra_tags="error_tag",
+            extra_tags="danger",
         )
         return response

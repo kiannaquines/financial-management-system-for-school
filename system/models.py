@@ -1,10 +1,41 @@
 from django.db import models
 from authentication.models import AuthUser
+from django.db.models import Q
+
+
+class SchoolYear(models.Model):
+    start_year = models.DateField(help_text="Start Year")
+    end_year = models.DateField(help_text="End Year")
+    primary_school_year = models.BooleanField(
+        default=False, help_text="Toggle for primary school years"
+    )
+
+    def __str__(self) -> str:
+        return f"School Year {self.start_year.year} - {self.end_year.year}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["primary_school_year"],
+                condition=Q(primary_school_year=True),
+                name="unique_primary_school_year",
+                violation_error_message="Only one primary school year should be specified, please try again later.",
+            )
+        ]
+        verbose_name = "School year"
+        verbose_name_plural = "School years"
 
 
 class Ledger(models.Model):
     transaction_date = models.DateField()
     description = models.TextField(max_length=255)
+    school_year_transaction = models.ForeignKey(
+        SchoolYear,
+        related_name="school_year_transaction",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
     amount = models.FloatField()
     transaction_type = models.CharField(
         max_length=255,
@@ -14,11 +45,15 @@ class Ledger(models.Model):
         ],
     )
     recorded_by = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
-    date_transaction = models.DateTimeField(auto_now_add=True)        
+    date_transaction = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f'Ledger for {self.transaction_date}- ₱ {self.amount}'
-    
+        return f"Ledger for {self.transaction_date}- ₱ {self.amount}"
+
+    class Meta:
+        verbose_name = "Ledger"
+        verbose_name_plural = "Ledgers"
+
 
 class Dependents(models.Model):
 
@@ -74,6 +109,11 @@ class Dependents(models.Model):
 
     def __str__(self) -> str:
         return self.get_full_name_of_dependent()
+    
+
+    class Meta:
+        verbose_name = "Dependent"
+        verbose_name_plural = "Dependents"
 
 
 class Assistance(models.Model):
@@ -82,25 +122,19 @@ class Assistance(models.Model):
         ("Death", "Death"),
         ("Hospitalization", "Hospitalization"),
     ]
-
+    school_year = models.ForeignKey(
+        SchoolYear,
+        related_name="assistance_school_year",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
     request_by = models.ForeignKey(
         "Membership",
         on_delete=models.CASCADE,
         help_text="The name of the member who requested the assistance",
     )
     id = models.AutoField(primary_key=True)
-    assistance_first_name = models.CharField(
-        max_length=50, help_text="The first name of the employee"
-    )
-    assistance_middle_name = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        help_text="The middle name of the employee",
-    )
-    assistance_last_name = models.CharField(
-        max_length=100, help_text="The last name of the employee"
-    )
     suffix = models.CharField(
         max_length=10, blank=True, null=True, help_text="The suffix of the employee"
     )
@@ -135,7 +169,7 @@ class Assistance(models.Model):
         max_digits=10,
         default=0.00,
         decimal_places=2,
-        help_text="Amoutnt to be released by the assistance",
+        help_text="Amount to be released by the assistance",
     )
     date_released = models.DateTimeField(auto_now_add=True)
 
@@ -193,6 +227,9 @@ class Beneficiary(models.Model):
         return (
             f"{self.beneficiary_first_name} {self.beneficiary_last_name} {self.suffix}"
         )
+    
+    def get_full_name(self):
+        return f"{self.beneficiary_first_name} {self.beneficiary_last_name}"
 
     class Meta:
         verbose_name = "Benefeciary"
@@ -276,11 +313,12 @@ class Membership(models.Model):
         default=False, help_text="Membership status of the employee"
     )
 
-    def __str__(self) -> str:
-        return f"{self.first_name} {self.last_name}"
+    school_year = models.ForeignKey(
+        SchoolYear, related_name="membership_school_year", on_delete=models.CASCADE
+    )
 
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+    def __str__(self) -> str:
+        return f"{self.user_id.first_name} {self.user_id.last_name}"
 
     class Meta:
         db_table = "membership"
@@ -296,6 +334,13 @@ class Expenses(models.Model):
     )
 
     expense_type = models.CharField(max_length=255, choices=EXPENSE_TYPE)
+    school_year = models.ForeignKey(
+        SchoolYear,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="expense_school_year",
+    )
     amount = models.FloatField(help_text="Amount of Expenses")
     date_added = models.DateTimeField(auto_now_add=True)
 
@@ -326,6 +371,9 @@ class Payment(models.Model):
         help_text="Employee who paid",
     )
     amount = models.FloatField(help_text="Amount employee paid")
+    school_year = models.ForeignKey(
+        SchoolYear, blank=True, null=True, on_delete=models.CASCADE
+    )
     payment_type = models.CharField(
         max_length=50,
         choices=PAYMENT_TYPE,

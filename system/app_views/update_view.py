@@ -29,7 +29,7 @@ class UpdateTransactionToLedger(UpdateView):
         messages.success(
             self.request,
             'You have successfully updated transaction to the ledger.',
-            extra_tags='success_tag'
+            extra_tags='success'
         )
         return super().form_valid(form)
     
@@ -44,7 +44,7 @@ class BeneficiaryUpdateView(UpdateView):
     form_class = UserBeneficiaryForm
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('employee_view_beneficiary')
-    template_name = 'employee/update.html'
+    template_name = 'employee/form.html'
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -56,7 +56,7 @@ class BeneficiaryUpdateView(UpdateView):
         success(
             self.request,
             "Beneficiary details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return form
     
@@ -66,7 +66,7 @@ class BeneficiaryUpdateView(UpdateView):
                 error(
                     self.request,
                     f"{error}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return super().form_invalid(form)
 
@@ -76,7 +76,7 @@ class AssistanceUpdateView(UpdateView):
     form_class = UserAssistanceForm
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('employee_assistance_request')
-    template_name = 'employee/update.html'
+    template_name = 'employee/form.html'
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -88,14 +88,14 @@ class AssistanceUpdateView(UpdateView):
         success(
             self.request,
             "Assistance details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return form
 
 
 class UpdateMemberInfoDependents(UpdateView):
     pk_url_kwarg = "pk"
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
     model = Membership
     form_class = UpdateMembershipInforDependentsForm
     success_url = reverse_lazy("employee_apply_membership")
@@ -119,7 +119,7 @@ class UpdateMemberInfoDependents(UpdateView):
 
 class UpdateDependentsView(UpdateView):
     pk_url_kwarg = "pk"
-    template_name = 'pages/update.html'
+    template_name = 'pages/form.html'
     model = Dependents
     form_class = DependentForm
     success_url = reverse_lazy("dependents_page")
@@ -129,7 +129,7 @@ class UpdateDependentsView(UpdateView):
         success(
             self.request,
             "Dependent details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return super().form_valid(form)
     
@@ -144,7 +144,7 @@ class UpdateDependentsView(UpdateView):
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return super().form_invalid(form)
 
@@ -154,7 +154,7 @@ class UpdatePasswordDetails(CustomLoginRequiredMixin, PasswordChangeView):
     model = AuthUser
     form_class = PasswordChangeForm
     success_url = reverse_lazy("users_page")
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -172,7 +172,7 @@ class UpdatePasswordDetails(CustomLoginRequiredMixin, PasswordChangeView):
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return super().form_invalid(form)
 
@@ -182,7 +182,7 @@ class UpdateAssistanceDetails(CustomLoginRequiredMixin, UpdateView):
     model = Assistance
     form_class = AssistanceForm
     success_url = reverse_lazy("assistance_page")
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -194,7 +194,7 @@ class UpdateAssistanceDetails(CustomLoginRequiredMixin, UpdateView):
         success(
             self.request,
             "Assistance details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
@@ -205,7 +205,7 @@ class UpdateAssistanceDetails(CustomLoginRequiredMixin, UpdateView):
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return response
 
@@ -215,7 +215,7 @@ class UpdateUserDetails(CustomLoginRequiredMixin, UpdateView):
     model = AuthUser
     form_class = AdminRegistrationForm
     success_url = reverse_lazy("users_page")
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -225,7 +225,7 @@ class UpdateUserDetails(CustomLoginRequiredMixin, UpdateView):
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         response = super().form_valid(form)
         success(
-            self.request, "User details updated successfully.", extra_tags="success_tag"
+            self.request, "User details updated successfully.", extra_tags="success"
         )
         return response
 
@@ -236,7 +236,7 @@ class UpdateUserDetails(CustomLoginRequiredMixin, UpdateView):
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return response
 
@@ -246,7 +246,7 @@ class UpdatePaymentDetails(CustomLoginRequiredMixin, UpdateView):
     model = Payment
     form_class = PaymentForm
     success_url = reverse_lazy("payments_page")
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -258,7 +258,7 @@ class UpdatePaymentDetails(CustomLoginRequiredMixin, UpdateView):
         success(
             self.request,
             "Payment details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
@@ -269,7 +269,7 @@ class UpdatePaymentDetails(CustomLoginRequiredMixin, UpdateView):
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return response
 
@@ -279,7 +279,7 @@ class UpdateBeneficiaryDetails(CustomLoginRequiredMixin, UpdateView):
     model = Beneficiary
     form_class = BeneficiaryForm
     success_url = reverse_lazy("beneficiary_page")
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -291,7 +291,7 @@ class UpdateBeneficiaryDetails(CustomLoginRequiredMixin, UpdateView):
         success(
             self.request,
             "Beneficiary details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
@@ -302,7 +302,7 @@ class UpdateBeneficiaryDetails(CustomLoginRequiredMixin, UpdateView):
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return response
 
@@ -312,7 +312,7 @@ class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
     model = Membership
     form_class = MembershipForm
     success_url = reverse_lazy("membership_page")
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -326,7 +326,7 @@ class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
         success(
             self.request,
             "Membership details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
@@ -337,7 +337,7 @@ class UpdateMembershipDetails(CustomLoginRequiredMixin, UpdateView):
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return response
 
@@ -349,7 +349,7 @@ class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView)
     model = Assistance
     form_class = AssistanceReleaseStatusForm
     success_url = reverse_lazy("assistance_page")
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -366,7 +366,7 @@ class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView)
             error(
                 self.request,
                 "Insufficient funds available for this transaction",
-                extra_tags="error_tag",
+                extra_tags="danger",
             )
             return HttpResponseRedirect(reverse_lazy("assistance_page"))
         
@@ -374,7 +374,7 @@ class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView)
         success(
             self.request,
             "Assistance details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
@@ -385,16 +385,40 @@ class UpdateAssistanceReleaseStatusDetails(CustomLoginRequiredMixin, UpdateView)
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return response
+
+class UpdateMemberInfoDependents(UpdateView):
+    pk_url_kwarg = "pk"
+    template_name = "pages/form.html"
+    model = Membership
+    form_class = UpdateMembershipInforDependentsForm
+    success_url = reverse_lazy("employee_apply_membership")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+    def form_valid(self, form):
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update Member"
+        return context
+
 
 class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
     pk_url_kwarg = "pk"
     model = Expenses
     form_class = ExpenseForm
     success_url = reverse_lazy("other_expense_page")
-    template_name = "pages/update.html"
+    template_name = "pages/form.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -406,7 +430,7 @@ class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
         success(
             self.request,
             "Expense details updated successfully.",
-            extra_tags="success_tag",
+            extra_tags="success",
         )
         return response
 
@@ -417,6 +441,6 @@ class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
                 error(
                     self.request,
                     f"{err}",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
         return response

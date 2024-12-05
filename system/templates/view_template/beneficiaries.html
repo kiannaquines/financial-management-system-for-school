@@ -6,33 +6,32 @@
 <div class="container-fluid mt-n22 px-6 mt-6">
     <div class="row my-6">
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
-            {% include './../includes/message.html' %}
+            {% include './../message.html' %}
             <div class="card">
                 <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Beneficiary</h4>
                     <div>
-                    <a href="#" class="btn btn-primary">Add Beneficiary</a>
+                    <a href="{% url 'add_beneficiary_page' %}" class="btn btn-primary">Add Beneficiary</a>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="datatable">
                         <thead>
                             <tr>
-                                <th>Fullname</th>
-                                <th>Contact</th>
-                                <th>Gender</th>
-                                <th>Employee ID</th>
-                                <th>Position</th>
+                                <th>Related to</th>
+                                <th>Beneficiary</th>
+                                <th>Relationship</th>
+                                <th>Date of Birth</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for item in beneficiary %}
                             <tr>
-                                <td>Kian Naquines</td>
-                                <td>09050673544</td>
-                                <td>Male</td>
-                                <td>21-65759</td>
-                                <td>Master Teacher II</td>
+                                <td>{{ item.user_id }}</td>
+                                <td>{{ item.get_full_name }}</td>
+                                <td>{{ item.relationship }}</td>
+                                <td>{{ item.date_of_birth }}</td>
                                 <td class="align-middle">
                                     <div class="dropdown dropstart">
                                         <a
@@ -46,8 +45,7 @@
                                         >
                                             <i class="icon-xxs" data-feather="more-vertical"></i>
                                         </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
-                                            <a class="dropdown-item" href="">Dependents</a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne">
                                             <a class="dropdown-item" href="">Edit</a>
                                             <a class="dropdown-item" href="">Remove</a>
                                         </div>

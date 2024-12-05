@@ -1,0 +1,40 @@
+{% extends './../includes/base.html' %}
+{% load static %}
+{% block title %}DSAPTEA Financial Management System | Dashboard{% endblock title %}
+{% block content %}
+<div class="container-fluid mt-n20 px-6">
+    <div class="row my-6">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            {% include './../message.html' %}
+            <div class="card h-100">
+                <div class="card-header border-0 bg-white py-4 d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0">Export Membership Fee Information</h4>
+                    <a href="#" class="btn btn-primary">Export Membership Fee</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Amount</th>
+                                <th>Payment Type</th>
+                                <th>Transaction Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in membership_fee %}
+                            <tr>
+                                <td class="align-middle">{{ transaction.paid_by.user_id }}</td>
+                                <td class="align-middle">{{ transaction.amount }}</td>
+                                <td class="align-middle">{{ transaction.payment_type }}</td>
+                                <td class="align-middle">{{ transaction.date_paid }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

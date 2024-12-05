@@ -1,0 +1,43 @@
+{% extends './../includes/base.html' %}
+{% load static %}
+{% block title %}DSAPTEA Financial Management System{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-n22 px-6 mt-6">
+    <div class="row my-6">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            {% include './../message.html' %}
+            <div class="card">
+                <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Export Assistance Expenses</h4>
+                    <a href="#" class="btn btn-primary">Export Monthly Due</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Requested by</th>
+                                <th>Assistance Type</th>
+                                <th>Amount Applied</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in assistance %}
+                            <tr>
+                                <td>{{ item.request_by }}</td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        {{ item.type_of_assistance }}
+                                    </span>
+                                </td>
+                                <td>{{ item.amount_released }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

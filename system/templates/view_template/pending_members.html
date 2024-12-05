@@ -6,7 +6,7 @@
 <div class="container-fluid mt-n22 px-6 mt-6">
     <div class="row my-6">
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
-            {% include './../includes/message.html' %}
+            {% include './../message.html' %}
             <div class="card">
                 <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Pending Members</h4>
@@ -20,16 +20,23 @@
                                 <th>Gender</th>
                                 <th>Employee ID</th>
                                 <th>Position</th>
+                                <th>Membership Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for item in pending_members %}
                             <tr>
-                                <td>Kian Naquines</td>
-                                <td>09050673544</td>
-                                <td>Male</td>
-                                <td>21-65759</td>
-                                <td>Master Teacher II</td>
+                                <td>{{ item.user_id.get_full_name }}</td>
+                                <td>{{ item.contact_number }}</td>
+                                <td>{{ item.gender }}</td>
+                                <td>{{ item.employee_id }}</td>
+                                <td>{{ item.position }}</td>
+                                <td>
+                                    {% if item.membership_status == False %}
+                                        <span class="badge bg-warning">Pending Membership</span>
+                                    {% endif %}
+                                </td>
                                 <td class="align-middle">
                                     <div class="dropdown dropstart">
                                         <a
@@ -43,10 +50,8 @@
                                         >
                                             <i class="icon-xxs" data-feather="more-vertical"></i>
                                         </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
-                                            <a class="dropdown-item" href="">Dependents</a>
-                                            <a class="dropdown-item" href="">Edit</a>
-                                            <a class="dropdown-item" href="">Remove</a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne">
+                                            <a class="dropdown-item" href="{% url 'approve_membership' pk=item.id %}">Approve Membership</a>
                                         </div>
                                     </div>
                                 </td>

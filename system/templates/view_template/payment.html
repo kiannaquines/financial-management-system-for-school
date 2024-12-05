@@ -6,30 +6,33 @@
 <div class="container-fluid mt-n22 px-6 mt-6">
     <div class="row my-6">
         <div class="col-xl-12 col-lg-12 col-md-12 col-12">
-            {% include './../includes/message.html' %}
+            {% include './../message.html' %}
             <div class="card">
                 <div class="card-header border-0 bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Payments</h4>
+                    <div>
+                        <a href="{% url 'add_payment_page' %}" class="btn btn-primary">Create Payment</a>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="datatable">
                         <thead>
                             <tr>
-                                <th>Fullname</th>
-                                <th>Contact</th>
-                                <th>Gender</th>
-                                <th>Employee ID</th>
-                                <th>Position</th>
+                                <th>Paid by</th>
+                                <th>Amount</th>
+                                <th>School Year</th>
+                                <th>Payment Type</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {% for item in payments %}
                             <tr>
-                                <td>Kian Naquines</td>
-                                <td>09050673544</td>
-                                <td>Male</td>
-                                <td>21-65759</td>
-                                <td>Master Teacher II</td>
+                                <td>{{ item.paid_by }}</td>
+                                <td>{{ item.amount }}</td>
+                                <td>{{ item.school_year }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ item.payment_type }}</span>
+                                </td>
                                 <td class="align-middle">
                                     <div class="dropdown dropstart">
                                         <a
@@ -43,15 +46,14 @@
                                         >
                                             <i class="icon-xxs" data-feather="more-vertical"></i>
                                         </a>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne{{ item.id }}">
-                                            <a class="dropdown-item" href="">Dependents</a>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownTeamOne">
                                             <a class="dropdown-item" href="">Edit</a>
                                             <a class="dropdown-item" href="">Remove</a>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-                            {% endfor %}
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>

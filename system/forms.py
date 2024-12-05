@@ -95,9 +95,18 @@ class MyDependentForm(forms.ModelForm):
 
     class Meta:
         model = Dependents
-        fields = ("dependent_first_name","dependent_last_name", "dependent_middle_name", "dependent_last_name", "relationship_to_member", "suffix","gender",)
-        exclude = ["related_to_member",]
-
+        fields = (
+            "dependent_first_name",
+            "dependent_last_name",
+            "dependent_middle_name",
+            "dependent_last_name",
+            "relationship_to_member",
+            "suffix",
+            "gender",
+        )
+        exclude = [
+            "related_to_member",
+        ]
 
 
 class ExpenseForm(forms.ModelForm):
@@ -106,12 +115,14 @@ class ExpenseForm(forms.ModelForm):
         super(ExpenseForm, self).__init__(*args, **kwargs)
         self.fields["amount"].widget.attrs.update({"class": "form-control"})
         self.fields["expense_type"].widget.attrs.update({"class": "form-control"})
+        self.fields["school_year"].widget.attrs.update({"class": "form-control"})
 
     class Meta:
         model = Expenses
         fields = [
             "amount",
             "expense_type",
+            "school_year"
         ]
 
 
@@ -142,25 +153,10 @@ class AssistanceForm(forms.ModelForm):
                 {"class": "form-check-input"}
             )
 
-        self.fields["assistance_first_name"].widget.attrs.update(
-            {"placeholder": "First Name", "class": "form-control"}
-        )
-
-        self.fields["amount_released"].widget.attrs.update(
-            {"placeholder": "Amount Released", "class": "form-control"}
-        )
-
-        self.fields["assistance_middle_name"].widget.attrs.update(
-            {"placeholder": "Middle Name", "class": "form-control"}
-        )
-
         self.fields["request_by"].widget.attrs.update(
             {"placeholder": "Request By", "class": "form-control"}
         )
 
-        self.fields["assistance_last_name"].widget.attrs.update(
-            {"placeholder": "Last Name", "class": "form-control"}
-        )
         self.fields["suffix"].widget.attrs.update(
             {"placeholder": "Suffix", "class": "form-control"}
         )
@@ -178,6 +174,10 @@ class AssistanceForm(forms.ModelForm):
             {"placeholder": "Death Certificate", "class": "form-control"}
         )
 
+        self.fields["amount_released"].widget.attrs.update(
+            {"placeholder": "Amount Applied", "class": "form-control"}
+        )
+
         self.fields["assistance_evidence_first"].label = "Medical Certificate"
         self.fields["assistance_evidence_second"].label = "Hospital Billing"
         self.fields["death_cert"].label = "Death Certificate"
@@ -186,9 +186,6 @@ class AssistanceForm(forms.ModelForm):
         model = Assistance
         fields = [
             "request_by",
-            "assistance_first_name",
-            "assistance_middle_name",
-            "assistance_last_name",
             "suffix",
             "amount_released",
             "type_of_assistance",
@@ -256,47 +253,12 @@ class BeneficiaryForm(forms.ModelForm):
 class MembershipForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MembershipForm, self).__init__(*args, **kwargs)
-        self.fields["first_name"].widget.attrs.update(
-            {"placeholder": "First Name", "class": "form-control"}
-        )
-        self.fields["last_name"].widget.attrs.update(
-            {"placeholder": "Last Name", "class": "form-control"}
-        )
-        self.fields["middle_name"].widget.attrs.update(
-            {"placeholder": "Middle Name", "class": "form-control"}
-        )
-        self.fields["place_of_birth"].widget.attrs.update(
-            {"placeholder": "Place of Birth", "class": "form-control"}
-        )
-        self.fields["date_of_birth"].widget.attrs.update(
-            {"placeholder": "Date of Birth", "class": "form-control"}
-        )
-        self.fields["address"].widget.attrs.update(
-            {"placeholder": "Address", "class": "form-control"}
-        )
-        self.fields["contact_number"].widget.attrs.update(
-            {"placeholder": "Contact Number", "class": "form-control"}
-        )
-        self.fields["employee_id"].widget.attrs.update(
-            {"placeholder": "Employee ID", "class": "form-control"}
-        )
-        self.fields["position"].widget.attrs.update(
-            {"placeholder": "Position", "class": "form-control"}
-        )
-        self.fields["user_id"].label = "Select User"
-        self.fields["user_id"].widget.attrs.update(
-            {"placeholder": "Select User", "class": "form-control"}
-        )
-        self.fields["gender"].widget.attrs.update(
-            {"placeholder": "Gender", "class": "form-control"}
-        )
-        self.fields["school_affiliation"].widget.attrs.update(
-            {"placeholder": "School Affiliation", "class": "form-control"}
-        )
 
-        self.fields["beneficiary"].widget.attrs.update(
-            {"placeholder": "Beneficiary", "class": "form-control"}
-        )
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update(
+                {"class": "form-control", "placeholder": field.label}
+            )
+            field.widget.is_required = True
 
     class Meta:
         model = Membership
@@ -309,37 +271,32 @@ class MembershipForm(forms.ModelForm):
         }
         fields = [
             "user_id",
-            "first_name",
-            "last_name",
-            "middle_name",
             "place_of_birth",
             "date_of_birth",
+            "school_year",
             "address",
             "contact_number",
             "employee_id",
             "position",
             "gender",
             "school_affiliation",
-            "beneficiary",
         ]
+        exclude = ["beneficiary"]
 
 
 class PaymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PaymentForm, self).__init__(*args, **kwargs)
-        self.fields["paid_by"].widget.attrs.update(
-            {"placeholder": "Select Employee", "class": "form-control"}
-        )
-        self.fields["amount"].widget.attrs.update(
-            {"placeholder": "Amount Paid", "class": "form-control"}
-        )
-        self.fields["payment_type"].widget.attrs.update(
-            {"placeholder": "Payment Type", "class": "form-control"}
-        )
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update(
+                {"class": "form-control", "placeholder": field.label}
+            )
+            field.widget.is_required = True
 
     class Meta:
         model = Payment
-        fields = ["paid_by", "amount", "payment_type"]
+        fields = ["paid_by","school_year", "amount", "payment_type"]
 
 
 class UserMembershipForm(forms.ModelForm):
@@ -348,15 +305,6 @@ class UserMembershipForm(forms.ModelForm):
 
         super(UserMembershipForm, self).__init__(*args, **kwargs)
 
-        self.fields["first_name"].widget.attrs.update(
-            {"placeholder": "First Name", "class": "form-control"}
-        )
-        self.fields["last_name"].widget.attrs.update(
-            {"placeholder": "Last Name", "class": "form-control"}
-        )
-        self.fields["middle_name"].widget.attrs.update(
-            {"placeholder": "Middle Name", "class": "form-control"}
-        )
         self.fields["place_of_birth"].widget.attrs.update(
             {"placeholder": "Place of Birth", "class": "form-control"}
         )
@@ -390,9 +338,6 @@ class UserMembershipForm(forms.ModelForm):
             )
         }
         fields = [
-            "first_name",
-            "last_name",
-            "middle_name",
             "place_of_birth",
             "date_of_birth",
             "address",
@@ -402,7 +347,9 @@ class UserMembershipForm(forms.ModelForm):
             "gender",
             "school_affiliation",
         ]
-        exclude = ["beneficiary",]
+        exclude = [
+            "beneficiary",
+        ]
 
 
 class ViewUserMembershipForm(forms.ModelForm):
@@ -411,9 +358,6 @@ class ViewUserMembershipForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         field_attrs = {
-            "first_name": "First Name",
-            "last_name": "Last Name",
-            "middle_name": "Middle Name",
             "place_of_birth": "Place of Birth",
             "date_of_birth": "Date of Birth",
             "address": "Address",
@@ -450,9 +394,6 @@ class ViewUserMembershipForm(forms.ModelForm):
     class Meta:
         model = Membership
         fields = [
-            "first_name",
-            "last_name",
-            "middle_name",
             "place_of_birth",
             "date_of_birth",
             "address",
@@ -518,17 +459,6 @@ class UserBeneficiaryForm(forms.ModelForm):
 class UserAssistanceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserAssistanceForm, self).__init__(*args, **kwargs)
-        self.fields["assistance_first_name"].widget.attrs.update(
-            {"placeholder": "First Name", "class": "form-control"}
-        )
-
-        self.fields["assistance_middle_name"].widget.attrs.update(
-            {"placeholder": "Middle Name", "class": "form-control"}
-        )
-
-        self.fields["assistance_last_name"].widget.attrs.update(
-            {"placeholder": "Last Name", "class": "form-control"}
-        )
         self.fields["suffix"].widget.attrs.update(
             {"placeholder": "Suffix", "class": "form-control"}
         )
@@ -552,9 +482,6 @@ class UserAssistanceForm(forms.ModelForm):
     class Meta:
         model = Assistance
         fields = [
-            "assistance_first_name",
-            "assistance_middle_name",
-            "assistance_last_name",
             "suffix",
             "type_of_assistance",
             "assistance_evidence_first",

@@ -1,191 +1,185 @@
+from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView
+from authentication.forms import RegistrationForm
+from django.http import HttpResponseRedirect
+from django.db.models import Sum
 from django.forms import BaseModelForm
 from django.utils import timezone
 from django.shortcuts import render
-from system.models import *
-from system.forms import *
-from authentication.forms import RegistrationForm
-from system.utils import oneshot_add_function
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
-from django.contrib.messages import success, error
 from django.contrib import messages
 from django.http import HttpResponse
 from typing import Any
-from django.views.generic import CreateView
+from system.models import *
+from system.forms import *
 
 class AddTransactionToLedger(CreateView):
-    template_name = 'pages/add.html'
+    template_name = "pages/form.html"
     model = Ledger
     form_class = LedgerForm
-    success_url = reverse_lazy('ledger_list')
+    success_url = reverse_lazy("ledger_list")
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context['header_title'] = 'Add Transaction'
+        context["header_title"] = "Add Transaction"
         return context
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         form.instance.recorded_by = self.request.user
         messages.success(
             self.request,
-            'You have successfully added a new transaction to the ledger.',
-            extra_tags='success_tag'
+            "You have successfully added a new transaction to the ledger.",
+            extra_tags="success",
         )
         return super().form_valid(form)
-    
+
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         for field, errors in form.errors.items():
             for error in errors:
                 messages.error(self.request, f"{field}: {error}")
         return super().form_invalid(form)
 
+
 @login_required(login_url="/auth/")
 def add_my_dependent_page(request):
-    path = reverse_lazy("employee_view_dependents")
-
+    context = {}
     if request.method == "POST":
         form_data = MyDependentForm(request.POST)
 
         if form_data.is_valid():
-            get_membership = Membership.objects.filter(
-                user_id=request.user
-            ).first()
+            get_membership = Membership.objects.filter(user_id=request.user).first()
             form_data.instance.related_to_member = get_membership
 
             form_data.save()
-            success(
+            messages.success(
                 request,
                 "You have succesfully added new dependent information",
-                extra_tags="success_tag",
+                extra_tags="success",
             )
-            return HttpResponseRedirect(path)
+            return HttpResponseRedirect(reverse_lazy("employee_view_dependents"))
         else:
             for field, errors in form_data.errors.items():
                 for err in errors:
-                    error(
+                    messages.error(
                         request,
-                        f"{err}",
-                        extra_tags="error_tag",
+                        err,
+                        extra_tags="danger",
                     )
             return HttpResponseRedirect(reverse_lazy("add_my_dependent_page"))
 
     form = MyDependentForm()
-    context = oneshot_add_function(
-        form, "Dependent", "Dependent Management", "Add Dependent",
-    )
-    return render(request, "employee/add.html", context)
+    context["form"] = form
+    return render(request, "employee/form.html", context)
+
 
 @login_required(login_url="/auth/")
 def add_dependent_page(request):
-    path = reverse_lazy("dependents_page")
+    context = {}
 
     if request.method == "POST":
         form_data = DependentForm(request.POST)
 
         if form_data.is_valid():
             form_data.save()
-            success(
+            messages.success(
                 request,
                 "You have succesfully added new dependent information",
-                extra_tags="success_tag",
+                extra_tags="success",
             )
-            return HttpResponseRedirect(path)
+            return HttpResponseRedirect(reverse_lazy("dependents_page"))
         else:
             for field, errors in form_data.errors.items():
                 for err in errors:
-                    error(
+                    messages.error(
                         request,
-                        f"{err}",
-                        extra_tags="error_tag",
+                        err,
+                        extra_tags="danger",
                     )
             return HttpResponseRedirect(reverse_lazy("add_expense_page"))
 
     form = DependentForm()
-    context = oneshot_add_function(
-        form, "Dependents", "Dependent Management", "Add Dependent",
-    )
-    return render(request, "pages/add.html", context)
+    context["form"] = form
+    context["header_title"] = "Add Dependent"
+    return render(request, "pages/form.html", context)
 
 
 @login_required(login_url="/auth/")
 def add_expense_page(request):
-    path = reverse_lazy("other_expense_page")
+    context = {}
 
     if request.method == "POST":
         form_data = ExpenseForm(request.POST)
 
         if form_data.is_valid():
             form_data.save()
-            success(
+            messages.success(
                 request,
                 "You have succesfully added new expense information",
-                extra_tags="success_tag",
+                extra_tags="success",
             )
-            return HttpResponseRedirect(path)
+            return HttpResponseRedirect(reverse_lazy("other_expense_page"))
         else:
             for field, errors in form_data.errors.items():
                 for err in errors:
-                    error(
+                    messages.error(
                         request,
-                        f"{err}",
-                        extra_tags="error_tag",
+                        err,
+                        extra_tags="danger",
                     )
             return HttpResponseRedirect(reverse_lazy("add_expense_page"))
 
     form = ExpenseForm()
-    context = oneshot_add_function(
-        form, "Add Expense", "Expense Management", "Add Expense"
-    )
-    return render(request, "pages/add.html", context)
+    context["form"] = form
+    context["header_title"] = "Add Other Expense"
+    return render(request, "pages/form.html", context)
 
 
 @login_required(login_url="/auth/")
 def add_assistance_page(request):
-    path = reverse_lazy("assistance_page")
-    from django.db.models import F, Sum
+    context = {}
+
     if request.method == "POST":
         form_data = AssistanceForm(request.POST, request.FILES)
 
         if form_data.is_valid():
-            sum_of_collections = Payment.objects.aggregate(
-                total=Sum('amount')
-            )['total'] or 0
+            sum_of_collections = (
+                Payment.objects.aggregate(total=Sum("amount"))["total"] or 0
+            )
 
-            if form_data.cleaned_data['amount'] > sum_of_collections:
-                error(
+            if form_data.cleaned_data["amount_released"] > sum_of_collections:
+                messages.error(
                     request,
                     "Insufficient funds available for this transaction",
-                    extra_tags="error_tag",
+                    extra_tags="info",
                 )
                 return HttpResponseRedirect(reverse_lazy("add_assistance_page"))
 
             form_data.save()
-            success(
+            messages.success(
                 request,
-                "You have succesfully added new assistance information",
-                extra_tags="success_tag",
+                "You have succesfully added new assistance information, please wait to approve by the president of the association.",
+                extra_tags="success",
             )
-            return HttpResponseRedirect(path)
+            return HttpResponseRedirect(reverse_lazy("assistance_page"))
         else:
             for field, errors in form_data.errors.items():
                 for err in errors:
-                    error(
+                    messages.error(
                         request,
-                        f"{err}",
-                        extra_tags="error_tag",
+                        err,
+                        extra_tags="danger",
                     )
             return HttpResponseRedirect(reverse_lazy("add_assistance_page"))
 
     form = AssistanceForm()
-    context = oneshot_add_function(
-        form, "Add Assistance", "Assistance Management", "Add Assistance"
-    )
-    return render(request, "pages/add.html", context)
+    context["form"] = form
+    context["header_title"] = "Add Assistance"
+    return render(request, "pages/form.html", context)
 
 
 @login_required(login_url="/auth/")
 def add_beneficiary_page(request):
+    context = {}
     path = reverse_lazy("beneficiary_page")
 
     if request.method == "POST":
@@ -193,49 +187,41 @@ def add_beneficiary_page(request):
 
         if form_data.is_valid():
             form_data.save()
-            success(
+            messages.success(
                 request,
                 "You have successfully added new beneficiary.",
-                extra_tags="success_tag",
+                extra_tags="success",
             )
             return HttpResponseRedirect(path)
         else:
             for field, errors in form_data.errors.items():
                 for err in errors:
-                    error(
+                    messages.error(
                         request,
-                        f"{err}",
-                        extra_tags="error_tag",
+                        err,
+                        extra_tags="danger",
                     )
             return HttpResponseRedirect(reverse_lazy("add_beneficiary_page"))
 
     form = BeneficiaryForm()
-    context = oneshot_add_function(
-        form, "Add Beneficiary", "Beneficiary Management", "Add Beneficiary"
-    )
-    return render(request, "pages/add.html", context)
+    context["form"] = form
+    context["header_title"] = "Add Beneficiary"
+    return render(request, "pages/form.html", context)
 
 
 @login_required(login_url="/auth/")
 def add_member_page(request):
+    context = {}
     path = reverse_lazy("membership_page")
     if request.method == "POST":
         form_data = MembershipForm(request.POST)
 
         if form_data.is_valid():
-
-            selected_beneficiaries = form_data["beneficiary"].value()
-
-            for id in selected_beneficiaries:
-                beneficiary_status = Beneficiary.objects.get(id=id)
-                beneficiary_status.used = True
-                beneficiary_status.save()
-
             form_data.save()
-            success(
+            messages.warning(
                 request,
-                "You have successfully added new membership.",
-                extra_tags="success_tag",
+                "You have successfully added new membership. Please approve the pending membership",
+                extra_tags="warning",
             )
             return HttpResponseRedirect(path)
 
@@ -243,24 +229,22 @@ def add_member_page(request):
 
             for field, errors in form_data.errors.items():
                 for err in errors:
-                    error(
+                    messages.error(
                         request,
-                        f"{err}",
-                        extra_tags="error_tag",
+                        err,
+                        extra_tags="danger",
                     )
             return HttpResponseRedirect(reverse_lazy("add_member_page"))
 
     form = MembershipForm()
-    context = oneshot_add_function(
-        form, "Enroll Member", "Membership Management", "Enroll Member"
-    )
-    return render(request, "pages/add.html", context)
+    context["form"] = form
+    context["header_title"] = "Enroll Member"
+    return render(request, "pages/form.html", context)
 
 
 @login_required(login_url="/auth/")
 def add_payment_page(request):
-    path = reverse_lazy("payments_page")
-
+    context = {}
     if request.method == "POST":
         form_data = PaymentForm(request.POST)
 
@@ -270,66 +254,67 @@ def add_payment_page(request):
 
             check_query = Payment.objects.filter(
                 payment_type=payment_type,
-                paid_by=paid_by_check_this_month, date_paid__date=timezone.now().date()
+                paid_by=paid_by_check_this_month,
+                date_paid__date=timezone.now().date(),
             )
             if check_query.exists():
-                success(
+                messages.success(
                     request,
                     "Employee already paid for membership this month, you can just update the payment information.",
-                    extra_tags="error_tag",
+                    extra_tags="danger",
                 )
-                return HttpResponseRedirect(path)
-            
+                return HttpResponseRedirect(reverse_lazy("add_payment_page"))
+
             form_data.save()
-            success(
+            messages.success(
                 request,
                 "You have successfully added new payment.",
-                extra_tags="success_tag",
+                extra_tags="success",
             )
-            return HttpResponseRedirect(path)
+            return HttpResponseRedirect(reverse_lazy("payments_page"))
         else:
             for field, errors in form_data.errors.items():
                 for err in errors:
-                    error(
+                    messages.error(
                         request,
-                        f"{err}",
-                        extra_tags="error_tag",
+                        err,
+                        extra_tags="danger",
                     )
             return HttpResponseRedirect(reverse_lazy("add_payment_page"))
 
     form = PaymentForm()
-    context = oneshot_add_function(
-        form, "Add Payment", "Payment Management", "Add Payment"
-    )
-    return render(request, "pages/add.html", context)
+    context["form"] = form
+    context["header_title"] = "Add Payment"
+    return render(request, "pages/form.html", context)
 
 
 @login_required(login_url="/auth/")
 def add_user_page(request):
-    path = reverse_lazy("users_page")
+    context = {}
     if request.method == "POST":
         form_data = RegistrationForm(request.POST)
 
         if form_data.is_valid():
             form_data.save()
-            success(
+            messages.success(
                 request,
                 "You have successfully added new user",
-                extra_tags="success_tag",
+                extra_tags="success",
             )
-            return HttpResponseRedirect(path)
+            return HttpResponseRedirect(reverse_lazy("users_page"))
 
         else:
             for field, errors in form_data.errors.items():
                 for err in errors:
-                    error(
+                    messages.error(
                         request,
-                        f"{err}",
-                        extra_tags="error_tag",
+                        err,
+                        extra_tags="danger",
                     )
 
             return HttpResponseRedirect(reverse_lazy("add_user_page"))
 
     form = RegistrationForm()
-    context = oneshot_add_function(form, "Add User", "User Management", "Add User")
-    return render(request, "pages/add.html", context)
+    context["form"] = form
+    context["header_title"] = "Create User"
+    return render(request, "pages/form.html", context)

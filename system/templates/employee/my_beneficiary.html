@@ -1,0 +1,34 @@
+{% extends './../includes/base.html' %}
+{% load static %}
+{% block title %}DSAPTEA Financial Management System | My Beneficiary {% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-n22 px-6 mt-6">
+    <div class="row my-6">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-12">
+            {% include './../message.html' %}
+            <div class="card">
+                <div class="card-header border-0 bg-white">
+                    <h4 class="mb-0">My Beneficiary</h4>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="datatable">
+                        <thead>
+                            <tr>
+                                <th>Beneficiary Of</th>
+                                <th>Assistance Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                               <td>Testing</td>
+                               <td>Testing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
