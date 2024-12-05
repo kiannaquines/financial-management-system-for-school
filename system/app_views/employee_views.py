@@ -84,6 +84,7 @@ def employee_apply_assistance(request):
                 messages.error(request,'You are not a member, you cannot request assistance.',extra_tags='danger')
                 return HttpResponseRedirect(reverse_lazy('employee_assistance_request'))
 
+            assistance_data.amount_released = 0
             assistance_data.request_by = query_my_membership
             assistance_data.save()
             messages.success(request,'You have successfully applied for assistance, please wait until the president of the association approve your request. Thank you!.',extra_tags='warning')

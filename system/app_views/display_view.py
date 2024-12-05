@@ -195,7 +195,7 @@ def generate_annual_membership_report(request):
             messages.warning(
                 request,
                 "The selected date range is incorrect, please try again.",
-                extra_tags="error_tag",
+                extra_tags="danger",
             )
             return redirect(reverse_lazy("membership_fee_page"))
 
@@ -222,7 +222,7 @@ def generate_annual_membership_report(request):
             messages.warning(
                 request,
                 "No membership payment found using the provided date range and school, please try again later.",
-                extra_tags="error_tag",
+                extra_tags="danger",
             )
             return redirect(reverse_lazy("membership_fee_page"))
 
@@ -230,7 +230,7 @@ def generate_annual_membership_report(request):
         total_paid_amount = 0
 
         for payment in payments:
-            fullname = f"{payment.paid_by.last_name}, {payment.paid_by.first_name}"
+            fullname = f"{payment.paid_by}"
             monthly_payments = {month: 0 for month in month_headers}
             current_date = start_date
             member_total_paid = 0
@@ -268,7 +268,7 @@ def generate_annual_membership_report(request):
             "school_year": f"SCHOOL YEAR {start_date.year} - {end_date.year}",
             "total_amount": f"{total_paid_amount:,}",
             "report_date": timezone.now().strftime("%B %d, %Y"),
-            "prepared_by": f"{request.user.first_name} {request.user.last_name}",
+            "prepared_by": f"{request.user.get_full_name()}",
             "report_type": f"Annual Membership Report",
         }
 

@@ -18,6 +18,7 @@
                     <table class="table text-nowrap" id="datatable">
                         <thead>
                             <tr>
+                                <th>Member ID</th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Date Joined</th>
@@ -27,6 +28,7 @@
                         <tbody>
                             {% for item in users %}
                             <tr>
+                                <td>(Member #{{ item.id }})</td>
                                 <td>{{ item.username }}</td>
                                 <td>{{ item.email }}</td>
                                 <td>{{ item.date_joined }}</td>

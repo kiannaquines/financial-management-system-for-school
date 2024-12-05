@@ -291,61 +291,19 @@
             
             if ($("#datatable").length > 0) {
               
-              if (window.location.pathname == "/members/pending/list" || window.location.pathname == "/members/list") {
-                $("#datatable").DataTable({
-                    paging: true,
-                    lengthChange: true,
-                    searching: true,
-                    ordering: true,
-                    info: true,
-                    autoWidth: false,
-                    responsive: true,
-                    order: [[0, "desc"]],
-                    columnDefs: [
-                        { 
-                            searchable: false,
-                            targets: [3],
-                        },
-                    ],
-                    pageLength: 50
-                });
-                $("#dt-search-0").attr('placeholder', 'Search by Name or ID')
-              } else if (window.location.pathname == "/payments/list"){
-                $("#datatable").DataTable({
-                    paging: true,
-                    lengthChange: true,
-                    searching: true,
-                    ordering: true,
-                    info: true,
-                    autoWidth: false,
-                    responsive: true,
-                    order: [[0, "desc"]],
-                    columnDefs: [
-                        { 
-                            searchable: false,
-                            targets: [2, 3],
-                        },
-                    ],
-                    pageLength: 50
-                });
-                $("#dt-search-0").attr('placeholder', 'Search using Name or ID....')
-              }  else {
-                $("#datatable").DataTable({
-                    paging: true,
-                    lengthChange: true,
-                    searching: true,
-                    ordering: true,
-                    info: true,
-                    autoWidth: false,
-                    responsive: true,
-                    order: [[0, "desc"]],
-                    
-                    pageLength: 50
-                });
-                $("#dt-search-0").attr('placeholder', 'Search....')
-              }
-
-              
+              $("#datatable").DataTable({
+                  paging: true,
+                  lengthChange: true,
+                  searching: true,
+                  ordering: true,
+                  info: true,
+                  autoWidth: false,
+                  responsive: true,
+                  order: [[0, "desc"]],
+                  pageLength: 50
+              });
+              $("#dt-search-0").attr('placeholder', 'Details or Employee ID')
+          
               var datatable = document.querySelector("#datatable_wrapper")
               var lastElement = datatable.children[2];
               lastElement.classList.add('mb-2')

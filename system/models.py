@@ -281,10 +281,10 @@ class Membership(models.Model):
     date_of_birth = models.DateField(help_text="Date of birth")
     address = models.CharField(max_length=100, help_text="Address of the employee")
     contact_number = models.CharField(
-        max_length=20, help_text="Contact number of the employee"
+        max_length=11, help_text="Contact number of the employee", unique=True,
     )
     employee_id = models.CharField(
-        max_length=50, help_text="Employee ID of the employee"
+        max_length=50, help_text="Employee ID of the employee", unique=True,
     )
     position = models.CharField(
         max_length=50, choices=POSITION, help_text="Position of the employee"
