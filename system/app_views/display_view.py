@@ -32,7 +32,7 @@ from xhtml2pdf import pisa
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-
+import json
 
 
 # DONE
@@ -467,7 +467,7 @@ def dashboard_page(request):
     context["total_pending"] = total_pending
     context["total_membership"] = total_membership
     context["latest_users"] = latest_users
-
+    context["school_years"] = SchoolYear.objects.all()
     return render(request, "dashboard.html", context)
 
 
@@ -551,3 +551,89 @@ def generate_other_expense(request):
             request, "other_expense_fee_report", "Other Expenses Report", query
         )
         return result
+    
+
+
+@login_required(login_url="/auth/")
+def fetch_dashboard_data_by_school_year(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            school_year_id = data.get("school_year_id")
+
+            if not school_year_id:
+                return JsonResponse({"error": "school_year_id is required"}, status=400)
+
+            try:
+                school_year = SchoolYear.objects.get(id=school_year_id)
+            except SchoolYear.DoesNotExist:
+                return JsonResponse({"error": "Invalid school_year_id"}, status=404)
+
+            payments_data = (
+                Payment.objects.filter(school_year=school_year)
+                .annotate(month=TruncMonth("date_paid"))
+                .values("month", "payment_type")
+                .annotate(total_amount=Sum("amount"))
+                .order_by("month")
+            )
+
+            payment_by_month = {
+                "Membership": [0] * 12,
+                "Delegation Pay": [0] * 12,
+                "Trust Fund": [0] * 12,
+                "Visitors Fund": [0] * 12,
+            }
+
+            for payment in payments_data:
+                month_index = payment['month'].month - 1
+                payment_type = payment['payment_type']
+                if payment_type in payment_by_month:
+                    payment_by_month[payment_type][month_index] = payment['total_amount']
+
+            months = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ]
+
+
+            hospitalization_count = Assistance.objects.filter(type_of_assistance="Hospitalization", date_released__range=(
+                school_year.start_year, school_year.end_year
+            )).count()
+            death_count = Assistance.objects.filter(type_of_assistance="Death", date_released__range=(
+                school_year.start_year, school_year.end_year
+            )).count()
+
+            school_affiliation_counts = Membership.objects.filter(
+                school_year=school_year,
+            ).values('school_affiliation').annotate(count=Count('school_affiliation')).order_by('school_affiliation')
+            school_affiliation_data = {affiliation['school_affiliation']: affiliation['count'] for affiliation in school_affiliation_counts}
+
+            total_membership = Membership.objects.filter(membership_status=True, school_year=school_year).count()
+            total_pending = Membership.objects.filter(membership_status=False, school_year=school_year).count()
+            total_beneficary = Beneficiary.objects.count()
+            total_payments = Payment.objects.filter(
+                school_year=school_year
+            ).annotate(total_amount=Sum("amount")).values(
+                "total_amount"
+            )
+
+            total_amount = 0
+            for total in total_payments:
+                total_amount += total["total_amount"]
+            
+            return JsonResponse({
+                "total_membership": total_membership,
+                "total_pending": total_pending,
+                "total_beneficary": total_beneficary,
+                "total_payments": total_amount,
+                "payment_data": payment_by_month,
+                "months": months,
+                'hospitalization_count': hospitalization_count,
+                'death_count': death_count,
+                "school_affiliation_data": school_affiliation_data
+            })
+
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON data"}, status=400)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)

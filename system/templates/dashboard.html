@@ -8,10 +8,11 @@
             <h3>Dashboard Overview</h3>
         </div>
         <div class="col-md-3">
-            <select class="form-select w-100">
-                <option>School Year</option>
-                <option value="1">2023-2024</option>
-                <option value="2">2024-2025</option>
+            <select class="form-select w-100" name="school_year_dashboard_select" id="school_year_dashboard_select">
+                <option value="">School Year</option>
+                {% for item in school_years %}
+                <option value="{{ item.id }}">{{ item }}</option>
+                {% endfor %}
             </select>
         </div>
     </div>
@@ -28,7 +29,7 @@
                         </div>
                     </div>
                     <div>
-                        <h2 class="fw-bold">{{ total_membership }}</h2>
+                        <h2 class="fw-bold" id="total_membership_count">{{ total_membership }}</h2>
                     </div>
                 </div>
             </div>
@@ -45,7 +46,7 @@
                         </div>
                     </div>
                     <div>
-                        <h2 class="fw-bold">{{ total_pending }}</h2>
+                        <h2 class="fw-bold" id="total_pending_count">{{ total_pending }}</h2>
                     </div>
                 </div>
             </div>
@@ -62,7 +63,7 @@
                         </div>
                     </div>
                     <div>
-                        <h2 class="fw-bold">₱ {{ total_payments }}</h2>
+                        <h2 class="fw-bold" id="total_collection_count">₱ {{ total_payments }}</h2>
                     </div>
                 </div>
             </div>
@@ -79,7 +80,7 @@
                         </div>
                     </div>
                     <div>
-                        <h2 class="fw-bold">
+                        <h2 class="fw-bold" id="total_beneficiary_count">
                             {{ total_beneficary }}
                         </h2>
                     </div>

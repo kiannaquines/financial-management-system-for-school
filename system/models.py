@@ -13,7 +13,7 @@ class SchoolYear(models.Model):
     )
 
     def __str__(self) -> str:
-        return f"School Year {self.start_year.year} - {self.end_year.year}"
+        return f"{self.start_year.year} - {self.end_year.year}"
 
     class Meta:
         constraints = [
@@ -49,7 +49,7 @@ class Ledger(models.Model):
     date_transaction = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
-        return f"Ledger for {self.transaction_date}- ₱ {self.amount}"
+        return f"Ledger for {self.transaction_date} - ₱ {self.amount:,.2f}"
 
     class Meta:
         verbose_name = "Ledger"

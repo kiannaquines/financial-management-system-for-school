@@ -4,6 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token }}">
         <title>{% block title %}DSAPTEA Financial Management System{% endblock title %}</title>
         <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/favicon/favicon.ico' %}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -51,138 +52,148 @@
                 }
             });
           }
-        })
+        });
+        
+        function back(){
+            window.history.back()
+        }
 
-          fetch('/get_monthly_payment_data/')
-        .then(response => response.json())
-        .then(data => {
-          const paymentData = data.payment_data;
-          const months = data.months;
+        let monthlyChart;
+        let assistanceChart;
+        let membershipChart;
 
-          const options = {
-            series: [
-              {
-                name: 'Trust Fund',
-                data: paymentData['Trust Fund']
+        async function fetchMonthlyPayments() {
+            fetch('/get_monthly_payment_data/')
+          .then(response => response.json())
+          .then(data => {
+            const paymentData = data.payment_data;
+            const months = data.months;
+
+            const options = {
+              series: [
+                {
+                  name: 'Trust Fund',
+                  data: paymentData['Trust Fund']
+                },
+                {
+                  name: 'Membership',
+                  data: paymentData['Membership']
+                },
+                {
+                  name: 'Delegation Pay',
+                  data: paymentData['Delegation Pay']
+                },
+                {
+                  name: 'Visitors Fund',
+                  data: paymentData['Visitors Fund']
+                }
+              ],
+              chart: {
+                type: 'bar',
+                height: 350,
+                fontFamily: 'Inter'
               },
-              {
-                name: 'Membership',
-                data: paymentData['Membership']
+              plotOptions: {
+                bar: {
+                  horizontal: false,
+                  columnWidth: '55%',
+                  endingShape: 'rounded'
+                }
               },
-              {
-                name: 'Delegation Pay',
-                data: paymentData['Delegation Pay']
+              dataLabels: {
+                enabled: false
               },
-              {
-                name: 'Visitors Fund',
-                data: paymentData['Visitors Fund']
-              }
-            ],
-            chart: {
-              type: 'bar',
-              height: 350,
-              fontFamily: 'Inter'
-            },
-            plotOptions: {
-              bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
-              }
-            },
-            dataLabels: {
-              enabled: false
-            },
-            stroke: {
-              show: true,
-              width: 2,
-              colors: ['transparent']
-            },
-            xaxis: {
-              categories: months,
-            },
-            yaxis: {
-              title: {
-                text: 'Funds'
-              }
-            },
-            fill: {
-              opacity: 1
-            },
-            tooltip: {
-              y: {
-                formatter: function (val) {
-                  return "₱ " + val + " ";
+              stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+              },
+              xaxis: {
+                categories: months,
+              },
+              yaxis: {
+                title: {
+                  text: 'Funds'
+                }
+              },
+              fill: {
+                opacity: 1
+              },
+              tooltip: {
+                y: {
+                  formatter: function (val) {
+                    return "₱ " + val + " ";
+                  }
                 }
               }
-            }
-          };
-
-          if (document.querySelector('#chart')) {
-            var chart = new ApexCharts(document.querySelector("#chart"), options);
-            chart.render();
-          }
-        })
-        .catch(error => console.error('Error fetching data:', error));
-        
-
-
-        async function fetchAssistanceData() {
-    try {
-        const response = await fetch('{% url "assistance_type_count" %}');
-        const data = await response.json();
-
-        if (response.ok) {
-            var options = {
-                series: [data.hospitalization_count, data.death_count],
-                chart: {
-                    type: 'pie',
-                    width: 450,
-                    height: 450,
-                },
-                plotOptions: {
-                    pie: {
-                        offsetY: 0,
-                        offsetX: 0,
-                        size: 250,
-                    }
-                },
-                labels: ['Hospitalization', 'Death'],
-                legend: {
-                    position: 'right',
-                    horizontalAlign: 'center',
-                    floating: false,
-                    fontSize: '14px'
-                },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        chart: {
-                            height: 350
-                        },
-                        legend: {
-                            position: 'bottom'
-                        },
-                        plotOptions: {
-                            pie: {
-                                size: 200
-                            }
-                        }
-                    }
-                }]
             };
 
-            if (document.querySelector("#yawa")) {
-                var chart = new ApexCharts(document.querySelector("#yawa"), options);
-                chart.render();
+            if (document.querySelector('#chart')) {
+              monthlyChart = new ApexCharts(document.querySelector("#chart"), options);
+              monthlyChart.render();
             }
-        } else {
-            console.error('Error fetching data:', data);
+          })
+          .catch(error => console.error('Error fetching data:', error));
         }
-    } catch (error) {
-        console.error('Error fetching assistance data:', error);
-    }
-}
+
+        fetchMonthlyPayments()
+
+        async function fetchAssistanceData() {
+          try {
+              const response = await fetch('{% url "assistance_type_count" %}');
+              const data = await response.json();
+
+              if (response.ok) {
+                  var options = {
+                      series: [data.hospitalization_count, data.death_count],
+                      chart: {
+                          type: 'pie',
+                          width: 450,
+                          height: 450,
+                      },
+                      plotOptions: {
+                          pie: {
+                              offsetY: 0,
+                              offsetX: 0,
+                              size: 250,
+                          }
+                      },
+                      labels: ['Hospitalization', 'Death'],
+                      legend: {
+                          position: 'right',
+                          horizontalAlign: 'center',
+                          floating: false,
+                          fontSize: '14px'
+                      },
+                      responsive: [{
+                          breakpoint: 480,
+                          options: {
+                              chart: {
+                                  height: 350
+                              },
+                              legend: {
+                                  position: 'bottom'
+                              },
+                              plotOptions: {
+                                  pie: {
+                                      size: 200
+                                  }
+                              }
+                          }
+                      }]
+                  };
+
+                  if (document.querySelector("#yawa")) {
+                      assistanceChart = new ApexCharts(document.querySelector("#yawa"), options);
+                      assistanceChart.render();
+                  }
+              } else {
+                  console.error('Error fetching data:', data);
+              }
+          } catch (error) {
+              console.error('Error fetching assistance data:', error);
+          }
+      }
 
         fetchAssistanceData();
 
@@ -235,8 +246,8 @@
                   };
 
                   if (document.querySelector("#piste")) {
-                      var chart = new ApexCharts(document.querySelector("#piste"), options);
-                      chart.render();
+                      membershipChart = new ApexCharts(document.querySelector("#piste"), options);
+                      membershipChart.render();
                   }
               } else {
                   console.error('Error fetching data:', data);
@@ -248,9 +259,84 @@
 
         fetchMembershipData();
 
-        function back(){
-            window.history.back()
+
+
+        async function dashboardSchoolYearData() {
+            const schoolYearSelected = document.querySelector("#school_year_dashboard_select");
+
+            if (schoolYearSelected) {
+                schoolYearSelected.addEventListener("change", function(e) {
+                    fetchDashboardDataBySchoolYear(schoolYear = e.target.value);
+                });
+            }
         }
+
+        async function fetchDashboardDataBySchoolYear(schoolYear) {
+              try {
+                  const csrfToken = document.querySelector('[name=csrf-token]').content;
+                  const response = await fetch("fetch/overall_type/count/", {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json",
+                          "X-CSRFToken": csrfToken,
+                      },
+                      body: JSON.stringify({ school_year_id: schoolYear }),
+                  });
+
+                  const data = await response.json();
+                  const paymentData = data.payment_data;
+                  const months = data.months;
+
+                  monthlyChart.updateSeries([
+                      { name: 'Trust Fund', data: paymentData['Trust Fund'] },
+                      { name: 'Membership', data: paymentData['Membership'] },
+                      { name: 'Delegation Pay', data: paymentData['Delegation Pay'] },
+                      { name: 'Visitors Fund', data: paymentData['Visitors Fund'] }
+                  ]);
+                  
+
+                  const labels = Object.keys(data.school_affiliation_data);
+                  const series = Object.values(data.school_affiliation_data);
+
+                  assistanceChart.updateSeries([data.hospitalization_count, data.death_count]);
+
+                  if (data.hospitalization_count == 0 && data.death_count == 0) {
+                    alert('No data available for Hopitalization vs Death.')
+                    assistanceChart.updateOptions({
+                      legend: {
+                          show: false
+                      }
+                    })
+                  } else {
+                    assistanceChart.updateOptions({
+                        legend: {
+                            show: true
+                        }
+                    })
+                  }
+
+                  const sumOfSeries = series.reduce((acc, count) => acc + count, 0);
+                  if (sumOfSeries === 0) {
+                    alert('No data available for Enrolled Members per School.')
+                  }
+                  membershipChart.updateOptions({
+                      series: series,
+                      labels: labels
+                  });
+
+
+                  document.querySelector("#total_beneficiary_count").textContent = data.total_beneficary
+                  document.querySelector("#total_membership_count").textContent = data.total_membership
+                  document.querySelector("#total_collection_count").textContent = `₱ ${data.total_payments}`
+                  document.querySelector("#total_pending_count").textContent = data.total_pending
+
+              } catch (error) {
+                  console.error("Error fetching dashboard data:", error);
+              }
+          }
+
+        dashboardSchoolYearData();
+
 
         $(document).ready(function(){
 

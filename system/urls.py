@@ -114,6 +114,7 @@ urlpatterns = [
 
     # JSON data URL's
     path("get_monthly_payment_data/",get_monthly_payment_data,name="get_monthly_payment_data"),
-    path('fetch/assistance_type/count', assistance_statistics, name="assistance_type_count"),
-    path('fetch/membership/count', membership_statistics, name="membership_statistics"),
+    path('fetch/assistance_type/count/', assistance_statistics, name="assistance_type_count"),
+    path('fetch/membership/count/', membership_statistics, name="membership_statistics"),
+    path('fetch/overall_type/count/', fetch_dashboard_data_by_school_year, name='fetch_dashboard_data_by_school_year')
 ]
