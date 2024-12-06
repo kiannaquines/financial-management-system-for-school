@@ -16,14 +16,26 @@
                         <thead>
                             <tr>
                                 <th>Payment Of</th>
-                                <th>Assistance Type</th>
+                                <th>User Type</th>
+                                <th>School Year</th>
+                                <th>Payment Type</th>
+                                <th>Payment Type</th>
+                                <th>Date Paid</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {% for item in items %}
                             <tr>
-                               <td>Testing</td>
-                               <td>Testing</td>
+                               <td>{{ item.paid_by }}</td>
+                               <td>
+                                <span class="badge bg-primary">{{ item.paid_by.user_id.user_type }}</span>
+                               </td>
+                               <td>{{ item.school_year }}</td>
+                               <td><span class="badge bg-primary">{{ item.payment_type }}</span></td>
+                               <td>{{ item.amount }}</td>
+                               <td>{{ item.date_paid }}</td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

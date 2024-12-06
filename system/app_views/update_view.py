@@ -503,3 +503,47 @@ class UpdateExpenseDetails(CustomLoginRequiredMixin, UpdateView):
                     extra_tags="danger",
                 )
         return response
+
+
+class UpdateMyMemberInfoDependents(UpdateView):
+    pk_url_kwarg = "pk"
+    template_name = "employee/form.html"
+    model = Membership
+    form_class = AddMyRelativesMembershipForm
+    success_url = reverse_lazy("employee_assistance_request")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        membership_id = self.kwargs.get(self.pk_url_kwarg)
+        membership = Membership.objects.get(pk=membership_id)      
+
+        kwargs['instance'] = membership        
+        
+        kwargs['beneficiary_queryset'] = Beneficiary.objects.filter(user_id=membership)    
+        kwargs['dependents_queryset'] = Dependents.objects.filter(related_to_member=membership)
+        
+        return kwargs
+
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "You have successfully added your new dependents and beneficiaries.",
+            extra_tags="success",
+        )
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        for field, errors in form.errors.items():
+            for err in errors:
+                messages.error(
+                    self.request,
+                    f"{err}",
+                    extra_tags="danger",
+                )
+        return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["header_title"] = "Update My Relative"
+        return context

@@ -61,9 +61,7 @@ def users_page(request):
 
 @login_required(login_url="/auth/")
 def beneficiary_page(request):
-    context = {}
-    path = reverse_lazy("add_beneficiary_page")
-    
+    context = {}    
     context['beneficiary'] = Beneficiary.objects.all()
     return render(request, "view_template/beneficiaries.html", context)
 

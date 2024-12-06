@@ -35,6 +35,8 @@ urlpatterns = [
     path("members/approve/<int:pk>", approve_membership, name="approve_membership"),
     path('members/update/info/<int:pk>', UpdateMemberInfoDependents.as_view(), name="update_membership_dependent_page"),
 
+    path('employee/update/info/<int:pk>', UpdateMyMemberInfoDependents.as_view(), name="update_my_membership_dependent_page"),
+
     #  Users URL's
     path("users/list", users_page, name="users_page"),
     path("users/inactive/list", inactive_users_page, name="inactive_users_page"),

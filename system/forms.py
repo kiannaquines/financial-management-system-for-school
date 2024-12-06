@@ -319,6 +319,30 @@ class AddRelativesMembershipForm(forms.ModelForm):
             "beneficiary",
         ]
 
+class AddMyRelativesMembershipForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        beneficiary_queryset = kwargs.pop('beneficiary_queryset', None)
+        dependents_queryset = kwargs.pop('dependents_queryset', None)
+        super(AddMyRelativesMembershipForm, self).__init__(*args, **kwargs)
+        
+        if beneficiary_queryset is not None:
+            self.fields['beneficiary'].queryset = beneficiary_queryset
+        if dependents_queryset is not None:
+            self.fields['my_dependents'].queryset = dependents_queryset
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update(
+                {"class": "form-control", "placeholder": field.label}
+            )
+            field.widget.is_required = True
+
+    class Meta:
+        model = Membership
+        fields = [
+            "my_dependents",
+            "beneficiary",
+        ]
+
 
 class PaymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -356,6 +380,9 @@ class UserMembershipForm(forms.ModelForm):
         self.fields["employee_id"].widget.attrs.update(
             {"placeholder": "Employee ID", "class": "form-control"}
         )
+        self.fields["school_year"].widget.attrs.update(
+            {"placeholder": "School Year", "class": "form-control"}
+        )
         self.fields["position"].widget.attrs.update(
             {"placeholder": "Position", "class": "form-control"}
         )
@@ -381,6 +408,7 @@ class UserMembershipForm(forms.ModelForm):
             "employee_id",
             "position",
             "gender",
+            "school_year",
             "school_affiliation",
         ]
         exclude = [

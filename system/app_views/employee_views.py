@@ -26,7 +26,7 @@ def employee_apply_membership(request):
             
             membership.user_id = request.user
             membership.save()
-            messages.success(request,'You have successfully applied for membership, Thank you!.',extra_tags='success')
+            messages.success(request,'You have successfully applied for membership, please wait until the treasurer approve your membership request. Thank you!.',extra_tags='warning')
 
             return HttpResponseRedirect(reverse_lazy('employee_apply_membership'))
         
