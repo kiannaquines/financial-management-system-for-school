@@ -11,10 +11,14 @@ class SchoolYear(models.Model):
     primary_school_year = models.BooleanField(
         default=False, help_text="Toggle if primary school year"
     )
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return f"{self.start_year.year} - {self.end_year.year}"
 
+    def formatted_date(self):
+        return self.date_added.strftime("%b %d, %Y")
+    
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -51,6 +55,9 @@ class Ledger(models.Model):
     def __str__(self) -> str:
         return f"Ledger for {self.transaction_date} - ₱ {self.amount:,.2f}"
 
+    def formatted_date(self):
+        return self.date_transaction.strftime("%b %d, %Y")
+    
     class Meta:
         verbose_name = "Ledger"
         verbose_name_plural = "Ledgers"
@@ -71,7 +78,8 @@ class Dependents(models.Model):
         ("Mother", "Mother"),
     )
     related_to_member = models.ForeignKey(
-        "Membership", on_delete=models.CASCADE, null=True, blank=True
+        "Membership", on_delete=models.CASCADE, null=True, blank=True,
+        limit_choices_to={"membership_status":True}
     )
     dependent_first_name = models.CharField(
         max_length=50, help_text="The first name of the dependent"
@@ -111,6 +119,8 @@ class Dependents(models.Model):
     def __str__(self) -> str:
         return self.get_full_name_of_dependent()
     
+    def formatted_date(self):
+        return self.date_added.strftime("%b %d, %Y")
 
     class Meta:
         verbose_name = "Dependent"
@@ -136,9 +146,6 @@ class Assistance(models.Model):
         help_text="The name of the member who requested the assistance",
     )
     id = models.AutoField(primary_key=True)
-    suffix = models.CharField(
-        max_length=10, blank=True, null=True, help_text="The suffix of the employee"
-    )
     type_of_assistance = models.CharField(
         max_length=50, choices=ASSISTANCE_TYPE, help_text="Choose type of assistance"
     )
@@ -168,6 +175,7 @@ class Assistance(models.Model):
     )
     amount_released = models.DecimalField(
         max_digits=10,
+        default=0.0,
         decimal_places=2,
         help_text="Amount applied in assistance",
     )
@@ -176,10 +184,14 @@ class Assistance(models.Model):
     def __str__(self) -> str:
         return f"{self.request_by} assistance for {self.type_of_assistance}"
 
+    def formatted_date(self):
+        return self.date_released.strftime("%b %d, %Y")
+    
     class Meta:
         verbose_name = "Assistance"
         verbose_name_plural = "Assistances"
         db_table = "assistance"
+        ordering = ["-date_released"]
 
 
 class Beneficiary(models.Model):
@@ -194,6 +206,7 @@ class Beneficiary(models.Model):
     user_id = models.ForeignKey(
         "Membership",
         related_name="beneficiary_membership",
+        limit_choices_to={"membership_status":True},
         on_delete=models.CASCADE,
         help_text="Select related user to the beneficiary",
     )
@@ -222,14 +235,17 @@ class Beneficiary(models.Model):
         help_text="Upload birth certificate of the beneficiary",
     )
     used = models.BooleanField(default=False, help_text="Whether used as a beneficiary")
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return (
             f"{self.beneficiary_first_name} {self.beneficiary_last_name}"
         )
-    
+    def formatted_date(self):
+        return self.date_added.strftime("%b %d, %Y")
     def get_full_name(self):
         return f"{self.beneficiary_first_name} {self.beneficiary_last_name}"
+    
 
     class Meta:
         verbose_name = "Benefeciary"
@@ -274,7 +290,7 @@ class Membership(models.Model):
         AuthUser,
         on_delete=models.CASCADE,
         help_text="Employee who want to be a member",
-        limit_choices_to={"user_type": "Employee"},
+        limit_choices_to={"user_type": "Employee","is_active":True},
         unique=True,
     )
     place_of_birth = models.CharField(max_length=50, help_text="Place of birth")
@@ -317,6 +333,8 @@ class Membership(models.Model):
         SchoolYear, related_name="membership_school_year", on_delete=models.CASCADE
     )
 
+    date_added = models.DateTimeField(auto_now_add=True)
+
     def __str__(self) -> str:
         return f"{self.user_id.first_name} {self.user_id.last_name}"
 
@@ -346,6 +364,9 @@ class Expenses(models.Model):
 
     def __str__(self) -> str:
         return self.expense_type
+    
+    def formatted_date(self):
+        return self.date_added.strftime("%b %d, %Y")
 
     class Meta:
         verbose_name = "Expense"
@@ -367,7 +388,7 @@ class Payment(models.Model):
         Membership,
         related_name="payment_name",
         on_delete=models.CASCADE,
-        limit_choices_to={"user_id__user_type": "Employee"},
+        limit_choices_to={"user_id__user_type": "Employee", "membership_status":True},
         help_text="Employee who paid",
     )
     amount = models.FloatField(help_text="Amount employee paid")
@@ -384,6 +405,9 @@ class Payment(models.Model):
     def __str__(self) -> str:
         return f"Paid by {self.paid_by.user_id.get_full_name()}"
 
+    def formatted_date(self):
+        return self.date_paid.strftime("%b %d, %Y")
+    
     class Meta:
         verbose_name = "Payment"
         verbose_name_plural = "Payments"
@@ -409,18 +433,31 @@ def handle_payment_post_save(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Assistance)
 def handle_payment_post_save(sender, instance, created, **kwargs):
     if created:
-        current_date = timezone.now().date()
-        description = f"Cash assistance recorded {instance.type_of_assistance} with amount of {instance.amount_released} to Member #{instance.request_by.user_id.id}"
-        get_school_year = SchoolYear.objects.get(primary_school_year=True)
-        create_transaction_ledger = Ledger.objects.create(
-            transaction_date=current_date,
-            description=description,
-            amount=instance.amount_released,
-            transaction_type="Debit",
-            school_year_transaction=get_school_year,
-        )
-        create_transaction_ledger.save()
-
+        if instance.amount_released > 0:
+            current_date = timezone.now().date()
+            description = f"Cash assistance recorded {instance.type_of_assistance} with amount of {instance.amount_released} to Member #{instance.request_by.user_id.id}"
+            get_school_year = SchoolYear.objects.get(primary_school_year=True)
+            create_transaction_ledger = Ledger.objects.create(
+                transaction_date=current_date,
+                description=description,
+                amount=instance.amount_released,
+                transaction_type="Debit",
+                school_year_transaction=get_school_year,
+            )
+            create_transaction_ledger.save()
+    else:
+        if instance.amount_released > 0:
+            current_date = timezone.now().date()
+            description = f"Cash assistance recorded {instance.type_of_assistance} with amount of {instance.amount_released} to Member #{instance.request_by.user_id.id}"
+            get_school_year = SchoolYear.objects.get(primary_school_year=True)
+            create_transaction_ledger = Ledger.objects.create(
+                transaction_date=current_date,
+                description=description,
+                amount=instance.amount_released,
+                transaction_type="Debit",
+                school_year_transaction=get_school_year,
+            )
+            create_transaction_ledger.save()
 
 @receiver(post_save, sender=Expenses)
 def handle_payment_post_save(sender, instance, created, **kwargs):

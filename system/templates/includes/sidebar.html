@@ -162,44 +162,33 @@
         </a>
         <ul class="navbar-nav flex-column" id="sideNavbar">
             <li class="nav-item">
-                <div class="navbar-heading">Dashboard</div>
+                <div class="navbar-heading">Main Modules</div>
             </li>
+
             <li class="nav-item">
-                <a class="nav-link has-arrow  active " href="{% url 'dashboard' %}">
+                <a class="nav-link has-arrow  {% if 'list' in request.path %}active{% endif %} " href="{% url 'assistance_page' %}">
                     <i data-feather="home" class="nav-icon icon-xs me-2"></i>
-                    Dashboard
+                    Approve Assistance
                 </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link has-arrow {% if 'pending' in request.path %}active{% endif %}" href="{% url 'pending_assistance_page' %}">
+                    <i data-feather="clipboard" class="nav-icon icon-xs me-2"></i>
+                    Pending Assistance
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <div class="navbar-heading">Ledger Module</div>
             </li>
             <li class="nav-item">
-                <div class="navbar-heading">Main Pages</div>
-            </li>
-            <li class="nav-item {% if 'assistance' in request.path %}active{% endif %}">
-                <a
-                    class="nav-link has-arrow  collapsed "
-                    href="#!"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#assistance"
-                    aria-expanded="false"
-                    aria-controls="assistance"
-                >
-                    <i data-feather="layers" class="nav-icon icon-xs me-2"></i>
-                    Assistance
+                <a class="nav-link has-arrow {% if 'ledger' in request.path %}active{% endif %}" href="{% url 'export_ledger_list' %}">
+                    <i data-feather="book" class="nav-icon icon-xs me-2"></i>
+                    Financial Ledger
                 </a>
-                <div id="assistance" class="collapse {% if 'assistance' in request.path %}show{% endif %}" data-bs-parent="#sideNavbar">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'assistance_page' %}">
-                                List of Assistance
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link " href="{% url 'pending_assistance_page' %}">
-                                Pending Assistance
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </li>
+
         </ul>
     </div>
     {% else %}
@@ -212,6 +201,11 @@
             <li class="nav-item">
                 <div class="navbar-heading">Main Pages</div>
             </li>
+
+            <li class="nav-item">
+                <div class="navbar-heading"> Apply Assistance</div>
+            </li>
+
             <li class="nav-item {% if request.path == '/employee/membership/add' or request.path == '/employee/assistance/add' or request.path == '/employee/assistance/list' %}active{% endif %}">
                 <a
                     class="nav-link has-arrow  collapsed "

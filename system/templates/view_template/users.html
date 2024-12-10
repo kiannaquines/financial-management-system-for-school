@@ -20,7 +20,7 @@
                             <tr>
                                 <th>Member ID</th>
                                 <th>Username</th>
-                                <th>Email</th>
+                                <th>User Type</th>
                                 <th>Date Joined</th>
                                 <th>Action</th>
                             </tr>
@@ -30,8 +30,10 @@
                             <tr>
                                 <td>(Member #{{ item.id }})</td>
                                 <td>{{ item.username }}</td>
-                                <td>{{ item.email }}</td>
-                                <td>{{ item.date_joined }}</td>
+                                <td>
+                                    <span class="badge bg-primary">{{ item.get_user_type }}</span>
+                                </td>
+                                <td>{{ item.formatted_date }}</td>
                                 <td class="align-middle">
                                     <div class="dropdown dropstart">
                                         <a

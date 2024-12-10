@@ -39,7 +39,7 @@ import json
 @login_required(login_url="/auth/")
 def membership_page(request):
     context = {}
-    enrolled_membership = Membership.objects.filter(membership_status=True)
+    enrolled_membership = Membership.objects.filter(membership_status=True).order_by('-date_added')
     context['enrolled_members'] = enrolled_membership
     return render(request, "view_template/enrolled_members.html", context)
 
@@ -47,7 +47,7 @@ def membership_page(request):
 @login_required(login_url="/auth/")
 def pending_membership_page(request):
     context = {}
-    pending_membership = Membership.objects.filter(membership_status=False)
+    pending_membership = Membership.objects.filter(membership_status=False).order_by('-date_added')
     context['pending_members'] = pending_membership   
     return render(request, "view_template/pending_members.html", context)
 
@@ -55,35 +55,35 @@ def pending_membership_page(request):
 @login_required(login_url="/auth/")
 def users_page(request):
     context = {}
-    users = AuthUser.objects.filter(is_active=True)
+    users = AuthUser.objects.filter(is_active=True).order_by('-date_joined')
     context['users'] = users
     return render(request, "view_template/users.html", context)
 
 @login_required(login_url="/auth/")
 def beneficiary_page(request):
     context = {}    
-    context['beneficiary'] = Beneficiary.objects.all()
+    context['beneficiary'] = Beneficiary.objects.all().order_by('-date_added')
     return render(request, "view_template/beneficiaries.html", context)
 
 
 @login_required(login_url="/auth/")
 def payments_page(request):
     context = {}
-    context['payments'] =  Payment.objects.all()
+    context['payments'] =  Payment.objects.all().order_by('-date_paid')
     return render(request, "view_template/payment.html", context)
 
 
 @login_required(login_url="/auth/")
 def inactive_users_page(request):
     context = {}
-    context['users'] = AuthUser.objects.filter(is_active=False)
+    context['users'] = AuthUser.objects.filter(is_active=False).order_by('-date_joined')
     return render(request, "view_template/inactive_users.html", context)
 
 
 @login_required(login_url="/auth/")
 def pending_assistance_page(request):
     context = {}
-    pending_assistance = Assistance.objects.filter(assistance_status=False).all()
+    pending_assistance = Assistance.objects.filter(assistance_status=False).all().order_by('-date_released')
     context['pending_assistance'] = pending_assistance
     return render(request, "view_template/pending_assistance.html",context)
 
@@ -91,7 +91,7 @@ def pending_assistance_page(request):
 @login_required(login_url="/auth/")
 def assistance_page(request):
     context = {}
-    assistance = Assistance.objects.filter(assistance_status=True)
+    assistance = Assistance.objects.filter(assistance_status=True).order_by('-date_released')
     context['assistance'] = assistance
     return render(request, "view_template/assistance.html", context)
 
@@ -99,7 +99,7 @@ def assistance_page(request):
 @login_required(login_url="/auth/")
 def payment_page(request):
     context = {}
-    payments = Payment.objects.all()
+    payments = Payment.objects.all().order_by('-date_paid')
     context["payments"] = payments
     return render(request, "view_template/payment.html", context)
 
@@ -107,7 +107,7 @@ def payment_page(request):
 @login_required(login_url="/auth/")
 def membership_fee_page(request):
     context = {}
-    context["membership_fee"] = Payment.objects.filter(payment_type="Membership").all()
+    context["membership_fee"] = Payment.objects.filter(payment_type="Membership").all().order_by('-date_paid')
     context["schools"] = [school[0] for school in Membership.SCHOOL_AFFILIATION]
     context["members"] = Membership.objects.all().distinct()
     return render(request, "view_template/membership_fee.html", context)
@@ -116,21 +116,21 @@ def membership_fee_page(request):
 @login_required(login_url="/auth/")
 def monthly_due_page(request):
     context = {}
-    context['monthly_dues'] =  Payment.objects.filter(Q(payment_type="Delegation Pay") | Q(payment_type="Trust Fund") | Q(payment_type="Visitors Fund"))
+    context['monthly_dues'] =  Payment.objects.filter(Q(payment_type="Delegation Pay") | Q(payment_type="Trust Fund") | Q(payment_type="Visitors Fund")).order_by('-date_paid')
     return render(request, "view_template/monthly_due.html", context)
 
 
 @login_required(login_url="/auth/")
 def dependents_page(request):
     context = {}
-    context["dependents"] = Dependents.objects.all()
+    context["dependents"] = Dependents.objects.all().order_by('-date_added')
     return render(request, "view_template/dependents.html", context)
 
 
 @login_required(login_url="/auth/")
 def other_expense_page(request):
     context = {}
-    expenses = Expenses.objects.all()
+    expenses = Expenses.objects.all().order_by('-date_added')
     context['expenses'] = expenses
     return render(request, "view_template/other_expenses.html", context)
 
@@ -138,27 +138,27 @@ def other_expense_page(request):
 @login_required(login_url="/auth/")
 def school_page(request):
     context = {}
-    context['items'] = SchoolYear.objects.all()
+    context['items'] = SchoolYear.objects.all().order_by('-date_added')
     return render(request, "view_template/school_year.html", context)
 
 @login_required(login_url="/auth/")
 def other_report_expense_page(request):
     context = {}
-    other_expenses = Expenses.objects.all()
+    other_expenses = Expenses.objects.all().order_by('-date_added')
     context['items'] = other_expenses
     return render(request, "view_template/expenses.html", context)
 
 @login_required(login_url="/auth/")
 def assistance_expense_page(request):
     context = {}
-    assistance = Assistance.objects.filter(assistance_status=True).all()
+    assistance = Assistance.objects.filter(assistance_status=True).all().order_by('-date_released')
     context["assistance"] = assistance
     return render(request, "view_template/assistance_expenses.html", context)
 
 @login_required(login_url="/auth/")
 def assistance_report_expense_page(request):
     context = {}
-    assistance = Assistance.objects.all()
+    assistance = Assistance.objects.all().order_by('-date_released')
     context["assistance"] = assistance
     return render(request, "view_template/assistance_release_expense.html", context)
 

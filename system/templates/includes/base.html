@@ -336,7 +336,14 @@
           }
 
         dashboardSchoolYearData();
+        
+        window.addEventListener("blur", function(){
+          document.title = "Go back 😭"
+        });
 
+        window.addEventListener("focus", function(){
+          document.title = "DSAPSTEA Financial Management System"
+        });
 
         $(document).ready(function(){
 
@@ -381,11 +388,11 @@
                   paging: true,
                   lengthChange: true,
                   searching: true,
-                  ordering: true,
+                  ordering: false,
                   info: true,
                   autoWidth: false,
                   responsive: true,
-                  order: [[0, "desc"]],
+                  order: [[0, "asc"]],
                   pageLength: 50
               });
               $("#dt-search-0").attr('placeholder', 'Details or Employee ID')

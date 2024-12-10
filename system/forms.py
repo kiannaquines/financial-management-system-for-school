@@ -175,9 +175,6 @@ class AssistanceForm(forms.ModelForm):
             {"placeholder": "Request By", "class": "form-control"}
         )
 
-        self.fields["suffix"].widget.attrs.update(
-            {"placeholder": "Suffix", "class": "form-control"}
-        )
         self.fields["type_of_assistance"].widget.attrs.update(
             {"placeholder": "Type of Assistance", "class": "form-control"}
         )
@@ -204,7 +201,6 @@ class AssistanceForm(forms.ModelForm):
         model = Assistance
         fields = [
             "request_by",
-            "suffix",
             "amount_released",
             "type_of_assistance",
             "assistance_evidence_first",
@@ -271,8 +267,8 @@ class BeneficiaryForm(forms.ModelForm):
 class MembershipForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MembershipForm, self).__init__(*args, **kwargs)
-
         for field_name, field in self.fields.items():
+
             field.widget.attrs.update(
                 {"class": "form-control", "placeholder": field.label}
             )
@@ -523,9 +519,6 @@ class UserBeneficiaryForm(forms.ModelForm):
 class UserAssistanceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserAssistanceForm, self).__init__(*args, **kwargs)
-        self.fields["suffix"].widget.attrs.update(
-            {"placeholder": "Suffix", "class": "form-control"}
-        )
         self.fields["type_of_assistance"].widget.attrs.update(
             {"placeholder": "Type of Assistance", "class": "form-control"}
         )
@@ -546,7 +539,6 @@ class UserAssistanceForm(forms.ModelForm):
     class Meta:
         model = Assistance
         fields = [
-            "suffix",
             "type_of_assistance",
             "assistance_evidence_first",
             "assistance_evidence_second",

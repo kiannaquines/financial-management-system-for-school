@@ -24,6 +24,13 @@ class AuthUser(AbstractUser):
 
     def get_username(self) -> str:
         return super().get_username()
+    
+    def get_user_type(self) -> str:
+        return self.user_type
+
+
+    def formatted_date(self):
+        return self.date_joined.strftime("%b %d, %Y, %I:%M %p").replace("PM", "pm").replace("AM", "am")
 
     class Meta:
         verbose_name = "Users"

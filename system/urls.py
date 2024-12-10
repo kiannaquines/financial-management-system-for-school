@@ -53,7 +53,7 @@ urlpatterns = [
     path("assistance/edit/<int:pk>",UpdateAssistanceDetails.as_view(),name="update_assistance"),
     path("assistance/delete/<int:pk>",DeleteAssistanceDetails.as_view(),name="delete_assistance"),
 
-    path("assistance/pending/list",pending_assistance_page,name="pending_assistance_page"),
+    path("assistance/pending/",pending_assistance_page,name="pending_assistance_page"),
     path("assistance/approve/<int:pk>", approve_assistance, name="approve_assistance"),
     path('assistance/update/release/<int:pk>', UpdateAssistanceReleaseStatusDetails.as_view(), name="update_assistance_release_status_details"),
 
