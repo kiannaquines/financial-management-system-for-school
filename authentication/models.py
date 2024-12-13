@@ -30,7 +30,7 @@ class AuthUser(AbstractUser):
 
 
     def formatted_date(self):
-        return self.date_joined.strftime("%b %d, %Y, %I:%M %p").replace("PM", "pm").replace("AM", "am")
+        return self.date_joined.strftime("%b %d, %Y")
 
     class Meta:
         verbose_name = "Users"

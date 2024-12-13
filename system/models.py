@@ -265,6 +265,7 @@ class Membership(models.Model):
         ("MS Teacher 2", "MS Teacher 2"),
         ("MS Teacher 3", "MS Teacher 3"),
         ("School Head", "School Head"),
+        ("Principal", "Principal"),
     ]
 
     GENDER = [
